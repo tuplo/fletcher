@@ -1,0 +1,68 @@
+import nock from 'nock';
+import $ from 'cheerio';
+
+import * as fletch from '.';
+
+describe('fletch - inline scripts', () => {
+  const mocksDir = `${__dirname}/__mocks__`;
+  nock('https://foo.com')
+    .persist()
+    .get('/inline-script.html')
+    .replyWithFile(200, `${mocksDir}/inline-script.html`);
+
+  afterAll(() => {
+    nock.cleanAll();
+  });
+
+  it('evaluates a script and returns its global scope', async () => {
+    expect.assertions(1);
+    type PageData = { pageData: { foo: string } };
+    const result = await fletch.script<PageData>(
+      'https://foo.com/inline-script.html',
+      { scriptPath: 'script:nth-of-type(1)' }
+    );
+
+    const expected = { pageData: { foo: 'bar' } };
+    expect(result).toMatchObject(expected);
+  });
+
+  it('uses a function to find a script element', async () => {
+    expect.assertions(1);
+    const result = await fletch.script('https://foo.com/inline-script.html', {
+      scriptFindFn: ($page) =>
+        $page
+          .find('script')
+          .toArray()
+          .find((script) => /findThisVar/.test($(script).html() || '')),
+    });
+
+    const expected = { findThisVar: true };
+    expect(result).toStrictEqual(expected);
+  });
+
+  it('throws if options are not provided', async () => {
+    expect.assertions(1);
+    const result = async () => {
+      await fletch.script('https://foo.com/inline-script.html');
+    };
+
+    const expected = new Error(
+      'fletch.script: scriptPath or scriptFindFn are required'
+    );
+    // eslint-disable-next-line jest/no-test-return-statement
+    return expect(result).rejects.toThrow(expected);
+  });
+
+  it("throws if scriptPath element isn't found", async () => {
+    expect.assertions(1);
+    const result = async () => {
+      await fletch.script('https://foo.com/inline-script.html', {
+        scriptPath: 'script#foobar',
+      });
+    };
+
+    const expected = new Error('fletch.script: script element is empty');
+    // eslint-disable-next-line jest/no-test-return-statement
+    return expect(result).rejects.toThrow(expected);
+  });
+});
