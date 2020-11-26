@@ -1,5 +1,13 @@
 # fletch
 
+<p>
+  <img src="https://img.shields.io/npm/v/@tuplo/fletch">
+  <a href="https://codecov.io/gh/tuplo/fletch">
+    <img src="https://codecov.io/gh/tuplo/fletch/branch/main/graph/badge.svg?token=2JFH83P3UW"/>
+  </a>
+  <img src="https://github.com/tuplo/fletch/workflows/Build/badge.svg">
+</p>
+
 > Web scraping HTTP request library
 
 ## Usage
@@ -7,6 +15,8 @@
 All purpose HTTP requests library focused on web scraping.
 
 ```typescript
+import fletch from '@tuplo/fletch';
+
 const $page = await fletch.html('https://foo.com/page.html');
 const heading = $page.find('body > h1');
 

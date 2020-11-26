@@ -4,7 +4,7 @@ import $ from 'cheerio';
 import fletch from '.';
 
 describe('fletch - inline scripts', () => {
-  const mocksDir = `${__dirname}/__mocks__`;
+  const mocksDir = `${__dirname}/__data__`;
   nock('https://foo.com')
     .persist()
     .get('/inline-script.html')

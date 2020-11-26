@@ -1,11 +1,15 @@
 {
   "name": "@tuplo/fletch",
-  "description": "",
+  "description": "Web scraping HTTP request library",
   "version": "0.0.0-development",
   "repository": "git@github.com:tuplo/fletch.git",
   "author": "Rui Costa",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "http-client",
+    "request",
+    "scraping"
+  ],
   "files": [
     "dist/**/*.js",
     "dist/index.d.ts"

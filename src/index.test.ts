@@ -3,7 +3,7 @@ import nock from 'nock';
 import fletch from '.';
 
 describe('fletch - HTTP client', () => {
-  const mocksDir = `${__dirname}/__mocks__`;
+  const mocksDir = `${__dirname}/__data__`;
   nock('https://foo.com')
     .persist()
     .get('/simple.html')
