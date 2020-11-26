@@ -7,43 +7,41 @@ import type { Response } from 'node-fetch';
 import type { FletchUserOptions } from './fletch.d';
 import fromUserOptions from './options';
 
-type Fletch = (
-  url: string,
+function fletch(
+  userUrl: string,
   userOptions?: FletchUserOptions
-) => Promise<Response>;
-const fletch: Fletch = async (userUrl, userOptions) => {
+): Promise<Response> {
   const { url, ...options } = fromUserOptions(userUrl, userOptions);
 
   return fetch(url, options);
-};
+}
 
-type FletchTextFn = (
-  url: string,
-  options?: FletchUserOptions
-) => Promise<string>;
-export const text: FletchTextFn = async (url, options) => {
-  return fletch(url, options).then((res) => res.text());
-};
+async function text(
+  userUrl: string,
+  userOptions?: FletchUserOptions
+): Promise<string> {
+  return fletch(userUrl, userOptions).then((res) => res.text());
+}
 
-type FletchHtmlFn = (
-  url: string,
-  options?: FletchUserOptions
-) => Promise<cheerio.Cheerio>;
-export const html: FletchHtmlFn = async (url, options) => {
-  const src = await fletch(url, options).then((res) => res.text());
+async function html(
+  userUrl: string,
+  userOptions?: FletchUserOptions
+): Promise<cheerio.Cheerio> {
+  const src = await fletch(userUrl, userOptions).then((res) => res.text());
+
   return $.load(src).root();
-};
+}
 
-export async function script<T extends unknown = unknown>(
-  url: string,
-  options?: FletchUserOptions
+async function script<T extends unknown = unknown>(
+  userUrl: string,
+  userOptions?: FletchUserOptions
 ): Promise<T> {
   const { scriptPath, scriptFindFn, scriptSandbox } =
-    options || ({} as FletchUserOptions);
+    userOptions || ({} as FletchUserOptions);
   if (!scriptPath && !scriptFindFn)
     throw new Error('fletch.script: scriptPath or scriptFindFn are required');
 
-  const $page = await html(url, options);
+  const $page = await html(userUrl, userOptions);
   let $el: cheerio.Cheerio | null | undefined = null;
   if (scriptPath) {
     $el = $page.find(scriptPath);
@@ -68,4 +66,4 @@ export async function script<T extends unknown = unknown>(
   return sandbox as T;
 }
 
-export default fetch;
+export default Object.assign(fetch, { text, html, script });

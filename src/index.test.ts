@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import * as fletch from '.';
+import fletch from '.';
 
 describe('fletch - HTTP client', () => {
   const mocksDir = `${__dirname}/__mocks__`;

@@ -1,7 +1,7 @@
 import nock from 'nock';
 import $ from 'cheerio';
 
-import * as fletch from '.';
+import fletch from '.';
 
 describe('fletch - inline scripts', () => {
   const mocksDir = `${__dirname}/__mocks__`;
