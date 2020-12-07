@@ -20,6 +20,8 @@ import fletch from '@tuplo/fletch';
 const $page = await fletch.html('https://foo.com/page.html');
 const heading = $page.find('body > h1');
 
+const { foo } = await fletch.json('https://foo.com/page.html');
+
 const { foo } = await fletch.script('https://foo.com/page.html', {
   scriptPath: 'script:nth-of-type(3)',
 });
@@ -63,6 +65,10 @@ const { foo } = await fletch.script('https://foo.com/page.html', {
 ### `fletch.text(url: string, options?: FletchOptions) => string`
 
 Requests a HTTP resource, returning it as a `string`
+
+### `fletch.json<T>(url: string, options?: FletchOptions) => T`
+
+Requests a HTTP resource, returning it as a JSON object
 
 ## Install
 

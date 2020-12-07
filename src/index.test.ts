@@ -7,7 +7,9 @@ describe('fletch - HTTP client', () => {
   nock('https://foo.com')
     .persist()
     .get('/simple.html')
-    .replyWithFile(200, `${mocksDir}/simple.html`);
+    .replyWithFile(200, `${mocksDir}/simple.html`)
+    .get('/simple.json')
+    .replyWithFile(200, `${mocksDir}/simple.json`);
 
   afterAll(() => {
     nock.cleanAll();
@@ -28,5 +30,22 @@ describe('fletch - HTTP client', () => {
 
     const expected = 'Simple heading';
     expect(result).toBe(expected);
+  });
+
+  it('simple json (GET)', async () => {
+    expect.assertions(1);
+    const result = await fletch.json('https://foo.com/simple.json');
+
+    const expected = { foo: 'bar' };
+    expect(result).toStrictEqual(expected);
+  });
+
+  it('simple json (GET) with generic type', async () => {
+    expect.assertions(1);
+    type FooBar = { foo: string };
+    const result = await fletch.json<FooBar>('https://foo.com/simple.json');
+
+    const expected: FooBar = { foo: 'bar' };
+    expect(result).toStrictEqual(expected);
   });
 });

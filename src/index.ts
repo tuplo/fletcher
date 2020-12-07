@@ -32,6 +32,15 @@ async function html(
   return $.load(src).root();
 }
 
+async function json<T = unknown>(
+  userUrl: string,
+  userOptions?: FletchUserOptions
+): Promise<T> {
+  const src = await fletch(userUrl, userOptions).then((res) => res.json());
+
+  return src;
+}
+
 async function script<T extends unknown = unknown>(
   userUrl: string,
   userOptions?: FletchUserOptions
@@ -66,4 +75,4 @@ async function script<T extends unknown = unknown>(
   return sandbox as T;
 }
 
-export default Object.assign(fetch, { text, html, script });
+export default Object.assign(fetch, { text, html, script, json });

@@ -7,8 +7,8 @@ type FromUserOptionsFn = (
   url: string,
   options?: FletchUserOptions
 ) => FletchOptions;
-const fromUserOptions: FromUserOptionsFn = (url, options?) => {
-  return Object.entries(options || {}).reduce(
+const fromUserOptions: FromUserOptionsFn = (url, options?) =>
+  Object.entries(options || {}).reduce(
     (acc, [key, value]) => {
       switch (key) {
         case 'urlSearchParams':
@@ -23,6 +23,5 @@ const fromUserOptions: FromUserOptionsFn = (url, options?) => {
     },
     { url } as FletchOptions
   );
-};
 
 export default fromUserOptions;
