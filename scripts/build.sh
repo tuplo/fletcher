@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
 rimraf dist
-microbundle --target node --sourcemap false --format cjs,modern --tsconfig tsconfig.build.json
+tsc --build tsconfig.build.json
+esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js
+esbuild src/index.ts --bundle --outfile=dist/index.modern.js --external:url --external:vm
 cp src/fletch.d.ts dist/fletch.d.ts
