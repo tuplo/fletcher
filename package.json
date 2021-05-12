@@ -10,15 +10,17 @@
     "request",
     "scraping"
   ],
+  "engines": {
+    "node": ">=12"
+  },
   "files": [
     "dist/**/*.js",
     "dist/index.d.ts",
     "dist/fletch.d.ts"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.modern.js",
-  "types": "dist/index.d.ts",
-  "source": "src/index.ts",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "dependencies": {
     "cheerio": "1.0.0-rc.9",
     "node-fetch": "2.6.1"
