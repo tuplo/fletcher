@@ -3,3 +3,4 @@
 /.vscode
 /coverage
 /e2e/node_modules
+/e2e/yarn.lock
