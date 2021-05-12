@@ -1,5 +1,5 @@
 import type { RequestInit } from 'node-fetch';
-import type VM from 'vm';
+import type * as VM from 'vm';
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
