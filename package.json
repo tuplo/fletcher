@@ -14,7 +14,7 @@
     "node": ">=12"
   },
   "files": [
-    "dist/**/*.js",
+    "dist/index.js",
     "dist/index.d.ts",
     "dist/fletch.d.ts"
   ],

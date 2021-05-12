@@ -2,3 +2,4 @@
 /dist
 /.vscode
 /coverage
+/e2e/node_modules
