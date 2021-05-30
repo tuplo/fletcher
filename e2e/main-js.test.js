@@ -1,8 +1,7 @@
-import fletch from '@tuplo/fletch';
+import { getPageHeading } from './main-js';
 
 it('is testable with Jest and JavaScript', async () => {
-  const $ = await fletch.html('https://httpbin.org/html');
-  const result = $.find('h1').text();
+  const result = await getPageHeading();
 
   const expected = 'Herman Melville - Moby-Dick';
   expect(result).toBe(expected);

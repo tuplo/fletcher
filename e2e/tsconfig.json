@@ -1,5 +1,15 @@
 {
   "compilerOptions": {
-    "allowJs": true
+    "allowJs": true,
+    "strict": true,
+    "baseUrl": "./",
+    "declaration": false,
+    "esModuleInterop": true,
+    "lib": ["es2019"],
+    "module": "ES2015",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "target": "esnext"
   }
 }

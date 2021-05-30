@@ -1,8 +1,13 @@
+/* eslint-disable import/prefer-default-export */
 import { strict as assert } from 'assert';
 import fletch from '@tuplo/fletch';
 
-(async function main() {
+export async function getPageHeading() {
   const $ = await fletch.html('https://httpbin.org/html');
-  const result = $.find('h1').text();
+  return $.find('h1').text();
+}
+
+(async function main() {
+  const result = await getPageHeading();
   assert.equal(result, 'Herman Melville - Moby-Dick');
 })();
