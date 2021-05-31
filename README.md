@@ -2,8 +2,11 @@
 
 <p>
   <img src="https://img.shields.io/npm/v/@tuplo/fletch">
-  <a href="https://codecov.io/gh/tuplo/fletch">
-    <img src="https://codecov.io/gh/tuplo/fletch/branch/main/graph/badge.svg?token=2JFH83P3UW"/>
+  <a href="https://codeclimate.com/github/tuplo/fletch/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/4a26597a1e38d18ba6d5/maintainability" />
+  </a>
+  <a href="https://codeclimate.com/github/tuplo/fletch/test_coverage">
+    <img src="https://api.codeclimate.com/v1/badges/4a26597a1e38d18ba6d5/test_coverage" />
   </a>
   <img src="https://github.com/tuplo/fletch/workflows/Build/badge.svg">
 </p>
