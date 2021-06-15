@@ -9,7 +9,7 @@ import fromUserOptions from './options';
 
 function fletch(
   userUrl: string,
-  userOptions?: FletchUserOptions
+  userOptions?: Partial<FletchUserOptions>
 ): Promise<Response> {
   const { url, ...options } = fromUserOptions(userUrl, userOptions);
 
@@ -18,14 +18,14 @@ function fletch(
 
 async function text(
   userUrl: string,
-  userOptions?: FletchUserOptions
+  userOptions?: Partial<FletchUserOptions>
 ): Promise<string> {
   return fletch(userUrl, userOptions).then((res) => res.text());
 }
 
 async function html(
   userUrl: string,
-  userOptions?: FletchUserOptions
+  userOptions?: Partial<FletchUserOptions>
 ): Promise<cheerio.Cheerio> {
   const src = await fletch(userUrl, userOptions).then((res) => res.text());
 
@@ -34,7 +34,7 @@ async function html(
 
 async function json<T = unknown>(
   userUrl: string,
-  userOptions?: FletchUserOptions
+  userOptions?: Partial<FletchUserOptions>
 ): Promise<T> {
   const src = await fletch(userUrl, userOptions).then((res) => res.json());
 
@@ -43,7 +43,7 @@ async function json<T = unknown>(
 
 async function script<T extends unknown = unknown>(
   userUrl: string,
-  userOptions?: FletchUserOptions
+  userOptions?: Partial<FletchUserOptions>
 ): Promise<T> {
   const { scriptPath, scriptFindFn, scriptSandbox } =
     userOptions || ({} as FletchUserOptions);

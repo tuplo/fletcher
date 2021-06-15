@@ -34,6 +34,7 @@ const { foo } = await fletch.script('https://foo.com/page.html', {
 
 | Option            | Description                                                                    |
 | ----------------- | ------------------------------------------------------------------------------ |
+| `headers`         | A simple multi-map of names to values                                          |
 | `scriptFindFn`    | A function to find a `script` element on the page, execute and return it       |
 | `scriptPath`      | A CSS selector to pick a `script` element on the page, execute and return it   |
 | `scriptSandbox`   | An object to use as base on an execution of a piece of code found on the page  |
