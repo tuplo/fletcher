@@ -1,12 +1,20 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
 import type { HeadersInit } from 'node-fetch';
+import type { Options as RetryOptions } from 'async-retry';
 
 import type { FletchUserOptions, FletchOptions } from './fletch.d';
 
-function getDefaultOptions(): Omit<FletchOptions, 'url'> {
+export function getDefaultOptions(): Omit<FletchOptions, 'url'> {
   return {
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
+    retry: {
+      retries: 10,
+      factor: 2,
+      minTimeout: 1_000,
+      maxTimeout: Infinity,
+      randomize: true,
+    },
   };
 }
 
@@ -22,6 +30,20 @@ function fromUserOptions(
           break;
         case 'headers':
           acc.headers = value as HeadersInit;
+          break;
+        case 'retry':
+          if (value === false) {
+            acc.retry = {
+              retries: 0,
+            };
+          } else if (typeof value === 'number') {
+            acc.retry = {
+              ...acc.retry,
+              retries: value,
+            };
+          } else if (typeof value === 'object') {
+            acc.retry = value as RetryOptions;
+          }
           break;
         case 'urlSearchParams':
           const newUrl = new URL(url);

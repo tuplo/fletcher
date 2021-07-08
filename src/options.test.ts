@@ -1,15 +1,14 @@
-import fromUserOptions from './options';
+import fromUserOptions, { getDefaultOptions } from './options';
 
 describe('fletch - general options', () => {
   it('delay', () => {
     const result = fromUserOptions('https://foo.com', {
       delay: 1_000,
     });
-
     const expected = {
+      ...getDefaultOptions(),
       delay: 1_000,
       url: 'https://foo.com',
-      headers: { foo: 'bar' },
     };
     expect(result).toStrictEqual(expected);
   });
@@ -18,9 +17,8 @@ describe('fletch - general options', () => {
     const result = fromUserOptions('https://foo.com', {
       headers: { foo: 'bar' },
     });
-
     const expected = {
-      delay: 0,
+      ...getDefaultOptions(),
       url: 'https://foo.com',
       headers: { foo: 'bar' },
     };
@@ -33,9 +31,8 @@ describe('fletch - general options', () => {
         foo: 'bar',
       },
     });
-
     const expected = {
-      delay: 0,
+      ...getDefaultOptions(),
       url: 'https://foo.com/?foo=bar',
     };
     expect(result).toStrictEqual(expected);

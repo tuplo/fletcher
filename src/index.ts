@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import $ from 'cheerio';
 import vm from 'vm';
+import retry from 'async-retry';
 
 import type { Response } from 'node-fetch';
 
@@ -15,10 +16,20 @@ function fletch(
   const {
     url,
     delay: delayMs,
+    retry: retryOptions,
     ...options
   } = fromUserOptions(userUrl, userOptions);
 
-  return delay<Response>(delayMs, async () => fetch(url, options));
+  return delay<Response>(delayMs, () =>
+    retry(
+      () =>
+        fetch(url, options).then((res) => {
+          if (!res.ok) throw Error(res.statusText);
+          return res;
+        }),
+      retryOptions
+    )
+  );
 }
 
 async function text(

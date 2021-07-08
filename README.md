@@ -32,10 +32,11 @@ const { foo } = await fletch.script('https://foo.com/page.html', {
 
 ## Options
 
-| Option            | Description                                                                    | Default |
-| ----------------- | ------------------------------------------------------------------------------ | ------- |
-| `delay`           | Introduce a delay before the request (ms)                                      | 1_000   |
+| Option            | Description                                                                    | Default                                                    |
+| ----------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| `delay`           | Introduce a delay before the request (ms)                                      | 1_000                                                      |
 | `headers`         | A simple multi-map of names to values                                          |
+| `retry`           | Retries failed responses                                                       | [`async-retry`](https://github.com/vercel/async-retry#api) |
 | `scriptFindFn`    | A function to find a `script` element on the page, execute and return it       |
 | `scriptPath`      | A CSS selector to pick a `script` element on the page, execute and return it   |
 | `scriptSandbox`   | An object to use as base on an execution of a piece of code found on the page  |
