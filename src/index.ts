@@ -6,14 +6,19 @@ import type { Response } from 'node-fetch';
 
 import type { FletchUserOptions } from './fletch.d';
 import fromUserOptions from './options';
+import { delay } from './helpers';
 
 function fletch(
   userUrl: string,
   userOptions?: Partial<FletchUserOptions>
 ): Promise<Response> {
-  const { url, ...options } = fromUserOptions(userUrl, userOptions);
+  const {
+    url,
+    delay: delayMs,
+    ...options
+  } = fromUserOptions(userUrl, userOptions);
 
-  return fetch(url, options);
+  return delay<Response>(delayMs, async () => fetch(url, options));
 }
 
 async function text(
@@ -36,9 +41,7 @@ async function json<T = unknown>(
   userUrl: string,
   userOptions?: Partial<FletchUserOptions>
 ): Promise<T> {
-  const src = await fletch(userUrl, userOptions).then((res) => res.json());
-
-  return src;
+  return fletch(userUrl, userOptions).then((res) => res.json());
 }
 
 async function script<T extends unknown = unknown>(

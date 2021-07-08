@@ -104,7 +104,8 @@
     "rules": {
       "jest/no-hooks": "off",
       "@typescript-eslint/comma-dangle": "off",
-      "jest/prefer-expect-assertions": "off"
+      "jest/prefer-expect-assertions": "off",
+      "import/prefer-default-export": "off"
     },
     "overrides": [
       {

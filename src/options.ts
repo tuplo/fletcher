@@ -4,14 +4,22 @@ import type { HeadersInit } from 'node-fetch';
 
 import type { FletchUserOptions, FletchOptions } from './fletch.d';
 
-type FromUserOptionsFn = (
+function getDefaultOptions(): Omit<FletchOptions, 'url'> {
+  return {
+    delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
+  };
+}
+
+function fromUserOptions(
   url: string,
   options?: Partial<FletchUserOptions>
-) => FletchOptions;
-const fromUserOptions: FromUserOptionsFn = (url, options?) =>
-  Object.entries(options || {}).reduce(
+): FletchOptions {
+  return Object.entries(options || {}).reduce(
     (acc, [key, value]) => {
       switch (key) {
+        case 'delay':
+          acc.delay = Number(value);
+          break;
         case 'headers':
           acc.headers = value as HeadersInit;
           break;
@@ -25,7 +33,11 @@ const fromUserOptions: FromUserOptionsFn = (url, options?) =>
 
       return acc;
     },
-    { url } as FletchOptions
+    {
+      url,
+      ...getDefaultOptions(),
+    } as FletchOptions
   );
+}
 
 export default fromUserOptions;

@@ -4,12 +4,13 @@ import type * as VM from 'vm';
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
 export type FletchUserOptions = {
+  delay: number;
   headers: HeadersInit;
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
   scriptSandbox: VM.Context;
   urlSearchParams: UrlSearchParams;
-  validateStatus?: (statusCode: number) => boolean;
+  validateStatus: (statusCode: number) => boolean;
 };
 
-export type FletchOptions = { url: string } & RequestInit;
+export type FletchOptions = { url: string; delay: number } & RequestInit;
