@@ -5,9 +5,7 @@ export type UrlSearchParams = Record<string, string | number | undefined>;
 
 export type FletchUserOptions = {
   headers: HeadersInit;
-  scriptFindFn: (
-    $page: cheerio.Cheerio
-  ) => cheerio.Cheerio | cheerio.Element | undefined;
+  scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
   scriptSandbox: VM.Context;
   urlSearchParams: UrlSearchParams;

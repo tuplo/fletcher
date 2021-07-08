@@ -27,11 +27,8 @@ describe('fletch - inline scripts', () => {
 
   it('uses a function to find a script element', async () => {
     const result = await fletch.script('https://foo.com/inline-script.html', {
-      scriptFindFn: ($page) =>
-        $page
-          .find('script')
-          .toArray()
-          .find((script) => /findThisVar/.test($(script).html() || '')),
+      scriptFindFn: (script: cheerio.Element) =>
+        /findThisVar/.test($(script).html() || ''),
     });
 
     const expected = { findThisVar: true };
@@ -50,7 +47,7 @@ describe('fletch - inline scripts', () => {
     return expect(result).rejects.toThrow(expected);
   });
 
-  it("throws if scriptPath element isn't found", async () => {
+  it('throws if scriptPath element is empty', async () => {
     const result = async () => {
       await fletch.script('https://foo.com/inline-script.html', {
         scriptPath: 'script#foobar',

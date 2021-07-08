@@ -55,7 +55,8 @@ async function script<T extends unknown = unknown>(
   if (scriptPath) {
     $el = $page.find(scriptPath);
   } else if (scriptFindFn) {
-    $el = $(scriptFindFn($page));
+    const elScript = $page.find('script').toArray().find(scriptFindFn);
+    $el = $(elScript);
   }
 
   if (!$el) {
