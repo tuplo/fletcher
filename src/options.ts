@@ -1,9 +1,14 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
+import ProxyAgent from 'https-proxy-agent';
 import type { HeadersInit } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
 
-import type { FletchUserOptions, FletchOptions } from './fletch.d';
+import type {
+  FletchUserOptions,
+  FletchOptions,
+  ProxyOptions,
+} from './fletch.d';
 
 export function getDefaultOptions(): Omit<FletchOptions, 'url'> {
   return {
@@ -30,6 +35,12 @@ function fromUserOptions(
           break;
         case 'headers':
           acc.headers = value as HeadersInit;
+          break;
+        case 'proxy':
+          const { host, port, username, password } = value as ProxyOptions;
+          acc.agent = ProxyAgent(
+            `http://${username}:${password}@${host}:${port}`
+          );
           break;
         case 'retry':
           if (value === false) {
