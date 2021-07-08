@@ -2,7 +2,6 @@ import fromUserOptions from './options';
 
 describe('fletch - general options', () => {
   it('headers', () => {
-    expect.assertions(1);
     const result = fromUserOptions('https://foo.com', {
       headers: { foo: 'bar' },
     });
@@ -15,7 +14,6 @@ describe('fletch - general options', () => {
   });
 
   it('urlSearchParams', () => {
-    expect.assertions(1);
     const result = fromUserOptions('https://foo.com', {
       urlSearchParams: {
         foo: 'bar',

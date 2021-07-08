@@ -16,7 +16,6 @@ describe('fletch - HTTP client', () => {
   });
 
   it('simple text (GET)', async () => {
-    expect.assertions(1);
     const result = await fletch.text('https://foo.com/simple.html');
 
     const expected = /Simple heading/;
@@ -24,7 +23,6 @@ describe('fletch - HTTP client', () => {
   });
 
   it('simple html (GET)', async () => {
-    expect.assertions(1);
     const $page = await fletch.html('https://foo.com/simple.html');
     const result = $page.find('h1').text();
 
@@ -33,7 +31,6 @@ describe('fletch - HTTP client', () => {
   });
 
   it('simple json (GET)', async () => {
-    expect.assertions(1);
     const result = await fletch.json('https://foo.com/simple.json');
 
     const expected = { foo: 'bar' };
@@ -41,7 +38,6 @@ describe('fletch - HTTP client', () => {
   });
 
   it('simple json (GET) with generic type', async () => {
-    expect.assertions(1);
     type FooBar = { foo: string };
     const result = await fletch.json<FooBar>('https://foo.com/simple.json');
 

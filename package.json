@@ -103,7 +103,8 @@
     },
     "rules": {
       "jest/no-hooks": "off",
-      "@typescript-eslint/comma-dangle": "off"
+      "@typescript-eslint/comma-dangle": "off",
+      "jest/prefer-expect-assertions": "off"
     },
     "overrides": [
       {

@@ -15,7 +15,6 @@ describe('fletch - inline scripts', () => {
   });
 
   it('evaluates a script and returns its global scope', async () => {
-    expect.assertions(1);
     type PageData = { pageData: { foo: string } };
     const result = await fletch.script<PageData>(
       'https://foo.com/inline-script.html',
@@ -27,7 +26,6 @@ describe('fletch - inline scripts', () => {
   });
 
   it('uses a function to find a script element', async () => {
-    expect.assertions(1);
     const result = await fletch.script('https://foo.com/inline-script.html', {
       scriptFindFn: ($page) =>
         $page
@@ -41,7 +39,6 @@ describe('fletch - inline scripts', () => {
   });
 
   it('throws if options are not provided', async () => {
-    expect.assertions(1);
     const result = async () => {
       await fletch.script('https://foo.com/inline-script.html');
     };
@@ -54,7 +51,6 @@ describe('fletch - inline scripts', () => {
   });
 
   it("throws if scriptPath element isn't found", async () => {
-    expect.assertions(1);
     const result = async () => {
       await fletch.script('https://foo.com/inline-script.html', {
         scriptPath: 'script#foobar',
