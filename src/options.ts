@@ -1,6 +1,8 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
 import ProxyAgent from 'https-proxy-agent';
+import randomUserAgent from 'random-useragent';
+
 import type { HeadersInit } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
 
@@ -10,9 +12,15 @@ import type {
   ProxyOptions,
 } from './fletch.d';
 
-export function getDefaultOptions(): Omit<FletchOptions, 'url'> {
+export function getDefaultOptions(
+  url = 'http://foo.com'
+): Omit<FletchOptions, 'url'> {
   return {
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
+    headers: {
+      'user-agent': randomUserAgent.getRandom() || '',
+      referer: new URL(url).origin,
+    },
     retry: {
       retries: 10,
       factor: 2,
@@ -34,7 +42,10 @@ function fromUserOptions(
           acc.delay = Number(value);
           break;
         case 'headers':
-          acc.headers = value as HeadersInit;
+          acc.headers = {
+            ...(acc.headers || {}),
+            ...((value || {}) as HeadersInit),
+          };
           break;
         case 'proxy':
           const { host, port, username, password } = value as ProxyOptions;

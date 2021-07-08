@@ -37,15 +37,16 @@
     "cheerio": "1.0.0-rc.10",
     "deepmerge": "4.2.2",
     "https-proxy-agent": "5.0.0",
-    "node-fetch": "2.6.1"
+    "node-fetch": "2.6.1",
+    "random-useragent": "0.5.0"
   },
   "devDependencies": {
     "@types/async-retry": "1.4.3",
     "@types/cheerio": "0.22.30",
-    "@types/create-cert": "1.0.1",
     "@types/jest": "26.0.24",
     "@types/node": "16.0.1",
     "@types/node-fetch": "2.5.11",
+    "@types/random-useragent": "0.3.0",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
     "esbuild": "0.12.15",

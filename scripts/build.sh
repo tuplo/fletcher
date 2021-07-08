@@ -6,7 +6,7 @@ tsc --build tsconfig.build.json
 
 esbuild src/index.cjs --bundle --platform=node --outfile=dist/index.cjs \
  --external:url --external:vm --external:node-fetch --external:cheerio
-esbuild src/index.ts --bundle --format=esm --outfile=dist/index.mjs \
+esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.mjs \
   --external:url --external:vm --external:node-fetch --external:cheerio
 
 cp src/fletch.d.ts dist/fletch.d.ts
