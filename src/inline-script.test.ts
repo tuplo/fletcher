@@ -47,15 +47,11 @@ describe('fletch - inline scripts', () => {
     return expect(result).rejects.toThrow(expected);
   });
 
-  it('throws if scriptPath element is empty', async () => {
-    const result = async () => {
-      await fletch.script('https://foo.com/inline-script.html', {
-        scriptPath: 'script#foobar',
-      });
-    };
+  it('should return an empty object if script element is empty', async () => {
+    const result = await fletch.script('https://foo.com/inline-script.html', {
+      scriptPath: 'script#foobar',
+    });
 
-    const expected = new Error('fletch.script: script element is empty');
-    // eslint-disable-next-line jest/no-test-return-statement
-    return expect(result).rejects.toThrow(expected);
+    expect(result).toStrictEqual({});
   });
 });

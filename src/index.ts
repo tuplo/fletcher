@@ -64,10 +64,6 @@ async function script<T extends unknown = unknown>(
   }
 
   const src = $el.html() || '';
-  if (!src) {
-    throw new Error('fletch.script: script element is empty');
-  }
-
   const code = new vm.Script(src);
   const sandbox = scriptSandbox || {};
   vm.createContext(sandbox);
