@@ -20,6 +20,7 @@ export function getDefaultOptions(
     headers: {
       'user-agent': randomUserAgent.getRandom() || '',
       referer: new URL(url).origin,
+      host: new URL(url).hostname,
     },
     retry: {
       retries: 10,
@@ -79,7 +80,7 @@ function fromUserOptions(
     },
     {
       url,
-      ...getDefaultOptions(),
+      ...getDefaultOptions(url),
     } as FletchOptions
   );
 }

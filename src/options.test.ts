@@ -5,24 +5,15 @@ describe('fletch - general options', () => {
     const result = fromUserOptions('https://foo.com', {
       delay: 1_000,
     });
-    const expected = {
-      ...getDefaultOptions(),
-      delay: 1_000,
-      url: 'https://foo.com',
-    };
-    expect(result).toStrictEqual(expected);
+    expect(result.delay).toBe(1_000);
   });
 
   it('headers', () => {
     const result = fromUserOptions('https://foo.com', {
       headers: { foo: 'bar' },
     });
-    const expected = {
-      ...getDefaultOptions(),
-      url: 'https://foo.com',
-      headers: { foo: 'bar' },
-    };
-    expect(result).toStrictEqual(expected);
+    const expected = { foo: 'bar' };
+    expect(result.headers).toMatchObject(expected);
   });
 
   it('urlSearchParams', () => {
@@ -31,10 +22,16 @@ describe('fletch - general options', () => {
         foo: 'bar',
       },
     });
+    const expected = 'https://foo.com/?foo=bar';
+    expect(result.url).toBe(expected);
+  });
+
+  it('sets hostname and referer', () => {
+    const result = getDefaultOptions('http://foo.com');
     const expected = {
-      ...getDefaultOptions(),
-      url: 'https://foo.com/?foo=bar',
+      host: 'foo.com',
+      referer: 'http://foo.com',
     };
-    expect(result).toStrictEqual(expected);
+    expect(result.headers).toMatchObject(expected);
   });
 });

@@ -70,42 +70,30 @@ describe('retry options', () => {
   it('default options', () => {
     const result = fromUserOptions('https://foo.com');
     const expected = {
-      ...getDefaultOptions(),
-      url: 'https://foo.com',
-      retry: {
-        factor: 2,
-        maxTimeout: Infinity,
-        minTimeout: 1000,
-        randomize: true,
-        retries: 10,
-      },
+      factor: 2,
+      maxTimeout: Infinity,
+      minTimeout: 1000,
+      randomize: true,
+      retries: 10,
     };
-    expect(result).toStrictEqual(expected);
+    expect(result.retry).toStrictEqual(expected);
   });
 
   it('changes number of retries', () => {
     const result = fromUserOptions('https://foo.com', { retry: 3 });
     const expected = {
-      ...getDefaultOptions(),
-      url: 'https://foo.com',
-      retry: {
-        factor: 2,
-        maxTimeout: Infinity,
-        minTimeout: 1000,
-        randomize: true,
-        retries: 3,
-      },
+      factor: 2,
+      maxTimeout: Infinity,
+      minTimeout: 1000,
+      randomize: true,
+      retries: 3,
     };
-    expect(result).toStrictEqual(expected);
+    expect(result.retry).toStrictEqual(expected);
   });
 
   it('disables retry', () => {
     const result = fromUserOptions('https://foo.com', { retry: false });
-    const expected = {
-      ...getDefaultOptions(),
-      url: 'https://foo.com',
-      retry: { retries: 0 },
-    };
-    expect(result).toStrictEqual(expected);
+    const expected = { retries: 0 };
+    expect(result.retry).toStrictEqual(expected);
   });
 });
