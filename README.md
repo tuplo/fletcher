@@ -76,6 +76,15 @@ Requests a HTTP resource, returning it as a `string`
 
 Requests a HTTP resource, returning it as a JSON object
 
+### `fletch.create(options: FletchOptions) => Object`
+
+Creates a new instance of fletch with a custom config
+
+```typescript
+const instance = fletch.create({ headers: { foo: 'bar' } });
+await instance.json('http://foo.com');
+```
+
 ## Install
 
 ```bash

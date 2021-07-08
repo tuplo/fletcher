@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import $ from 'cheerio';
 import vm from 'vm';
 import retry from 'async-retry';
+import deepMerge from 'deepmerge';
 
 import type { Response } from 'node-fetch';
 
@@ -86,4 +87,21 @@ async function script<T extends unknown = unknown>(
   return sandbox as T;
 }
 
-export default Object.assign(fetch, { text, html, script, json });
+function create(defaultOptions: Partial<FletchUserOptions>) {
+  return {
+    text: (url: string, options: Partial<FletchUserOptions> = {}) =>
+      text(url, deepMerge(defaultOptions, options)),
+    html: (url: string, options: Partial<FletchUserOptions> = {}) =>
+      html(url, deepMerge(defaultOptions, options)),
+    script: <T = unknown>(
+      url: string,
+      options: Partial<FletchUserOptions> = {}
+    ) => script<T>(url, deepMerge(defaultOptions, options)),
+    json: <T = unknown>(
+      url: string,
+      options: Partial<FletchUserOptions> = {}
+    ) => json<T>(url, deepMerge(defaultOptions, options)),
+  };
+}
+
+export default Object.assign(fetch, { text, html, script, json, create });
