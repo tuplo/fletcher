@@ -89,7 +89,7 @@ async function script<T extends unknown = unknown>(
 
 export type FletchInstance = Instance;
 
-function create(defaultOptions: Partial<FletchUserOptions>): Instance {
+function create(defaultOptions: Partial<FletchUserOptions> = {}): Instance {
   return {
     text: (url: string, options: Partial<FletchUserOptions> = {}) =>
       text(url, deepMerge(defaultOptions, options)),

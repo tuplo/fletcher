@@ -93,4 +93,19 @@ describe('creates an instance with options', () => {
 
     server.close();
   });
+
+  it('accepts calling create with no parameters', async () => {
+    const port = await getPort();
+    const spy = jest.fn((_, res) => res.end());
+    const server = http.createServer(spy).listen(port);
+    const url = `http://localhost:${port}/`;
+
+    const instance = fletch.create();
+    await instance.html(url, { headers: { baz: 'buz' } });
+
+    const expected = { baz: 'buz' };
+    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
+
+    server.close();
+  });
 });
