@@ -1,3 +1,4 @@
+/// <reference types="cheerio" />
 import type { Options as RetryOptions } from 'async-retry';
 import type { RequestInit, HeadersInit } from 'node-fetch';
 import type * as VM from 'vm';
@@ -28,3 +29,19 @@ export type FletchOptions = {
   delay: number;
   retry: RetryOptions;
 } & RequestInit;
+
+export interface Instance {
+  text: (url: string, options: Partial<FletchUserOptions>) => Promise<string>;
+  html: (
+    url: string,
+    options: Partial<FletchUserOptions>
+  ) => Promise<cheerio.Cheerio>;
+  script: <T = unknown>(
+    url: string,
+    options: Partial<FletchUserOptions>
+  ) => Promise<T>;
+  json: <T = unknown>(
+    url: string,
+    options: Partial<FletchUserOptions>
+  ) => Promise<T>;
+}

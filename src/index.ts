@@ -6,7 +6,7 @@ import deepMerge from 'deepmerge';
 
 import type { Response } from 'node-fetch';
 
-import type { FletchUserOptions } from './fletch.d';
+import type { FletchUserOptions, Instance } from './fletch.d';
 import fromUserOptions from './options';
 import { delay } from './helpers';
 
@@ -87,7 +87,9 @@ async function script<T extends unknown = unknown>(
   return sandbox as T;
 }
 
-function create(defaultOptions: Partial<FletchUserOptions>) {
+export type FletchInstance = Instance;
+
+function create(defaultOptions: Partial<FletchUserOptions>): Instance {
   return {
     text: (url: string, options: Partial<FletchUserOptions> = {}) =>
       text(url, deepMerge(defaultOptions, options)),
