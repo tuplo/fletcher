@@ -47,6 +47,7 @@ function fromUserOptions(
           };
           break;
         case 'proxy':
+          if (typeof value === 'undefined') break;
           const { host, port, username, password } = value as ProxyOptions;
           acc.agent = ProxyAgent(
             `http://${username}:${password}@${host}:${port}`

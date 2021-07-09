@@ -34,4 +34,25 @@ describe('fletch - general options', () => {
     };
     expect(result.headers).toMatchObject(expected);
   });
+
+  describe('proxy', () => {
+    it('accepts proxy configuration', () => {
+      const result = fromUserOptions('http://foo.com', {
+        proxy: {
+          username: 'mock-user',
+          password: 'mock-passwd',
+          host: 'mock-host',
+          port: 76,
+        },
+      });
+      expect(result.agent).toBeDefined();
+    });
+
+    it('accepts undefined as a proxy config', () => {
+      const result = fromUserOptions('http://foo.com', {
+        proxy: undefined,
+      });
+      expect(result.agent).toBeUndefined();
+    });
+  });
 });
