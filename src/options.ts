@@ -1,7 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
 import ProxyAgent from 'https-proxy-agent';
-import randomUserAgent from 'random-useragent';
 
 import type { HeadersInit } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
@@ -18,7 +17,6 @@ export function getDefaultOptions(
   return {
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
     headers: {
-      'user-agent': randomUserAgent.getRandom() || '',
       referer: new URL(url).origin,
       host: new URL(url).hostname,
     },
