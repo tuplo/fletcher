@@ -31,17 +31,17 @@ export type FletchOptions = {
 } & RequestInit;
 
 export interface Instance {
-  text: (url: string, options: Partial<FletchUserOptions>) => Promise<string>;
+  text: (url: string, options?: Partial<FletchUserOptions>) => Promise<string>;
   html: (
     url: string,
-    options: Partial<FletchUserOptions>
+    options?: Partial<FletchUserOptions>
   ) => Promise<cheerio.Cheerio>;
   script: <T = unknown>(
     url: string,
-    options: Partial<FletchUserOptions>
+    options?: Partial<FletchUserOptions>
   ) => Promise<T>;
   json: <T = unknown>(
     url: string,
-    options: Partial<FletchUserOptions>
+    options?: Partial<FletchUserOptions>
   ) => Promise<T>;
 }
