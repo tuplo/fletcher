@@ -18,18 +18,29 @@ function fletch(
     url,
     delay: delayMs,
     retry: retryOptions,
+    validateStatus,
     ...options
   } = fromUserOptions(userUrl, userOptions);
 
   return delay<Response>(delayMs, () =>
-    retry(
-      () =>
-        fetch(url, options).then((res) => {
-          if (!res.ok) throw Error(res.statusText);
-          return res;
-        }),
-      retryOptions
-    )
+    retry(async () => {
+      let res: Response | null = null;
+      try {
+        res = await fetch(url, options);
+        if (!validateStatus(res.status)) {
+          throw Error(res.statusText);
+        }
+
+        return res;
+      } catch (err) {
+        if (!res) throw Error(err);
+
+        if (!validateStatus(res.status)) {
+          throw Error(res.statusText);
+        }
+        return res;
+      }
+    }, retryOptions)
   );
 }
 

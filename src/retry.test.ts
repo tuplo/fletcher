@@ -1,7 +1,7 @@
 import getPort from 'get-port';
 import http from 'http';
 
-import fromUserOptions, { getDefaultOptions } from './options';
+import fromUserOptions from './options';
 import fletch from './index';
 
 describe('retry', () => {

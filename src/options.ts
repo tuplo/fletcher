@@ -27,6 +27,7 @@ export function getDefaultOptions(
       maxTimeout: Infinity,
       randomize: true,
     },
+    validateStatus: (status: number): boolean => status >= 200 && status < 400,
   };
 }
 
@@ -71,6 +72,10 @@ function fromUserOptions(
           const newUrl = new URL(url);
           newUrl.search = new URLSearchParams(value as string).toString();
           acc.url = newUrl.href;
+          break;
+        case 'validateStatus':
+          const validateFn = value as (status: number) => boolean;
+          acc.validateStatus = validateFn ?? acc.validateStatus;
           break;
         default:
       }

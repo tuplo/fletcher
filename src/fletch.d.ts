@@ -28,6 +28,7 @@ export type FletchOptions = {
   url: string;
   delay: number;
   retry: RetryOptions;
+  validateStatus: (statusCode: number) => boolean;
 } & RequestInit;
 
 export interface Instance {
