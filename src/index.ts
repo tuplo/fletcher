@@ -8,7 +8,9 @@ import type { Response } from 'node-fetch';
 
 import type { FletchUserOptions, Instance } from './fletch.d';
 import fromUserOptions from './options';
-import { delay } from './helpers';
+import { delay, hashRequest } from './helpers';
+
+const cache = new Map();
 
 function fletch(
   userUrl: string,
@@ -48,14 +50,28 @@ async function text(
   userUrl: string,
   userOptions?: Partial<FletchUserOptions>
 ): Promise<string> {
-  return fletch(userUrl, userOptions).then((res) => res.text());
+  const hash = hashRequest('text', userUrl, userOptions);
+  if (cache.has(hash)) {
+    return cache.get(hash);
+  }
+
+  const res = await fletch(userUrl, userOptions).then((r) => r.text());
+  cache.set(hash, res);
+
+  return res;
 }
 
 async function html(
   userUrl: string,
   userOptions?: Partial<FletchUserOptions>
 ): Promise<cheerio.Cheerio> {
+  const hash = hashRequest('html', userUrl, userOptions);
+  if (cache.has(hash)) {
+    return $.load(cache.get(hash)).root();
+  }
+
   const src = await fletch(userUrl, userOptions).then((res) => res.text());
+  cache.set(hash, src);
 
   return $.load(src).root();
 }
@@ -64,7 +80,15 @@ async function json<T = unknown>(
   userUrl: string,
   userOptions?: Partial<FletchUserOptions>
 ): Promise<T> {
-  return fletch(userUrl, userOptions).then((res) => res.json());
+  const hash = hashRequest('json', userUrl, userOptions);
+  if (cache.has(hash)) {
+    return JSON.parse(cache.get(hash));
+  }
+
+  const src = await fletch(userUrl, userOptions).then((res) => res.json());
+  cache.set(hash, JSON.stringify(src));
+
+  return src;
 }
 
 async function script<T extends unknown = unknown>(
