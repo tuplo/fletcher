@@ -51,12 +51,14 @@ async function text(
   userOptions?: Partial<FletchUserOptions>
 ): Promise<string> {
   const hash = hashRequest('text', userUrl, userOptions);
-  if (cache.has(hash)) {
+  if (userOptions?.cache && cache.has(hash)) {
     return cache.get(hash);
   }
 
   const res = await fletch(userUrl, userOptions).then((r) => r.text());
-  cache.set(hash, res);
+  if (userOptions?.cache) {
+    cache.set(hash, res);
+  }
 
   return res;
 }
@@ -66,12 +68,14 @@ async function html(
   userOptions?: Partial<FletchUserOptions>
 ): Promise<cheerio.Cheerio> {
   const hash = hashRequest('html', userUrl, userOptions);
-  if (cache.has(hash)) {
+  if (userOptions?.cache && cache.has(hash)) {
     return $.load(cache.get(hash)).root();
   }
 
   const src = await fletch(userUrl, userOptions).then((res) => res.text());
-  cache.set(hash, src);
+  if (userOptions?.cache) {
+    cache.set(hash, src);
+  }
 
   return $.load(src).root();
 }
@@ -81,12 +85,14 @@ async function json<T = unknown>(
   userOptions?: Partial<FletchUserOptions>
 ): Promise<T> {
   const hash = hashRequest('json', userUrl, userOptions);
-  if (cache.has(hash)) {
+  if (userOptions?.cache && cache.has(hash)) {
     return JSON.parse(cache.get(hash));
   }
 
   const src = await fletch(userUrl, userOptions).then((res) => res.json());
-  cache.set(hash, JSON.stringify(src));
+  if (userOptions?.cache) {
+    cache.set(hash, JSON.stringify(src));
+  }
 
   return src;
 }

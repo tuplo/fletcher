@@ -11,6 +11,7 @@ export function getDefaultOptions(
   url = 'http://foo.com'
 ): Omit<FletchOptions, 'url'> {
   return {
+    cache: false,
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
     headers: {
       referer: new URL(url).origin,
@@ -34,6 +35,9 @@ function fromUserOptions(
   return Object.entries(options || {}).reduce(
     (acc, [key, value]) => {
       switch (key) {
+        case 'cache':
+          acc.cache = Boolean(value);
+          break;
         case 'delay':
           acc.delay = Number(value);
           break;

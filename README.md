@@ -1,5 +1,7 @@
 # fletch
 
+Web scraping HTTP request library.
+
 <p>
   <img src="https://img.shields.io/npm/v/@tuplo/fletch">
   <a href="https://codeclimate.com/github/tuplo/fletch/maintainability">
@@ -10,8 +12,6 @@
   </a>
   <img src="https://github.com/tuplo/fletch/workflows/Build/badge.svg">
 </p>
-
-> Web scraping HTTP request library
 
 ## Usage
 
@@ -34,6 +34,7 @@ const { foo } = await fletch.script('https://foo.com/page.html', {
 
 | Option            | Description                                                                    | Default                                                    |
 | ----------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| `cache`           | Caches requests in memory                                                      | `false`                                                    |
 | `delay`           | Introduce a delay before the request (ms)                                      | 1_000                                                      |
 | `headers`         | A simple multi-map of names to values                                          |
 | `proxy`           | Proxy configuration (`host`, `port`, `username`, `password`)                   |
