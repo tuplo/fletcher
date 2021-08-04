@@ -6,8 +6,8 @@ import type * as VM from 'vm';
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
 export type ProxyOptions = {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   host: string;
   port: number;
 };
