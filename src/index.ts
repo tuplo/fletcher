@@ -24,6 +24,11 @@ function fletch(
     ...options
   } = fromUserOptions(userUrl, userOptions);
 
+  if (userOptions?.log) {
+    // eslint-disable-next-line no-console
+    console.log(url);
+  }
+
   return delay<Response>(delayMs, () =>
     retry(async () => {
       let res: Response | null = null;

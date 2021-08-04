@@ -16,6 +16,7 @@ export type ProxyConfig = {
 export type FletchUserOptions = {
   cache: boolean;
   delay: number;
+  log: boolean;
   headers: HeadersInit;
   proxy: ProxyConfig;
   retry: boolean | number | RetryOptions;
