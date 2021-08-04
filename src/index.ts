@@ -6,7 +6,7 @@ import deepMerge from 'deepmerge';
 
 import type { Response } from 'node-fetch';
 
-import type { FletchUserOptions, Instance } from './fletch.d';
+import type { FletchUserOptions, Instance, ProxyConfig } from './fletch.d';
 import fromUserOptions from './options';
 import { delay, hashRequest } from './helpers';
 
@@ -123,6 +123,7 @@ async function script<T extends unknown = unknown>(
 }
 
 export type FletchInstance = Instance;
+export type FletchProxyConfig = ProxyConfig;
 
 function create(defaultOptions: Partial<FletchUserOptions> = {}): Instance {
   return {

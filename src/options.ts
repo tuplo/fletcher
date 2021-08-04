@@ -1,15 +1,11 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
-import ProxyAgent from 'https-proxy-agent';
 
 import type { HeadersInit } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
 
-import type {
-  FletchUserOptions,
-  FletchOptions,
-  ProxyOptions,
-} from './fletch.d';
+import HttpsProxyAgent from './helpers/patched-https-proxy-agent';
+import type { FletchUserOptions, FletchOptions, ProxyConfig } from './fletch.d';
 
 export function getDefaultOptions(
   url = 'http://foo.com'
@@ -49,10 +45,16 @@ function fromUserOptions(
           break;
         case 'proxy':
           if (typeof value === 'undefined') break;
-          const { host, port, username, password } = value as ProxyOptions;
-          acc.agent = ProxyAgent(
-            `http://${username}:${password}@${host}:${port}`
-          );
+          const { host, port, username, password, rejectUnauthorized } =
+            value as ProxyConfig;
+          acc.agent = new HttpsProxyAgent({
+            auth: [username, password].filter(Boolean).join(':') || null,
+            host,
+            hostname: host,
+            port,
+            protocol: 'http',
+            rejectUnauthorized,
+          });
           break;
         case 'retry':
           if (value === false) {
