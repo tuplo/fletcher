@@ -26,7 +26,7 @@ function fletch(
 
   if (userOptions?.log) {
     // eslint-disable-next-line no-console
-    console.log(url);
+    console.error(url);
   }
 
   return delay<Response>(delayMs, () =>
