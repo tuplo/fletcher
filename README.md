@@ -28,6 +28,8 @@ const { foo } = await fletch.json('https://foo.com/page.html');
 const { foo } = await fletch.script('https://foo.com/page.html', {
   scriptPath: 'script:nth-of-type(3)',
 });
+
+const [jsonld] = await fletch.jsonld('https://foo.com/page.html)
 ```
 
 ## Options
@@ -78,6 +80,10 @@ Requests a HTTP resource, returning it as a `string`
 ### `fletch.json<T>(url: string, options?: FletchOptions) => T`
 
 Requests a HTTP resource, returning it as a JSON object
+
+### `fletch.jsonld(url: string, options?: FletchOptions) => unknown[]`
+
+Requests a HTTP resource, retrieving all the JSON-LD blocks found on the document
 
 ### `fletch.create(options: FletchOptions) => Object`
 

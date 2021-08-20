@@ -133,6 +133,25 @@ async function script<T extends unknown = unknown>(
   return sandbox as T;
 }
 
+async function jsonld(
+  userUrl: string,
+  userOptions?: Partial<FletchUserOptions>
+): Promise<unknown[]> {
+  const $page = await html(userUrl, userOptions);
+  return $page
+    .find('script[type="application/ld+json"]')
+    .toArray()
+    .map((el) => {
+      const $el = $(el);
+      const src = $el.html() || '';
+      try {
+        return JSON.parse(src);
+      } catch {
+        return {};
+      }
+    });
+}
+
 export type FletchInstance = Instance;
 export type FletchProxyConfig = ProxyConfig;
 
@@ -150,7 +169,16 @@ function create(defaultOptions: Partial<FletchUserOptions> = {}): Instance {
       url: string,
       options: Partial<FletchUserOptions> = {}
     ) => json<T>(url, deepMerge(defaultOptions, options)),
+    jsonld: (url: string, options: Partial<FletchUserOptions> = {}) =>
+      jsonld(url, deepMerge(defaultOptions, options)),
   };
 }
 
-export default Object.assign(fetch, { text, html, script, json, create });
+export default Object.assign(fetch, {
+  text,
+  html,
+  script,
+  json,
+  jsonld,
+  create,
+});
