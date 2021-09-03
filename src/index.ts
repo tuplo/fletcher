@@ -8,7 +8,7 @@ import type { Response } from 'node-fetch';
 
 import type { FletchUserOptions, Instance, ProxyConfig } from './fletch.d';
 import fromUserOptions from './options';
-import { delay, hashRequest } from './helpers';
+import { delay, hashRequest, decodeEncoding } from './helpers';
 
 const cache = new Map();
 
@@ -39,8 +39,8 @@ function fletch(
         }
 
         return res;
-      } catch (err) {
-        if (!res) throw Error(err);
+      } catch (err: unknown) {
+        if (!res) throw Error(err as string);
 
         if (!validateStatus(res.status)) {
           throw Error(res.statusText);
@@ -49,6 +49,14 @@ function fletch(
       }
     }, retryOptions)
   );
+}
+
+async function decfletch(
+  url: string,
+  userOptions?: Partial<FletchUserOptions>
+): Promise<string> {
+  const res = fletch(url, userOptions);
+  return decodeEncoding(res, userOptions?.encoding);
 }
 
 async function text(
@@ -60,7 +68,7 @@ async function text(
     return cache.get(hash);
   }
 
-  const res = await fletch(userUrl, userOptions).then((r) => r.text());
+  const res = await decfletch(userUrl, userOptions);
   if (userOptions?.cache) {
     cache.set(hash, res);
   }
@@ -77,7 +85,7 @@ async function html(
     return $.load(cache.get(hash)).root();
   }
 
-  const src = await fletch(userUrl, userOptions).then((res) => res.text());
+  const src = await decfletch(userUrl, userOptions);
   if (userOptions?.cache) {
     cache.set(hash, src);
   }
@@ -94,7 +102,8 @@ async function json<T = unknown>(
     return JSON.parse(cache.get(hash));
   }
 
-  const src = await fletch(userUrl, userOptions).then((res) => res.json());
+  const res = await decfletch(userUrl, userOptions);
+  const src = JSON.parse(res);
   if (userOptions?.cache) {
     cache.set(hash, JSON.stringify(src));
   }

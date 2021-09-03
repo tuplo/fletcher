@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { StringDecoder } from 'string_decoder';
+import type { Response } from 'node-fetch';
 
 import type { FletchUserOptions } from './fletch.d';
 
@@ -42,4 +44,15 @@ export function hashRequest(
       urlSearchParams: serializeObject(urlSearchParams),
     })}`
   );
+}
+
+export async function decodeEncoding(
+  res: Promise<Response>,
+  encoding?: BufferEncoding
+): Promise<string> {
+  if (!encoding) {
+    return res.then((r) => r.text());
+  }
+  const decoder = new StringDecoder(encoding);
+  return res.then((r) => r.buffer()).then((buf) => decoder.write(buf));
 }

@@ -1,6 +1,6 @@
 # fletch
 
-Web scraping HTTP request library.
+HTTP request library, focused on web scraping.
 
 <p>
   <img src="https://img.shields.io/npm/v/@tuplo/fletch">
@@ -14,8 +14,6 @@ Web scraping HTTP request library.
 </p>
 
 ## Usage
-
-All purpose HTTP requests library focused on web scraping.
 
 ```typescript
 import fletch from '@tuplo/fletch';
@@ -38,6 +36,7 @@ const [jsonld] = await fletch.jsonld('https://foo.com/page.html)
 | ----------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | `cache`           | Caches requests in memory                                                      | `false`                                                    |
 | `delay`           | Introduce a delay before the request (ms)                                      | 1_000                                                      |
+| `encoding`        | The encoding used by the source page, will be converted to UTF8                |
 | `headers`         | A simple multi-map of names to values                                          |
 | `log`             | Should log all request URLS to stderr                                          | false                                                      |
 | `proxy`           | Proxy configuration (`host`, `port`, `username`, `password`)                   |

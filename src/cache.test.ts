@@ -54,7 +54,7 @@ describe('cache', () => {
   it('caches requests with the same url (json)', async () => {
     fetchSpy.mockResolvedValue({
       status: 200,
-      json: async () => ({ foo: 'bar' }),
+      text: async () => JSON.stringify({ foo: 'bar' }),
     });
 
     const result = [];
