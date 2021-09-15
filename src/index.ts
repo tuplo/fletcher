@@ -152,10 +152,11 @@ async function jsonld(
     .toArray()
     .map((el) => {
       const $el = $(el);
-      const src = $el.html() || '';
+      // make sure no new lines inside values
+      const src = ($el.html() || '').split('\n').join(' ');
       try {
         return JSON.parse(src);
-      } catch {
+      } catch (err) {
         return {};
       }
     });
