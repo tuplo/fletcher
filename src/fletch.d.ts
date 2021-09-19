@@ -17,8 +17,10 @@ export type FletchUserOptions = {
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
-  log: boolean;
+  formData: Record<string, string>;
   headers: HeadersInit;
+  log: boolean;
+  method: 'GET' | 'POST' | 'HEAD';
   proxy: ProxyConfig;
   retry: boolean | number | RetryOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;

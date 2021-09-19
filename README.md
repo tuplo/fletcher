@@ -36,6 +36,7 @@ const [jsonld] = await fletch.jsonld('https://foo.com/page.html)
 | ----------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
 | `cache`           | Caches requests in memory                                                      | `false`                                                    |
 | `delay`           | Introduce a delay before the request (ms)                                      | 1_000                                                      |
+| `formData`        | Object with key/value pairs to send as form data                               |
 | `encoding`        | The encoding used by the source page, will be converted to UTF8                |
 | `headers`         | A simple multi-map of names to values                                          |
 | `log`             | Should log all request URLS to stderr                                          | false                                                      |

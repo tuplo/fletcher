@@ -26,6 +26,19 @@ describe('fletch - general options', () => {
     expect(result.url).toBe(expected);
   });
 
+  it('formData', () => {
+    const result = fromUserOptions('https://foo.com', {
+      formData: {
+        foo: 'bar',
+        'query[post_type][]': 'films',
+      },
+    });
+
+    const expected = 'foo=bar&query%5Bpost_type%5D%5B%5D=films';
+    expect(result.method).toBe('POST');
+    expect(result.body?.toString()).toBe(expected);
+  });
+
   it('sets hostname and referer', () => {
     const result = getDefaultOptions('http://foo.com');
     const expected = {

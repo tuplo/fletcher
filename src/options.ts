@@ -41,6 +41,11 @@ function fromUserOptions(
         case 'delay':
           acc.delay = Number(value);
           break;
+        case 'formData':
+          const sp = new URLSearchParams(value as Record<string, string>);
+          acc.method = 'POST';
+          acc.body = sp;
+          break;
         case 'headers':
           acc.headers = {
             ...(acc.headers || {}),
