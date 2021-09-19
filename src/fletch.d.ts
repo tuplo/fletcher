@@ -18,6 +18,7 @@ export type FletchUserOptions = {
   delay: number;
   encoding: BufferEncoding;
   formData: Record<string, string>;
+  jsonData: Record<string, string | number | undefined | null>;
   headers: HeadersInit;
   log: boolean;
   method: 'GET' | 'POST' | 'HEAD';

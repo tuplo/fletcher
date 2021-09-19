@@ -52,6 +52,14 @@ function fromUserOptions(
             ...((value || {}) as HeadersInit),
           };
           break;
+        case 'jsonData':
+          acc.headers = {
+            ...acc.headers,
+            'content-type': 'application/json',
+          };
+          acc.method = 'POST';
+          acc.body = JSON.stringify(value);
+          break;
         case 'proxy':
           if (typeof value === 'undefined') break;
           const { host, port, username, password, rejectUnauthorized } =
