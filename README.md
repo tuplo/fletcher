@@ -39,6 +39,7 @@ const [jsonld] = await fletch.jsonld('https://foo.com/page.html)
 | `formData`        | Object with key/value pairs to send as form data                               |
 | `encoding`        | The encoding used by the source page, will be converted to UTF8                |
 | `headers`         | A simple multi-map of names to values                                          |
+| `jsonData`        | Object with key/value pairs to send as json data                               |
 | `log`             | Should log all request URLS to stderr                                          | false                                                      |
 | `proxy`           | Proxy configuration (`host`, `port`, `username`, `password`)                   |
 | `retry`           | Retries failed responses                                                       | [`async-retry`](https://github.com/vercel/async-retry#api) |
