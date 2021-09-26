@@ -13,12 +13,17 @@ export type ProxyConfig = {
   rejectUnauthorized?: boolean;
 };
 
+type RequestData = Record<
+  string,
+  string | string[] | number | boolean | undefined | null
+>;
+
 export type FletchUserOptions = {
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
-  formData: Record<string, string>;
-  jsonData: Record<string, string | string[] | number | undefined | null>;
+  formData: RequestData;
+  jsonData: RequestData;
   headers: HeadersInit;
   log: boolean;
   method: 'GET' | 'POST' | 'HEAD';
