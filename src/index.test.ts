@@ -1,8 +1,8 @@
 import nock from 'nock';
 
-import fletch from '.';
+import fletcher from '.';
 
-describe('fletch - HTTP client', () => {
+describe('fletcher - HTTP client', () => {
   const mocksDir = `${__dirname}/__data__`;
   nock('https://foo.com')
     .persist()
@@ -18,14 +18,14 @@ describe('fletch - HTTP client', () => {
   });
 
   it('simple text (GET)', async () => {
-    const result = await fletch.text('https://foo.com/simple.html');
+    const result = await fletcher.text('https://foo.com/simple.html');
 
     const expected = /Simple heading/;
     expect(result).toMatch(expected);
   });
 
   it('simple html (GET)', async () => {
-    const $page = await fletch.html('https://foo.com/simple.html');
+    const $page = await fletcher.html('https://foo.com/simple.html');
     const result = $page.find('h1').text();
 
     const expected = 'Simple heading';
@@ -33,7 +33,7 @@ describe('fletch - HTTP client', () => {
   });
 
   it('simple json (GET)', async () => {
-    const result = await fletch.json('https://foo.com/simple.json');
+    const result = await fletcher.json('https://foo.com/simple.json');
 
     const expected = { foo: 'bar' };
     expect(result).toStrictEqual(expected);
@@ -41,14 +41,14 @@ describe('fletch - HTTP client', () => {
 
   it('simple json (GET) with generic type', async () => {
     type FooBar = { foo: string };
-    const result = await fletch.json<FooBar>('https://foo.com/simple.json');
+    const result = await fletcher.json<FooBar>('https://foo.com/simple.json');
 
     const expected: FooBar = { foo: 'bar' };
     expect(result).toStrictEqual(expected);
   });
 
   it('json-ld (GET)', async () => {
-    const result = await fletch.jsonld('https://foo.com/json-ld.html');
+    const result = await fletcher.jsonld('https://foo.com/json-ld.html');
 
     const expected = {
       '@context': 'http://schema.org',

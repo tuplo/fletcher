@@ -3,6 +3,6 @@
     "^.+\\.[jt]s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "fletch$": "<rootDir>/node_modules/@tuplo/fletch/cjs"
+    "fletcher$": "<rootDir>/node_modules/@tuplo/fletcher/cjs"
   }
 }

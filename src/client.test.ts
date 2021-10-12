@@ -1,7 +1,7 @@
 import getPort from 'get-port';
 import http from 'http';
 
-import fletch from './index';
+import fletcher from './index';
 
 describe('creates an instance with options', () => {
   it('simple text (GET)', async () => {
@@ -10,7 +10,7 @@ describe('creates an instance with options', () => {
     const server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}/`;
 
-    const instance = fletch.create({ headers: { foo: 'bar' } });
+    const instance = fletcher.create({ headers: { foo: 'bar' } });
     await instance.text(url);
 
     const expected = { foo: 'bar' };
@@ -25,7 +25,7 @@ describe('creates an instance with options', () => {
     const server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}/`;
 
-    const instance = fletch.create({ headers: { foo: 'bar' } });
+    const instance = fletcher.create({ headers: { foo: 'bar' } });
     await instance.html(url);
 
     const expected = { foo: 'bar' };
@@ -46,7 +46,7 @@ describe('creates an instance with options', () => {
     const server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}/`;
 
-    const instance = fletch.create({ headers: { foo: 'bar' } });
+    const instance = fletcher.create({ headers: { foo: 'bar' } });
     const result = await instance.json(url);
 
     const expected = { foo: 'bar' };
@@ -68,7 +68,7 @@ describe('creates an instance with options', () => {
     const server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}/`;
 
-    const instance = fletch.create({ headers: { foo: 'bar' } });
+    const instance = fletcher.create({ headers: { foo: 'bar' } });
     type FooBar = { foo: string };
     const result = await instance.json<FooBar>(url);
 
@@ -85,7 +85,7 @@ describe('creates an instance with options', () => {
     const server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}/`;
 
-    const instance = fletch.create({ headers: { foo: 'bar' } });
+    const instance = fletcher.create({ headers: { foo: 'bar' } });
     await instance.html(url, { headers: { baz: 'buz' } });
 
     const expected = { foo: 'bar', baz: 'buz' };
@@ -100,7 +100,7 @@ describe('creates an instance with options', () => {
     const server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}/`;
 
-    const instance = fletch.create();
+    const instance = fletcher.create();
     await instance.html(url, { headers: { baz: 'buz' } });
 
     const expected = { baz: 'buz' };

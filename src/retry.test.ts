@@ -2,7 +2,7 @@ import getPort from 'get-port';
 import http from 'http';
 
 import fromUserOptions from './options';
-import fletch from './index';
+import fletcher from './index';
 
 describe('retry', () => {
   it('retries failed request', async () => {
@@ -15,7 +15,7 @@ describe('retry', () => {
     });
     const server = http.createServer(spy).listen(port);
 
-    await fletch.html(`http://localhost:${port}/`, {
+    await fletcher.html(`http://localhost:${port}/`, {
       retry: {
         retries: 3,
         factor: 1,
@@ -36,7 +36,7 @@ describe('retry', () => {
     const port = await getPort();
     const server = http.createServer(spy).listen(port);
 
-    const r = fletch.html(`http://localhost:${port}`, {
+    const r = fletcher.html(`http://localhost:${port}`, {
       retry: false,
     });
 
@@ -55,7 +55,7 @@ describe('retry', () => {
     const port = await getPort();
     const server = http.createServer(spy).listen(port);
 
-    const r = fletch.html(`http://localhost:${port}`, {
+    const r = fletcher.html(`http://localhost:${port}`, {
       retry: 1,
     });
     await expect(r).rejects.toThrow(`Internal Server Error`);

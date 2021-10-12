@@ -1,3 +1,3 @@
-import fletch from './index';
+import fletcher from './index';
 
-module.exports = fletch;
+module.exports = fletcher;

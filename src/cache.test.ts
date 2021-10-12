@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-restricted-syntax */
-import fletch from './index';
+import fletcher from './index';
 
 const fetchSpy = jest.fn();
 jest.mock('node-fetch', () => ({
@@ -25,7 +25,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null)) {
-      const r = await fletch.text('https://foo.com', { cache: true });
+      const r = await fletcher.text('https://foo.com', { cache: true });
       result.push(r);
     }
 
@@ -42,7 +42,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null)) {
-      const r = await fletch.html('https://foo.com', { cache: true });
+      const r = await fletcher.html('https://foo.com', { cache: true });
       result.push(r);
     }
 
@@ -59,7 +59,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null)) {
-      const r = await fletch.json('https://foo.com', { cache: true });
+      const r = await fletcher.json('https://foo.com', { cache: true });
       result.push(r);
     }
 

@@ -2,7 +2,7 @@ import http from 'http';
 import getPort from 'get-port';
 import type { Server } from 'http';
 
-import fletch from './index';
+import fletcher from './index';
 
 describe('validateStatus', () => {
   let server: Server;
@@ -20,7 +20,7 @@ describe('validateStatus', () => {
     server = http.createServer(spy).listen(port);
     const url = `http://localhost:${port}`;
 
-    const test = () => fletch.text(url, { retry: false });
+    const test = () => fletcher.text(url, { retry: false });
 
     await expect(test).rejects.toThrow('Not Found');
   });
@@ -35,7 +35,7 @@ describe('validateStatus', () => {
     const url = `http://localhost:${port}`;
 
     const test = () =>
-      fletch.text(url, {
+      fletcher.text(url, {
         retry: false,
         validateStatus: (status) => status !== 202,
       });
@@ -53,7 +53,7 @@ describe('validateStatus', () => {
     const url = `http://localhost:${port}`;
 
     const test = () =>
-      fletch.text(url, {
+      fletcher.text(url, {
         retry: false,
         validateStatus: undefined,
       });

@@ -1,33 +1,33 @@
-# fletch
+# @tuplo/fletcher
 
 HTTP request library, focused on web scraping.
 
 <p>
-  <img src="https://img.shields.io/npm/v/@tuplo/fletch">
-  <a href="https://codeclimate.com/github/tuplo/fletch/maintainability">
+  <img src="https://img.shields.io/npm/v/@tuplo/fletcher">
+  <a href="https://codeclimate.com/github/tuplo/fletcher/maintainability">
     <img src="https://api.codeclimate.com/v1/badges/4a26597a1e38d18ba6d5/maintainability" />
   </a>
-  <a href="https://codeclimate.com/github/tuplo/fletch/test_coverage">
+  <a href="https://codeclimate.com/github/tuplo/fletcher/test_coverage">
     <img src="https://api.codeclimate.com/v1/badges/4a26597a1e38d18ba6d5/test_coverage" />
   </a>
-  <img src="https://github.com/tuplo/fletch/workflows/Build/badge.svg">
+  <img src="https://github.com/tuplo/fletcher/workflows/Build/badge.svg">
 </p>
 
 ## Usage
 
 ```typescript
-import fletch from '@tuplo/fletch';
+import fletcher from '@tuplo/fletcher';
 
-const $page = await fletch.html('https://foo.com/page.html');
+const $page = await fletcher.html('https://foo.com/page.html');
 const heading = $page.find('body > h1');
 
-const { foo } = await fletch.json('https://foo.com/page.html');
+const { foo } = await fletcher.json('https://foo.com/page.html');
 
-const { foo } = await fletch.script('https://foo.com/page.html', {
+const { foo } = await fletcher.script('https://foo.com/page.html', {
   scriptPath: 'script:nth-of-type(3)',
 });
 
-const [jsonld] = await fletch.jsonld('https://foo.com/page.html)
+const [jsonld] = await fletcher.jsonld('https://foo.com/page.html)
 ```
 
 ## Options
@@ -51,57 +51,57 @@ const [jsonld] = await fletch.jsonld('https://foo.com/page.html)
 
 ## API
 
-### `fletch(url: string, options?: FletchOptions) => http.Response`
+### `fletcher(url: string, options?: FletcherOptions) => http.Response`
 
 Generic utility to return a HTTP Response
 
-### `fletch.html(url: string, options?: FletchOptions) => cheerio.Cheerio`
+### `fletcher.html(url: string, options?: FletcherOptions) => cheerio.Cheerio`
 
 Requests a HTTP resource, parses it using Cheerio and returns its
 
 ```typescript
-const $page = await fletch.html('https://foo.com/page.html');
+const $page = await fletcher.html('https://foo.com/page.html');
 const heading = $page.find('body > h1');
 ```
 
-### `fletch.script<T>(url: string, options?: FletchOptions) => T`
+### `fletcher.script<T>(url: string, options?: FletcherOptions) => T`
 
 Requests a HTTP resource, finds a `script` on it, executes and returns its global context.
 
 ```typescript
-const { foo } = await fletch.script('https://foo.com/page.html', {
+const { foo } = await fletcher.script('https://foo.com/page.html', {
   scriptPath: 'script:nth-of-type(3)',
 });
 ```
 
-### `fletch.text(url: string, options?: FletchOptions) => string`
+### `fletcher.text(url: string, options?: FletcherOptions) => string`
 
 Requests a HTTP resource, returning it as a `string`
 
-### `fletch.json<T>(url: string, options?: FletchOptions) => T`
+### `fletcher.json<T>(url: string, options?: FletcherOptions) => T`
 
 Requests a HTTP resource, returning it as a JSON object
 
-### `fletch.jsonld(url: string, options?: FletchOptions) => unknown[]`
+### `fletcher.jsonld(url: string, options?: FletcherOptions) => unknown[]`
 
 Requests a HTTP resource, retrieving all the JSON-LD blocks found on the document
 
-### `fletch.create(options: FletchOptions) => Object`
+### `fletcher.create(options: FletcherOptions) => Object`
 
-Creates a new instance of fletch with a custom config
+Creates a new instance of fletcher with a custom config
 
 ```typescript
-const instance = fletch.create({ headers: { foo: 'bar' } });
+const instance = fletcher.create({ headers: { foo: 'bar' } });
 await instance.json('http://foo.com');
 ```
 
 ## Install
 
 ```bash
-$ npm install @tuplo/fletch
+$ npm install @tuplo/fletcher
 
 # or with yarn
-$ yarn add @tuplo/fletch
+$ yarn add @tuplo/fletcher
 ```
 
 ### Contribute

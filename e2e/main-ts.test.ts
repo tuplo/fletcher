@@ -1,6 +1,6 @@
 import { getPageHeading } from './main-ts';
 
-describe('fletch', () => {
+describe('fletcher', () => {
   it('is testable with Jest and TypeScript', async () => {
     expect.assertions(1);
     const result = await getPageHeading();

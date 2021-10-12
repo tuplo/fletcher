@@ -5,11 +5,15 @@ import type { HeadersInit } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
 
 import HttpsProxyAgent from './helpers/patched-https-proxy-agent';
-import type { FletchUserOptions, FletchOptions, ProxyConfig } from './fletch.d';
+import type {
+  FletcherUserOptions,
+  FletcherOptions,
+  ProxyConfig,
+} from './fletcher.d';
 
 export function getDefaultOptions(
   url = 'http://foo.com'
-): Omit<FletchOptions, 'url'> {
+): Omit<FletcherOptions, 'url'> {
   return {
     cache: false,
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
@@ -30,8 +34,8 @@ export function getDefaultOptions(
 
 function fromUserOptions(
   url: string,
-  options?: Partial<FletchUserOptions>
-): FletchOptions {
+  options?: Partial<FletcherUserOptions>
+): FletcherOptions {
   return Object.entries(options || {}).reduce(
     (acc, [key, value]) => {
       switch (key) {
@@ -104,7 +108,7 @@ function fromUserOptions(
     {
       url,
       ...getDefaultOptions(url),
-    } as FletchOptions
+    } as FletcherOptions
   );
 }
 

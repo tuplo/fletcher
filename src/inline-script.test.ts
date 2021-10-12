@@ -1,9 +1,9 @@
 import nock from 'nock';
 import $ from 'cheerio';
 
-import fletch from '.';
+import fletcher from '.';
 
-describe('fletch - inline scripts', () => {
+describe('fletcher - inline scripts', () => {
   const mocksDir = `${__dirname}/__data__`;
   nock('https://foo.com')
     .persist()
@@ -16,7 +16,7 @@ describe('fletch - inline scripts', () => {
 
   it('evaluates a script and returns its global scope', async () => {
     type PageData = { pageData: { foo: string } };
-    const result = await fletch.script<PageData>(
+    const result = await fletcher.script<PageData>(
       'https://foo.com/inline-script.html',
       { scriptPath: 'script:nth-of-type(1)' }
     );
@@ -26,7 +26,7 @@ describe('fletch - inline scripts', () => {
   });
 
   it('uses a function to find a script element', async () => {
-    const result = await fletch.script('https://foo.com/inline-script.html', {
+    const result = await fletcher.script('https://foo.com/inline-script.html', {
       scriptFindFn: (script: cheerio.Element) =>
         /findThisVar/.test($(script).html() || ''),
     });
@@ -37,7 +37,7 @@ describe('fletch - inline scripts', () => {
 
   it('throws if options are not provided', async () => {
     const result = async () => {
-      await fletch.script('https://foo.com/inline-script.html');
+      await fletcher.script('https://foo.com/inline-script.html');
     };
 
     const expected = new Error(
@@ -48,7 +48,7 @@ describe('fletch - inline scripts', () => {
   });
 
   it('should return an empty object if script element is empty', async () => {
-    const result = await fletch.script('https://foo.com/inline-script.html', {
+    const result = await fletcher.script('https://foo.com/inline-script.html', {
       scriptPath: 'script#foobar',
     });
 

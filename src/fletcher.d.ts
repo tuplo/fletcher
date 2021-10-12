@@ -18,7 +18,7 @@ type RequestData = Record<
   string | string[] | number | boolean | undefined | null
 >;
 
-export type FletchUserOptions = {
+export type FletcherUserOptions = {
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
@@ -36,7 +36,7 @@ export type FletchUserOptions = {
   validateStatus: (statusCode: number) => boolean;
 };
 
-export type FletchOptions = {
+export type FletcherOptions = {
   url: string;
   cache: boolean;
   delay: number;
@@ -45,21 +45,24 @@ export type FletchOptions = {
 } & RequestInit;
 
 export interface Instance {
-  text: (url: string, options?: Partial<FletchUserOptions>) => Promise<string>;
+  text: (
+    url: string,
+    options?: Partial<FletcherUserOptions>
+  ) => Promise<string>;
   html: (
     url: string,
-    options?: Partial<FletchUserOptions>
+    options?: Partial<FletcherUserOptions>
   ) => Promise<cheerio.Cheerio>;
   script: <T = unknown>(
     url: string,
-    options?: Partial<FletchUserOptions>
+    options?: Partial<FletcherUserOptions>
   ) => Promise<T>;
   json: <T = unknown>(
     url: string,
-    options?: Partial<FletchUserOptions>
+    options?: Partial<FletcherUserOptions>
   ) => Promise<T>;
   jsonld: (
     url: string,
-    options?: Partial<FletchUserOptions>
+    options?: Partial<FletcherUserOptions>
   ) => Promise<unknown[]>;
 }

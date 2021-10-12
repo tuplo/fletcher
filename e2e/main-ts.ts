@@ -1,9 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import { strict as assert } from 'assert';
-import fletch from '@tuplo/fletch';
+import fletcher from '@tuplo/fletcher';
 
 export async function getPageHeading(): Promise<string> {
-  const $ = await fletch.html('https://httpbin.org/html');
+  const $ = await fletcher.html('https://httpbin.org/html');
   return $.find('h1').text();
 }
 

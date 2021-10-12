@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { StringDecoder } from 'string_decoder';
 import type { Response } from 'node-fetch';
 
-import type { FletchUserOptions } from './fletch.d';
+import type { FletchUserOptions } from './fletcher.d';
 
 export function delay<T>(
   ms = 0,

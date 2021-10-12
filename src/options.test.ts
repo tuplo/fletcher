@@ -1,6 +1,6 @@
 import fromUserOptions, { getDefaultOptions } from './options';
 
-describe('fletch - general options', () => {
+describe('fletcher - general options', () => {
   it('delay', () => {
     const result = fromUserOptions('https://foo.com', {
       delay: 1_000,
