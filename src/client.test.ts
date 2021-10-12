@@ -1,111 +1,98 @@
-import getPort from 'get-port';
-import http from 'http';
-
 import fletcher from './index';
 
-describe('creates an instance with options', () => {
-  it('simple text (GET)', async () => {
-    const port = await getPort();
-    const spy = jest.fn((_, res) => res.end());
-    const server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}/`;
+const fetchSpy = jest.fn();
+jest.mock('node-fetch', () => ({
+  __esModule: true,
+  default: (url: string, options: unknown) => fetchSpy(url, options),
+}));
 
-    const instance = fletcher.create({ headers: { foo: 'bar' } });
-    await instance.text(url);
+describe('creates an instance with options', () => {
+  afterEach(() => {
+    fetchSpy.mockClear();
+  });
+
+  afterAll(() => {
+    fetchSpy.mockRestore();
+  });
+
+  it('simple text (GET)', async () => {
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => 'foobar',
+    });
+
+    const client = fletcher.create({ headers: { foo: 'bar' } });
+    await client.text('http://localhost');
 
     const expected = { foo: 'bar' };
-    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
-
-    server.close();
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject(expected);
   });
 
   it('simple html (GET)', async () => {
-    const port = await getPort();
-    const spy = jest.fn((_, res) => res.end());
-    const server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}/`;
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => '<body></body>',
+    });
 
-    const instance = fletcher.create({ headers: { foo: 'bar' } });
-    await instance.html(url);
+    const client = fletcher.create({ headers: { foo: 'bar' } });
+    await client.html('http://localhost');
 
     const expected = { foo: 'bar' };
-    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
-
-    server.close();
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject(expected);
   });
 
   it('simple json (GET)', async () => {
-    const port = await getPort();
-    const spy = jest.fn((_, res) => {
-      res.writeHead(200, {
-        'Content-type': 'application/json',
-      });
-      res.write(JSON.stringify({ baz: 'buz' }));
-      res.end();
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => JSON.stringify({ baz: 'buz' }),
     });
-    const server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}/`;
 
-    const instance = fletcher.create({ headers: { foo: 'bar' } });
-    const result = await instance.json(url);
+    const client = fletcher.create({ headers: { foo: 'bar' } });
+    const result = await client.json('http://localhost');
 
     const expected = { foo: 'bar' };
-    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject(expected);
     expect(result).toStrictEqual({ baz: 'buz' });
-
-    server.close();
   });
 
   it('simple json (GET) with generic type', async () => {
-    const port = await getPort();
-    const spy = jest.fn((_, res) => {
-      res.writeHead(200, {
-        'Content-type': 'application/json',
-      });
-      res.write(JSON.stringify({ baz: 'buz' }));
-      res.end();
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => JSON.stringify({ baz: 'buz' }),
     });
-    const server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}/`;
 
-    const instance = fletcher.create({ headers: { foo: 'bar' } });
+    const client = fletcher.create({ headers: { foo: 'bar' } });
     type FooBar = { foo: string };
-    const result = await instance.json<FooBar>(url);
+    const result = await client.json<FooBar>('http://localhost');
 
     const expected: FooBar = { foo: 'bar' };
-    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject(expected);
     expect(result).toStrictEqual({ baz: 'buz' });
-
-    server.close();
   });
 
   it('accepts new options but keeps initial config', async () => {
-    const port = await getPort();
-    const spy = jest.fn((_, res) => res.end());
-    const server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}/`;
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => 'foobar',
+    });
 
-    const instance = fletcher.create({ headers: { foo: 'bar' } });
-    await instance.html(url, { headers: { baz: 'buz' } });
+    const client = fletcher.create({ headers: { foo: 'bar' } });
+    await client.html('http://localhost', { headers: { baz: 'buz' } });
 
     const expected = { foo: 'bar', baz: 'buz' };
-    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
-
-    server.close();
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject(expected);
   });
 
   it('accepts calling create with no parameters', async () => {
-    const port = await getPort();
-    const spy = jest.fn((_, res) => res.end());
-    const server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}/`;
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => '<body></body>',
+    });
 
-    const instance = fletcher.create();
-    await instance.html(url, { headers: { baz: 'buz' } });
+    const client = fletcher.create();
+    await client.html('http://localhost', { headers: { baz: 'buz' } });
 
     const expected = { baz: 'buz' };
-    expect(spy.mock.calls[0][0].headers).toMatchObject(expected);
-
-    server.close();
+    expect(fetchSpy.mock.calls[0][1].headers).toMatchObject(expected);
   });
 });

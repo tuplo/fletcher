@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { StringDecoder } from 'string_decoder';
 import type { Response } from 'node-fetch';
 
-import type { FletchUserOptions } from './fletcher.d';
+import type { FletcherUserOptions } from './fletcher.d';
 
 export function delay<T>(
   ms = 0,
@@ -34,7 +34,7 @@ export function serializeObject(obj: Record<string, any>): string {
 export function hashRequest(
   format: string,
   url: string,
-  options?: Partial<FletchUserOptions>
+  options?: Partial<FletcherUserOptions>
 ): string {
   const { headers = {}, urlSearchParams = {} } = options || {};
 

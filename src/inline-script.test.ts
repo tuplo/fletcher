@@ -4,11 +4,13 @@ import $ from 'cheerio';
 import fletcher from '.';
 
 describe('fletcher - inline scripts', () => {
-  const mocksDir = `${__dirname}/__data__`;
-  nock('https://foo.com')
-    .persist()
-    .get('/inline-script.html')
-    .replyWithFile(200, `${mocksDir}/inline-script.html`);
+  beforeAll(() => {
+    const mocksDir = `${__dirname}/__data__`;
+    nock('https://foo.com')
+      .persist()
+      .get('/inline-script.html')
+      .replyWithFile(200, `${mocksDir}/inline-script.html`);
+  });
 
   afterAll(() => {
     nock.cleanAll();

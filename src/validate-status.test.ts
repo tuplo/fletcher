@@ -1,41 +1,31 @@
-import http from 'http';
-import getPort from 'get-port';
-import type { Server } from 'http';
-
 import fletcher from './index';
 
+const fetchSpy = jest.fn();
+jest.mock('node-fetch', () => ({
+  __esModule: true,
+  default: (url: string) => fetchSpy(url),
+}));
+
 describe('validateStatus', () => {
-  let server: Server;
-
-  afterEach(() => {
-    server.close();
-  });
-
   it('validates status with default logic', async () => {
-    const spy = jest.fn().mockImplementation((_, res) => {
-      res.writeHead(404);
-      res.end();
+    fetchSpy.mockResolvedValue({
+      status: 404,
+      statusText: 'Not Found',
     });
-    const port = await getPort();
-    server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}`;
 
-    const test = () => fletcher.text(url, { retry: false });
+    const test = () => fletcher.text('http://localhost', { retry: false });
 
     await expect(test).rejects.toThrow('Not Found');
   });
 
   it('validates status with custom logic (error)', async () => {
-    const spy = jest.fn().mockImplementation((_, res) => {
-      res.writeHead(202, 'Custom error');
-      res.end();
+    fetchSpy.mockResolvedValue({
+      status: 202,
+      statusText: 'Custom error',
     });
-    const port = await getPort();
-    server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}`;
 
     const test = () =>
-      fletcher.text(url, {
+      fletcher.text('http://localhost', {
         retry: false,
         validateStatus: (status) => status !== 202,
       });
@@ -44,16 +34,13 @@ describe('validateStatus', () => {
   });
 
   it('accepts undefined as option (default behavior)', async () => {
-    const spy = jest.fn().mockImplementation((_, res) => {
-      res.writeHead(500);
-      res.end();
+    fetchSpy.mockResolvedValue({
+      status: 500,
+      statusText: 'Internal Server Error',
     });
-    const port = await getPort();
-    server = http.createServer(spy).listen(port);
-    const url = `http://localhost:${port}`;
 
     const test = () =>
-      fletcher.text(url, {
+      fletcher.text('http://localhost', {
         retry: false,
         validateStatus: undefined,
       });

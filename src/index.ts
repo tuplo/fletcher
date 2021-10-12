@@ -111,7 +111,7 @@ async function json<T = unknown>(
   return src;
 }
 
-async function script<T extends unknown = unknown>(
+async function script<T = unknown>(
   userUrl: string,
   userOptions?: Partial<FletcherUserOptions>
 ): Promise<T> {

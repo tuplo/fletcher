@@ -3,15 +3,17 @@ import nock from 'nock';
 import fletcher from '.';
 
 describe('fletcher - HTTP client', () => {
-  const mocksDir = `${__dirname}/__data__`;
-  nock('https://foo.com')
-    .persist()
-    .get('/simple.html')
-    .replyWithFile(200, `${mocksDir}/simple.html`)
-    .get('/simple.json')
-    .replyWithFile(200, `${mocksDir}/simple.json`)
-    .get('/json-ld.html')
-    .replyWithFile(200, `${mocksDir}/json-ld.html`);
+  beforeAll(() => {
+    const mocksDir = `${__dirname}/__data__`;
+    nock('https://foo.com')
+      .persist()
+      .get('/simple.html')
+      .replyWithFile(200, `${mocksDir}/simple.html`)
+      .get('/simple.json')
+      .replyWithFile(200, `${mocksDir}/simple.json`)
+      .get('/json-ld.html')
+      .replyWithFile(200, `${mocksDir}/json-ld.html`);
+  });
 
   afterAll(() => {
     nock.cleanAll();
