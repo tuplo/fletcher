@@ -5,7 +5,7 @@ import type { Response } from 'node-fetch';
 import type { FletcherUserOptions } from './fletcher.d';
 
 export function delay<T>(
-  ms = 0,
+  ms: number,
   fn: (...args: unknown[]) => Promise<T>
 ): Promise<T> {
   return new Promise((resolve) => {

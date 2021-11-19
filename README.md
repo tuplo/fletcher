@@ -27,7 +27,11 @@ const { foo } = await fletcher.script('https://foo.com/page.html', {
   scriptPath: 'script:nth-of-type(3)',
 });
 
-const [jsonld] = await fletcher.jsonld('https://foo.com/page.html)
+const [jsonld] = await fletcher.jsonld('https://foo.com/page.html);
+
+// using browserless (puppeteer/chrome)
+const $page = await fletcher.browser.html('https://foo.com');
+const { foo} = await fletcher.browser.json('https://foo.com', /ajax-cinema-list/);
 ```
 
 ## Options
@@ -86,6 +90,14 @@ Requests a HTTP resource, returning it as a JSON object
 
 Requests a HTTP resource, retrieving all the JSON-LD blocks found on the document
 
+### `fletcher.browser.html(url: string) => cheerio.Cheerio`
+
+Requests a HTTP resource using Puppeteer/Chrome, parses it using Cheerio and returns its.
+
+### `fletcher.browser.json<T>(url: string, requestUrl: string | RegExp) => T`
+
+Requests a HTTP resource using Puppeteer/Chrome, intercepts a request made by that page and returns it as a JSON object
+
 ### `fletcher.create(options: FletcherOptions) => Object`
 
 Creates a new instance of fletcher with a custom config
@@ -103,31 +115,3 @@ $ npm install @tuplo/fletcher
 # or with yarn
 $ yarn add @tuplo/fletcher
 ```
-
-### Contribute
-
-Contributions are always welcome!
-
-### License
-
-> The MIT License (MIT)
->
-> Copyright (c) 2020 - 2021 Tuplo.
->
-> Permission is hereby granted, free of charge, to any person obtaining a copy
-> of this software and associated documentation files (the "Software"), to deal
-> in the Software without restriction, including without limitation the rights
-> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-> copies of the Software, and to permit persons to whom the Software is
-> furnished to do so, subject to the following conditions:
->
-> The above copyright notice and this permission notice shall be included in
-> all copies or substantial portions of the Software.
->
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-> THE SOFTWARE.

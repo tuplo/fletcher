@@ -65,4 +65,8 @@ export interface Instance {
     url: string,
     options?: Partial<FletcherUserOptions>
   ) => Promise<unknown[]>;
+  browser: {
+    json: <T = unknown>(url: string, requestUrl: string | RegExp) => Promise<T>;
+    html: (url: string) => Promise<cheerio.Cheerio>;
+  };
 }

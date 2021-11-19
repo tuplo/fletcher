@@ -9,6 +9,7 @@ import type { Response } from 'node-fetch';
 import type { FletcherUserOptions, Instance, ProxyConfig } from './fletcher.d';
 import fromUserOptions from './options';
 import { delay, hashRequest, decodeEncoding } from './helpers';
+import browser from './browser';
 
 const cache = new Map();
 
@@ -18,7 +19,7 @@ function fletcher(
 ): Promise<Response> {
   const {
     url,
-    delay: delayMs,
+    delay: delayMs = 0,
     retry: retryOptions,
     validateStatus,
     ...options
@@ -181,6 +182,7 @@ function create(defaultOptions: Partial<FletcherUserOptions> = {}): Instance {
     ) => json<T>(url, deepMerge(defaultOptions, options)),
     jsonld: (url: string, options: Partial<FletcherUserOptions> = {}) =>
       jsonld(url, deepMerge(defaultOptions, options)),
+    browser,
   };
 }
 
@@ -191,4 +193,5 @@ export default Object.assign(fletcher, {
   json,
   jsonld,
   create,
+  browser,
 });
