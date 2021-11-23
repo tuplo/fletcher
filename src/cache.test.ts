@@ -67,4 +67,24 @@ describe('cache', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(result).toStrictEqual(expected);
   });
+
+  it("doesn't cache requests with different options", async () => {
+    fetchSpy.mockResolvedValue({
+      status: 200,
+      text: async () => JSON.stringify({ foo: 'bar' }),
+    });
+
+    const result = [];
+    for await (const i of new Array(3).fill(null).map((_, j) => j)) {
+      const r = await fletcher.json('https://foo.com', {
+        formData: { i },
+        cache: true,
+      });
+      result.push(r);
+    }
+
+    const expected = [{ foo: 'bar' }, { foo: 'bar' }, { foo: 'bar' }];
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
+    expect(result).toStrictEqual(expected);
+  });
 });

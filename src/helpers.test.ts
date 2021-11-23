@@ -32,18 +32,18 @@ describe('helpers', () => {
     });
 
     it.each([
-      ['https://foo1.com', '1d624947f883aca4ed54f5fb40ef29dd'],
-      ['https://foo2.com', '787e206a2af554d3f591cd03f4fd5e2f'],
+      ['https://foo1.com', '08d9edafb3d87ad668729c6476dac5c3'],
+      ['https://foo2.com', 'b531aa92fcc30ce83b968eb39e5192f2'],
     ])('builds a unique string out of different URLs: %s', (url, expected) => {
       const result = hashRequest('json', url);
       expect(result).toBe(expected);
     });
 
     it.each([
-      ['text', '53b9ec162c85f2adc7d2f5d7b81a4285'],
-      ['json', 'c3c309c968a44669d01df91077215772'],
-      ['html', '1f809e57f68cc9f232cc604504aca5e3'],
-      ['script', 'd684bf5ac4479c35bbf5444c5c90a1be'],
+      ['text', '683e693c3143edb2a7fbf2c5d626bd09'],
+      ['json', '21797d08e391d59efa62707bee72ba9e'],
+      ['html', '70cc405167ffd214ce321a7c318dce12'],
+      ['script', '4599305aa1241ad8a00a9a97faebacf5'],
     ])(
       'builds a unique string out of different formats on the URL: %s',
       (format, expected) => {
@@ -53,8 +53,8 @@ describe('helpers', () => {
     );
 
     it.each([
-      [{ headers: { foo: 'bar' } }, '3e45732f405ff974d9e704c313569513'],
-      [{ headers: { bar: 'foo' } }, 'e849a068e12c331f1b44963a8a0ff0bc'],
+      [{ headers: { foo: 'bar' } }, '0124f0198d408343137566c14ddbd36a'],
+      [{ headers: { bar: 'foo' } }, 'a8b594f480d983d06ef3430190e45a9f'],
     ])(
       'builds a unique string out of different options on the URL',
       (options, expected) => {
@@ -80,7 +80,7 @@ describe('helpers', () => {
       'builds the same cache key for options ordered differently',
       (options) => {
         const result = hashRequest('json', 'https://foo.com', options);
-        const expected = 'ccb40792768d732cec5c2cf8231f88c9';
+        const expected = '1dabc76118b4f29f9df71238829c9b29';
         expect(result).toBe(expected);
       }
     );

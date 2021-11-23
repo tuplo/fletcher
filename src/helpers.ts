@@ -36,12 +36,19 @@ export function hashRequest(
   url: string,
   options?: Partial<FletcherUserOptions>
 ): string {
-  const { headers = {}, urlSearchParams = {} } = options || {};
+  const {
+    headers = {},
+    urlSearchParams = {},
+    formData = {},
+    jsonData = {},
+  } = options || {};
 
   return md5(
     `${format}${url}${JSON.stringify({
       headers: serializeObject(headers),
       urlSearchParams: serializeObject(urlSearchParams),
+      formData: serializeObject(formData),
+      jsonData: serializeObject(jsonData),
     })}`
   );
 }
