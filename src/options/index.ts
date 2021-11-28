@@ -1,15 +1,14 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
-
 import type { HeadersInit } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
 
-import HttpsProxyAgent from './helpers/patched-https-proxy-agent';
+import HttpsProxyAgent from '../helpers/patched-https-proxy-agent';
 import type {
   FletcherUserOptions,
   FletcherOptions,
   ProxyConfig,
-} from './fletcher.d';
+} from '../fletcher.d';
 
 export function getDefaultOptions(
   url = 'http://foo.com'

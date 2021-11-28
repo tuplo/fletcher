@@ -77,5 +77,9 @@ export interface Instance {
       url: string,
       options?: Partial<FletcherUserOptions>
     ) => Promise<cheerio.Cheerio>;
+    script: <T = unknown>(
+      url: string,
+      options?: Partial<FletcherUserOptions>
+    ) => Promise<T>;
   };
 }

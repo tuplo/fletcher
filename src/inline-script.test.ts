@@ -1,7 +1,7 @@
 import nock from 'nock';
 import $ from 'cheerio';
 
-import fletcher from '.';
+import fletcher from './index';
 
 describe('fletcher - inline scripts', () => {
   beforeAll(() => {

@@ -1,7 +1,8 @@
 import puppeteer from 'puppeteer-core';
 import $ from 'cheerio';
 
-import type { FletcherUserOptions } from './fletcher.d';
+import type { FletcherUserOptions } from '../fletcher';
+import { getScript } from './script';
 
 type ExecutorFn<T = unknown> = (page: puppeteer.Page) => Promise<T>;
 
@@ -96,4 +97,9 @@ async function json<T>(
   return fetch<T>(executor, options);
 }
 
-export default { json, html };
+async function script<T>(url: string, options: Partial<FletcherUserOptions>) {
+  const $page = await html(url, options);
+  return getScript<T>($page, options);
+}
+
+export default { json, html, script };

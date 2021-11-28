@@ -1,4 +1,4 @@
-import fromUserOptions, { getDefaultOptions } from './options';
+import fromUserOptions, { getDefaultOptions } from './index';
 
 describe('fletcher - general options', () => {
   it('delay', () => {

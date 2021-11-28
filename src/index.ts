@@ -1,15 +1,14 @@
 import fetch from 'node-fetch';
 import $ from 'cheerio';
-import vm from 'vm';
 import retry from 'async-retry';
 import deepMerge from 'deepmerge';
-
 import type { Response } from 'node-fetch';
 
 import type { FletcherUserOptions, Instance, ProxyConfig } from './fletcher.d';
 import fromUserOptions from './options';
+import { getScript } from './options/script';
 import { delay, hashRequest, decodeEncoding } from './helpers';
-import browser from './browser';
+import browser from './options/browser';
 
 const cache = new Map();
 
@@ -120,31 +119,8 @@ async function script<T = unknown>(
   userUrl: string,
   userOptions?: Partial<FletcherUserOptions>
 ): Promise<T> {
-  const { scriptPath, scriptFindFn, scriptSandbox } =
-    userOptions || ({} as FletcherUserOptions);
-  if (!scriptPath && !scriptFindFn)
-    throw new Error('fletch.script: scriptPath or scriptFindFn are required');
-
   const $page = await html(userUrl, userOptions);
-  let $el: cheerio.Cheerio | null | undefined = null;
-  if (scriptPath) {
-    $el = $page.find(scriptPath);
-  } else if (scriptFindFn) {
-    const elScript = $page.find('script').toArray().find(scriptFindFn);
-    $el = $(elScript);
-  }
-
-  if (!$el) {
-    throw new Error('fletch.script: script element not found');
-  }
-
-  const src = $el.html() || '';
-  const code = new vm.Script(src);
-  const sandbox = scriptSandbox || {};
-  vm.createContext(sandbox);
-  code.runInContext(sandbox, { displayErrors: false });
-
-  return sandbox as T;
+  return getScript<T>($page, userOptions);
 }
 
 async function jsonld(
@@ -198,6 +174,8 @@ function create(defaultOptions: Partial<FletcherUserOptions> = {}): Instance {
         options: Partial<FletcherUserOptions> = {}
       ): Promise<T> =>
         browser.json(pageUrl, requestUrl, deepMerge(defaultOptions, options)),
+      script: <T>(url: string, options: Partial<FletcherUserOptions> = {}) =>
+        browser.script<T>(url, deepMerge(defaultOptions, options)),
     },
   };
 }
