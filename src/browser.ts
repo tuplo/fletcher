@@ -9,12 +9,12 @@ async function fetch<T>(
   executor: ExecutorFn<T>,
   options: Partial<FletcherUserOptions> = {}
 ) {
-  const { browserlessEndpoint, userAgent } = options;
+  const { browserWSEndpoint, userAgent } = options;
 
   let browser: puppeteer.Browser;
-  if (browserlessEndpoint) {
+  if (browserWSEndpoint) {
     browser = await puppeteer.connect({
-      browserWSEndpoint: browserlessEndpoint,
+      browserWSEndpoint,
     });
   } else {
     browser = await puppeteer.launch({

@@ -19,7 +19,7 @@ type RequestData = Record<
 >;
 
 export type FletcherUserOptions = {
-  browserlessEndpoint: string;
+  browserWSEndpoint: string;
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
