@@ -19,7 +19,6 @@ export function getDefaultOptions(
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
     headers: {
       referer: new URL(url).origin,
-      host: new URL(url).hostname,
     },
     retry: {
       retries: 10,
@@ -95,6 +94,12 @@ function fromUserOptions(
           const newUrl = new URL(url);
           newUrl.search = new URLSearchParams(value as string).toString();
           acc.url = newUrl.href;
+          break;
+        case 'userAgent':
+          acc.headers = {
+            ...(acc.headers || {}),
+            'user-agent': value.toString(),
+          };
           break;
         case 'validateStatus':
           const validateFn = value as (status: number) => boolean;

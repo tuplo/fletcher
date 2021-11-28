@@ -41,6 +41,10 @@ function fletcher(
 
         return res;
       } catch (err: unknown) {
+        if (userOptions?.log) {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        }
         if (!res) throw Error(err as string);
 
         if (!validateStatus(res.status)) {
@@ -182,7 +186,19 @@ function create(defaultOptions: Partial<FletcherUserOptions> = {}): Instance {
     ) => json<T>(url, deepMerge(defaultOptions, options)),
     jsonld: (url: string, options: Partial<FletcherUserOptions> = {}) =>
       jsonld(url, deepMerge(defaultOptions, options)),
-    browser,
+    browser: {
+      html: (
+        url: string,
+        options: Partial<FletcherUserOptions> = {}
+      ): Promise<cheerio.Cheerio> =>
+        browser.html(url, deepMerge(defaultOptions, options)),
+      json: <T>(
+        pageUrl: string,
+        requestUrl: string | RegExp,
+        options: Partial<FletcherUserOptions> = {}
+      ): Promise<T> =>
+        browser.json(pageUrl, requestUrl, deepMerge(defaultOptions, options)),
+    },
   };
 }
 

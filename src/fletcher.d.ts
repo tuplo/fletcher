@@ -19,6 +19,7 @@ type RequestData = Record<
 >;
 
 export type FletcherUserOptions = {
+  browserlessEndpoint: string;
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
@@ -33,6 +34,7 @@ export type FletcherUserOptions = {
   scriptPath: string;
   scriptSandbox: VM.Context;
   urlSearchParams: UrlSearchParams;
+  userAgent: string;
   validateStatus: (statusCode: number) => boolean;
 };
 
@@ -66,7 +68,14 @@ export interface Instance {
     options?: Partial<FletcherUserOptions>
   ) => Promise<unknown[]>;
   browser: {
-    json: <T = unknown>(url: string, requestUrl: string | RegExp) => Promise<T>;
-    html: (url: string) => Promise<cheerio.Cheerio>;
+    json: <T = unknown>(
+      url: string,
+      requestUrl: string | RegExp,
+      options?: Partial<FletcherUserOptions>
+    ) => Promise<T>;
+    html: (
+      url: string,
+      options?: Partial<FletcherUserOptions>
+    ) => Promise<cheerio.Cheerio>;
   };
 }

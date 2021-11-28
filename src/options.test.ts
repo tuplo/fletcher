@@ -39,10 +39,9 @@ describe('fletcher - general options', () => {
     expect(result.body?.toString()).toBe(expected);
   });
 
-  it('sets hostname and referer', () => {
+  it('sets referer', () => {
     const result = getDefaultOptions('http://foo.com');
     const expected = {
-      host: 'foo.com',
       referer: 'http://foo.com',
     };
     expect(result.headers).toMatchObject(expected);

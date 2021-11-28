@@ -29,29 +29,30 @@ const { foo } = await fletcher.script('https://foo.com/page.html', {
 
 const [jsonld] = await fletcher.jsonld('https://foo.com/page.html);
 
-// using browserless (puppeteer/chrome)
 const $page = await fletcher.browser.html('https://foo.com');
 const { foo} = await fletcher.browser.json('https://foo.com', /ajax-cinema-list/);
 ```
 
 ## Options
 
-| Option            | Description                                                                    | Default                                                    |
-| ----------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| `cache`           | Caches requests in memory                                                      | `false`                                                    |
-| `delay`           | Introduce a delay before the request (ms)                                      | 1_000                                                      |
-| `formData`        | Object with key/value pairs to send as form data                               |
-| `encoding`        | The encoding used by the source page, will be converted to UTF8                |
-| `headers`         | A simple multi-map of names to values                                          |
-| `jsonData`        | Object with key/value pairs to send as json data                               |
-| `log`             | Should log all request URLS to stderr                                          | false                                                      |
-| `proxy`           | Proxy configuration (`host`, `port`, `username`, `password`)                   |
-| `retry`           | Retries failed responses                                                       | [`async-retry`](https://github.com/vercel/async-retry#api) |
-| `scriptFindFn`    | A function to find a `script` element on the page, execute and return it       |
-| `scriptPath`      | A CSS selector to pick a `script` element on the page, execute and return it   |
-| `scriptSandbox`   | An object to use as base on an execution of a piece of code found on the page  |
-| `urlSearchParams` | A key-value object listing what parameters to add to the query string of `url` |
-| `validateStatus`  | A function to decide if the response status is an error and should be thrown   |
+| Option                | Description                                                                    | Default                                                    |
+| --------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| `browserlessEndpoint` | browserless web socket address                                                 |
+| `cache`               | Caches requests in memory                                                      | `false`                                                    |
+| `delay`               | Introduce a delay before the request (ms)                                      | 1_000                                                      |
+| `formData`            | Object with key/value pairs to send as form data                               |
+| `encoding`            | The encoding used by the source page, will be converted to UTF8                |
+| `headers`             | A simple multi-map of names to values                                          |
+| `jsonData`            | Object with key/value pairs to send as json data                               |
+| `log`                 | Should log all request URLS to stderr                                          | false                                                      |
+| `proxy`               | Proxy configuration (`host`, `port`, `username`, `password`)                   |
+| `retry`               | Retries failed responses                                                       | [`async-retry`](https://github.com/vercel/async-retry#api) |
+| `scriptFindFn`        | A function to find a `script` element on the page, execute and return it       |
+| `scriptPath`          | A CSS selector to pick a `script` element on the page, execute and return it   |
+| `scriptSandbox`       | An object to use as base on an execution of a piece of code found on the page  |
+| `urlSearchParams`     | A key-value object listing what parameters to add to the query string of `url` |
+| `userAgent`           | Set a custom user agent                                                        |
+| `validateStatus`      | A function to decide if the response status is an error and should be thrown   |
 
 ## API
 
