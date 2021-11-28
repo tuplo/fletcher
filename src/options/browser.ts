@@ -3,6 +3,7 @@ import $ from 'cheerio';
 
 import type { FletcherUserOptions } from '../fletcher';
 import { getScript } from './script';
+import { getJsonLd } from './json-ld';
 import Cache from './cache';
 
 type ExecutorFn<T = unknown> = (page: puppeteer.Page) => Promise<T>;
@@ -123,4 +124,9 @@ async function script<T>(url: string, options: Partial<FletcherUserOptions>) {
   return getScript<T>($page, options);
 }
 
-export default { json, html, script };
+async function jsonld<T>(url: string, options: Partial<FletcherUserOptions>) {
+  const $page = await html(url, options);
+  return getJsonLd<T>($page);
+}
+
+export default { json, html, script, jsonld };

@@ -7,6 +7,7 @@ import type { Response } from 'node-fetch';
 import type { FletcherUserOptions, Instance, ProxyConfig } from './fletcher.d';
 import fromUserOptions from './options';
 import { getScript } from './options/script';
+import { getJsonLd } from './options/json-ld';
 import { delay, decodeEncoding } from './helpers';
 import browser from './options/browser';
 import Cache from './options/cache';
@@ -120,19 +121,7 @@ async function jsonld(
   userOptions?: Partial<FletcherUserOptions>
 ): Promise<unknown[]> {
   const $page = await html(userUrl, userOptions);
-  return $page
-    .find('script[type="application/ld+json"]')
-    .toArray()
-    .map((el) => {
-      const $el = $(el);
-      // make sure no new lines inside values
-      const src = ($el.html() || '').split('\n').join(' ');
-      try {
-        return JSON.parse(src);
-      } catch (err) {
-        return {};
-      }
-    });
+  return getJsonLd($page);
 }
 
 export type FletcherInstance = Instance;
@@ -168,6 +157,8 @@ function create(defaultOptions: Partial<FletcherUserOptions> = {}): Instance {
         browser.json(pageUrl, requestUrl, deepMerge(defaultOptions, options)),
       script: <T>(url: string, options: Partial<FletcherUserOptions> = {}) =>
         browser.script<T>(url, deepMerge(defaultOptions, options)),
+      jsonld: (url: string, options: Partial<FletcherUserOptions> = {}) =>
+        browser.jsonld(url, deepMerge(defaultOptions, options)),
     },
   };
 }

@@ -81,5 +81,9 @@ export interface Instance {
       url: string,
       options?: Partial<FletcherUserOptions>
     ) => Promise<T>;
+    jsonld: (
+      url: string,
+      options?: Partial<FletcherUserOptions>
+    ) => Promise<unknown[]>;
   };
 }
