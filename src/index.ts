@@ -7,10 +7,11 @@ import type { Response } from 'node-fetch';
 import type { FletcherUserOptions, Instance, ProxyConfig } from './fletcher.d';
 import fromUserOptions from './options';
 import { getScript } from './options/script';
-import { delay, hashRequest, decodeEncoding } from './helpers';
+import { delay, decodeEncoding } from './helpers';
 import browser from './options/browser';
+import Cache from './options/cache';
 
-const cache = new Map();
+const cache = new Cache();
 
 function fletcher(
   userUrl: string,
@@ -67,15 +68,12 @@ async function text(
   userUrl: string,
   userOptions?: Partial<FletcherUserOptions>
 ): Promise<string> {
-  const hash = hashRequest('text', userUrl, userOptions);
-  if (userOptions?.cache && cache.has(hash)) {
-    return cache.get(hash);
-  }
+  const cacheParams = { format: 'text', url: userUrl, options: userOptions };
+  const hit = cache.hit<string>(cacheParams);
+  if (hit) return hit;
 
   const res = await decfletcher(userUrl, userOptions);
-  if (userOptions?.cache) {
-    cache.set(hash, res);
-  }
+  cache.write({ ...cacheParams, payload: res });
 
   return res;
 }
@@ -84,15 +82,12 @@ async function html(
   userUrl: string,
   userOptions?: Partial<FletcherUserOptions>
 ): Promise<cheerio.Cheerio> {
-  const hash = hashRequest('html', userUrl, userOptions);
-  if (userOptions?.cache && cache.has(hash)) {
-    return $.load(cache.get(hash)).root();
-  }
+  const cacheParams = { format: 'html', url: userUrl, options: userOptions };
+  const hit = cache.hit(cacheParams);
+  if (hit) return $.load(hit).root();
 
   const src = await decfletcher(userUrl, userOptions);
-  if (userOptions?.cache) {
-    cache.set(hash, src);
-  }
+  cache.write({ ...cacheParams, payload: src });
 
   return $.load(src).root();
 }
@@ -101,16 +96,13 @@ async function json<T = unknown>(
   userUrl: string,
   userOptions?: Partial<FletcherUserOptions>
 ): Promise<T> {
-  const hash = hashRequest('json', userUrl, userOptions);
-  if (userOptions?.cache && cache.has(hash)) {
-    return JSON.parse(cache.get(hash));
-  }
+  const cacheParams = { format: 'json', url: userUrl, options: userOptions };
+  const hit = cache.hit(cacheParams);
+  if (hit) return JSON.parse(hit);
 
   const res = await decfletcher(userUrl, userOptions);
   const src = JSON.parse(res);
-  if (userOptions?.cache) {
-    cache.set(hash, JSON.stringify(src));
-  }
+  cache.write({ ...cacheParams, payload: JSON.stringify(src) });
 
   return src;
 }

@@ -3,8 +3,11 @@ import $ from 'cheerio';
 
 import type { FletcherUserOptions } from '../fletcher';
 import { getScript } from './script';
+import Cache from './cache';
 
 type ExecutorFn<T = unknown> = (page: puppeteer.Page) => Promise<T>;
+
+const cache = new Cache();
 
 async function fetch<T>(
   executor: ExecutorFn<T>,
@@ -53,15 +56,22 @@ async function html(
   url: string,
   options: Partial<FletcherUserOptions> = {}
 ): Promise<cheerio.Cheerio> {
+  const cacheParams = { format: 'html', url, options };
+
   const executor = async (page: puppeteer.Page) => {
     await page.goto(url, {
       timeout: 0,
       waitUntil: 'networkidle0',
     });
+
     const src = await page.content();
-    const $page = $.load(src).root();
-    return $page;
+    cache.write({ ...cacheParams, payload: src });
+
+    return $.load(src).root();
   };
+
+  const hit = cache.hit(cacheParams);
+  if (hit) return $.load(hit).root();
 
   return fetch(executor, options);
 }
@@ -71,13 +81,21 @@ async function json<T>(
   requestUrl: string | RegExp,
   options: Partial<FletcherUserOptions> = {}
 ): Promise<T> {
+  const cacheParams = {
+    format: 'json',
+    url: pageUrl,
+    options: { requestUrl, ...options },
+  };
+
   const executor = (page: puppeteer.Page): Promise<T> =>
     new Promise((resolve) => {
       const store = new Proxy(
         { data: null },
         {
           set: (obj, prop, value): boolean => {
+            cache.write({ ...cacheParams, payload: JSON.stringify(value) });
             resolve(value as T);
+
             return true;
           },
         }
@@ -93,6 +111,9 @@ async function json<T>(
 
       page.goto(pageUrl);
     });
+
+  const hit = cache.hit(cacheParams);
+  if (hit) return JSON.parse(hit);
 
   return fetch<T>(executor, options);
 }
