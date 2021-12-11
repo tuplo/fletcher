@@ -48,6 +48,9 @@ function fromUserOptions(
           acc.method = 'POST';
           acc.body = sp;
           break;
+        case 'formUrlEncoded':
+          acc.body = new URLSearchParams(value as Record<string, string>);
+          break;
         case 'headers':
           acc.headers = {
             ...(acc.headers || {}),

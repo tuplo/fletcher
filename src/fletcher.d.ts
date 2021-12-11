@@ -24,6 +24,7 @@ export type FletcherUserOptions = {
   delay: number;
   encoding: BufferEncoding;
   formData: RequestData;
+  formUrlEncoded: Record<string, string | number | boolean>;
   jsonData: RequestData;
   headers: HeadersInit;
   log: boolean;
