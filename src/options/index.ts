@@ -65,6 +65,9 @@ function fromUserOptions(
           acc.method = 'POST';
           acc.body = JSON.stringify(value);
           break;
+        case 'method':
+          acc.method = value.toString();
+          break;
         case 'proxy':
           if (typeof value === 'undefined') break;
           const { host, port, username, password, rejectUnauthorized } =
@@ -113,8 +116,8 @@ function fromUserOptions(
       return acc;
     },
     {
-      url,
       ...getDefaultOptions(url),
+      url,
     } as FletcherOptions
   );
 }
