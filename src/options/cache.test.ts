@@ -5,8 +5,8 @@ describe('cache', () => {
     const cache = new Cache();
 
     it.each([
-      ['https://foo1.com', '08d9edafb3d87ad668729c6476dac5c3'],
-      ['https://foo2.com', 'b531aa92fcc30ce83b968eb39e5192f2'],
+      ['https://foo1.com', '9860d2bb1ea923d6ec8dff0932290810'],
+      ['https://foo2.com', 'eb9e7b1f0deb957b09dfa1bc9d241482'],
     ])('builds a unique string out of different URLs: %s', (url, expected) => {
       const cacheParams = { format: 'json', url };
       const result = cache.key(cacheParams);
@@ -14,10 +14,10 @@ describe('cache', () => {
     });
 
     it.each([
-      ['text', '683e693c3143edb2a7fbf2c5d626bd09'],
-      ['json', '21797d08e391d59efa62707bee72ba9e'],
-      ['html', '70cc405167ffd214ce321a7c318dce12'],
-      ['script', '4599305aa1241ad8a00a9a97faebacf5'],
+      ['text', 'e749c83266352cfbc2e9b0087f2333a0'],
+      ['json', '94744c63b019e984a58314e09be7233b'],
+      ['html', '6b3c51560c5bb9590fed59edc48d0e30'],
+      ['script', '13288af19cb33f580e58976401fdeaad'],
     ])(
       'builds a unique string out of different formats on the URL: %s',
       (format, expected) => {
@@ -28,8 +28,8 @@ describe('cache', () => {
     );
 
     it.each([
-      [{ headers: { foo: 'bar' } }, '0124f0198d408343137566c14ddbd36a'],
-      [{ headers: { bar: 'foo' } }, 'a8b594f480d983d06ef3430190e45a9f'],
+      [{ headers: { foo: 'bar' } }, 'c7f42c503fdc30cac43d51b291f488e2'],
+      [{ headers: { bar: 'foo' } }, '3fbe3651340c892b6cf6aee5fe17a577'],
     ])(
       'builds a unique string out of different options on the URL',
       (options, expected) => {
@@ -57,7 +57,7 @@ describe('cache', () => {
       (options) => {
         const cacheParams = { format: 'json', url: 'https://foo.com', options };
         const result = cache.key(cacheParams);
-        const expected = '1dabc76118b4f29f9df71238829c9b29';
+        const expected = '78fea821662f03807adabbfb82cfd298';
         expect(result).toBe(expected);
       }
     );

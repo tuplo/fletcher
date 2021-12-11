@@ -36,20 +36,22 @@ export default class Cache {
   key = (params: CacheParams): string => {
     const { format, url, options } = params;
     const {
-      headers = {},
-      urlSearchParams = {},
       formData = {},
+      formUrlEncoded = {},
+      headers = {},
       jsonData = {},
+      urlSearchParams = {},
     } = options || {};
 
     const seed = [
       format,
       url,
       JSON.stringify({
-        headers: serializeObject(headers),
-        urlSearchParams: serializeObject(urlSearchParams),
         formData: serializeObject(formData),
+        formUrlEncoded: serializeObject(formUrlEncoded),
+        headers: serializeObject(headers),
         jsonData: serializeObject(jsonData),
+        urlSearchParams: serializeObject(urlSearchParams),
       }),
     ]
       .filter(Boolean)
