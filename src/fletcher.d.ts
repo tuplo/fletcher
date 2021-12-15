@@ -1,6 +1,6 @@
 /// <reference types="cheerio" />
 import type { Options as RetryOptions } from 'async-retry';
-import type { RequestInit, HeadersInit } from 'node-fetch';
+import type { RequestInit, HeadersInit, RequestRedirect } from 'node-fetch';
 import type * as VM from 'vm';
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
@@ -18,11 +18,16 @@ type RequestData = Record<
   string | string[] | number | boolean | undefined | null
 >;
 
+export type Headers = Partial<{
+  [key: string]: string;
+}>;
+
 export type FletcherUserOptions = {
   browserWSEndpoint: string;
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
+  follow: number;
   formData: RequestData;
   formUrlEncoded: Record<string, string | number | boolean>;
   jsonData: RequestData;
@@ -30,6 +35,7 @@ export type FletcherUserOptions = {
   log: boolean;
   method: 'GET' | 'POST' | 'HEAD';
   proxy: ProxyConfig;
+  redirect: RequestRedirect;
   retry: boolean | number | RetryOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
@@ -48,18 +54,14 @@ export type FletcherOptions = {
 } & RequestInit;
 
 export interface Instance {
-  text: (
+  headers: (
     url: string,
     options?: Partial<FletcherUserOptions>
-  ) => Promise<string>;
+  ) => Promise<Headers>;
   html: (
     url: string,
     options?: Partial<FletcherUserOptions>
   ) => Promise<cheerio.Cheerio>;
-  script: <T = unknown>(
-    url: string,
-    options?: Partial<FletcherUserOptions>
-  ) => Promise<T>;
   json: <T = unknown>(
     url: string,
     options?: Partial<FletcherUserOptions>
@@ -68,6 +70,14 @@ export interface Instance {
     url: string,
     options?: Partial<FletcherUserOptions>
   ) => Promise<unknown[]>;
+  script: <T = unknown>(
+    url: string,
+    options?: Partial<FletcherUserOptions>
+  ) => Promise<T>;
+  text: (
+    url: string,
+    options?: Partial<FletcherUserOptions>
+  ) => Promise<string>;
   browser: {
     json: <T = unknown>(
       url: string,

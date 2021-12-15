@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
-import type { HeadersInit } from 'node-fetch';
+import type { HeadersInit, RequestRedirect } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
 
 import HttpsProxyAgent from '../helpers/patched-https-proxy-agent';
@@ -43,6 +43,9 @@ function fromUserOptions(
         case 'delay':
           acc.delay = Number(value);
           break;
+        case 'follow':
+          acc.follow = Number(value);
+          break;
         case 'formData':
           const sp = new URLSearchParams(value as Record<string, string>);
           acc.method = 'POST';
@@ -80,6 +83,9 @@ function fromUserOptions(
             protocol: 'http',
             rejectUnauthorized,
           });
+          break;
+        case 'redirect':
+          acc.redirect = value as RequestRedirect;
           break;
         case 'retry':
           if (value === false) {
