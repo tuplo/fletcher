@@ -14,7 +14,7 @@ async function fetch<T>(
   executor: ExecutorFn<T>,
   options: Partial<FletcherUserOptions> = {}
 ) {
-  const { browserWSEndpoint, userAgent } = options;
+  const { browserWSEndpoint, userAgent, proxy } = options;
 
   let browser: puppeteer.Browser;
   if (browserWSEndpoint) {
@@ -35,14 +35,19 @@ async function fetch<T>(
     page.setUserAgent(userAgent);
   }
 
+  if (proxy) {
+    const { username = '', password = '' } = proxy;
+    await page.authenticate({ username, password });
+  }
+
   const blockedResourceTypes = ['stylesheet', 'image', 'font', 'media'];
   const blockedResourceTypesRg = new RegExp(blockedResourceTypes.join('|'));
   await page.setRequestInterception(true);
-  page.on('request', (req) => {
-    if (blockedResourceTypesRg.test(req.resourceType())) {
-      req.abort();
+  page.on('request', async (request) => {
+    if (blockedResourceTypesRg.test(request.resourceType())) {
+      request.abort();
     } else {
-      req.continue();
+      request.continue();
     }
   });
 
