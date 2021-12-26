@@ -1,7 +1,10 @@
 import puppeteer from 'puppeteer-core';
 import $ from 'cheerio';
 
-import type { FletcherUserOptions } from '../fletcher';
+import type {
+  FletcherUserOptions,
+  FletcherBrowserUserOptions,
+} from '../fletcher';
 import { getScript } from './script';
 import { getJsonLd } from './json-ld';
 import Cache from './cache';
@@ -14,7 +17,9 @@ async function fetch<T>(
   executor: ExecutorFn<T>,
   options: Partial<FletcherUserOptions> = {}
 ) {
-  const { browserWSEndpoint, userAgent, proxy } = options;
+  const { userAgent, proxy } = options;
+  const { endpoint: browserWSEndpoint } =
+    options.browser || ({} as FletcherBrowserUserOptions);
 
   let browser: puppeteer.Browser;
   if (browserWSEndpoint) {
@@ -62,6 +67,8 @@ async function html(
   url: string,
   options: Partial<FletcherUserOptions> = {}
 ): Promise<cheerio.Cheerio> {
+  const { browser: browserOptions } = options;
+
   if (options?.log) {
     // eslint-disable-next-line no-console
     console.error(url);
@@ -75,8 +82,12 @@ async function html(
       waitUntil: 'networkidle0',
     });
 
-    if (options.screenshot) {
-      await page.screenshot(options.screenshot);
+    if (browserOptions?.screenshot) {
+      await page.screenshot(browserOptions.screenshot);
+    }
+
+    if (browserOptions?.waitForSelector) {
+      await page.waitForSelector(browserOptions.waitForSelector);
     }
 
     const src = await page.content();

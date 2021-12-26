@@ -23,8 +23,14 @@ export type Headers = Partial<{
   [key: string]: string;
 }>;
 
+export type FletcherBrowserUserOptions = {
+  endpoint: string;
+  screenshot: ScreenshotOptions;
+  waitForSelector: string;
+};
+
 export type FletcherUserOptions = {
-  browserWSEndpoint: string;
+  browser: Partial<FletcherBrowserUserOptions>;
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
@@ -38,7 +44,6 @@ export type FletcherUserOptions = {
   proxy: ProxyConfig;
   redirect: RequestRedirect;
   retry: boolean | number | RetryOptions;
-  screenshot: ScreenshotOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
   scriptSandbox: VM.Context;
