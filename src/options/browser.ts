@@ -18,13 +18,12 @@ async function fetch<T>(
   options: Partial<FletcherUserOptions> = {}
 ) {
   const { userAgent, proxy } = options;
-  const { endpoint: browserWSEndpoint } =
-    options.browser || ({} as FletcherBrowserUserOptions);
+  const { browser: browserOptions } = options;
 
   let browser: puppeteer.Browser;
-  if (browserWSEndpoint) {
+  if (browserOptions?.endpoint) {
     browser = await puppeteer.connect({
-      browserWSEndpoint,
+      browserWSEndpoint: browserOptions.endpoint,
     });
   } else {
     browser = await puppeteer.launch({
@@ -45,16 +44,27 @@ async function fetch<T>(
     await page.authenticate({ username, password });
   }
 
-  const blockedResourceTypes = ['stylesheet', 'image', 'font', 'media'];
-  const blockedResourceTypesRg = new RegExp(blockedResourceTypes.join('|'));
-  await page.setRequestInterception(true);
-  page.on('request', async (request) => {
-    if (blockedResourceTypesRg.test(request.resourceType())) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
+  const { blockedResourceTypes } = browserOptions as FletcherBrowserUserOptions;
+  const shouldBlockResourceTypes =
+    typeof blockedResourceTypes === 'undefined' ||
+    Array.isArray(blockedResourceTypes);
+  if (shouldBlockResourceTypes) {
+    const blockResourceTypes = blockedResourceTypes || [
+      'stylesheet',
+      'image',
+      'font',
+      'media',
+    ];
+    const rgBlockedResourceTypesRg = new RegExp(blockResourceTypes.join('|'));
+    await page.setRequestInterception(true);
+    page.on('request', async (request) => {
+      if (rgBlockedResourceTypesRg.test(request.resourceType())) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
+  }
 
   const res = await executor(page);
   await page.close();

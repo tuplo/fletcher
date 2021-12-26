@@ -24,6 +24,7 @@ export type Headers = Partial<{
 }>;
 
 export type FletcherBrowserUserOptions = {
+  blockedResourceTypes: boolean | string[];
   endpoint: string;
   screenshot: ScreenshotOptions;
   waitForSelector: string;
