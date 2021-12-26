@@ -2,6 +2,7 @@
 import type { Options as RetryOptions } from 'async-retry';
 import type { RequestInit, HeadersInit, RequestRedirect } from 'node-fetch';
 import type * as VM from 'vm';
+import type { ScreenshotOptions } from 'puppeteer-core';
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
@@ -37,6 +38,7 @@ export type FletcherUserOptions = {
   proxy: ProxyConfig;
   redirect: RequestRedirect;
   retry: boolean | number | RetryOptions;
+  screenshot: ScreenshotOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
   scriptSandbox: VM.Context;

@@ -62,6 +62,11 @@ async function html(
   url: string,
   options: Partial<FletcherUserOptions> = {}
 ): Promise<cheerio.Cheerio> {
+  if (options?.log) {
+    // eslint-disable-next-line no-console
+    console.error(url);
+  }
+
   const cacheParams = { format: 'html', url, options };
 
   const executor = async (page: puppeteer.Page) => {
@@ -69,6 +74,10 @@ async function html(
       timeout: 0,
       waitUntil: 'networkidle0',
     });
+
+    if (options.screenshot) {
+      await page.screenshot(options.screenshot);
+    }
 
     const src = await page.content();
     cache.write({ ...cacheParams, payload: src });
