@@ -87,6 +87,7 @@ export interface Instance {
     options?: Partial<FletcherUserOptions>
   ) => Promise<string>;
   browser: {
+    close: () => Promise<void>;
     json: <T = unknown>(
       url: string,
       requestUrl: string | RegExp,

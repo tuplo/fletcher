@@ -13,6 +13,8 @@ type ExecutorFn<T = unknown> = (page: puppeteer.Page) => Promise<T>;
 
 const cache = new Cache();
 
+let browser: puppeteer.Browser | null = null;
+
 async function fetch<T>(
   executor: ExecutorFn<T>,
   options: Partial<FletcherUserOptions> = {}
@@ -20,16 +22,17 @@ async function fetch<T>(
   const { userAgent, proxy } = options;
   const { browser: browserOptions } = options;
 
-  let browser: puppeteer.Browser;
-  if (browserOptions?.endpoint) {
-    browser = await puppeteer.connect({
-      browserWSEndpoint: browserOptions.endpoint,
-    });
-  } else {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-gpu'],
-    });
+  if (!browser) {
+    if (browserOptions?.endpoint) {
+      browser = await puppeteer.connect({
+        browserWSEndpoint: browserOptions.endpoint,
+      });
+    } else {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-gpu'],
+      });
+    }
   }
 
   if (!browser) throw new Error("Can't launch puppeteer");
@@ -68,7 +71,6 @@ async function fetch<T>(
 
   const res = await executor(page);
   await page.close();
-  await browser.close();
 
   return res;
 }
@@ -164,4 +166,11 @@ async function jsonld<T>(url: string, options: Partial<FletcherUserOptions>) {
   return getJsonLd<T>($page);
 }
 
-export default { json, html, script, jsonld };
+async function close() {
+  if (!browser) return;
+
+  await browser.close();
+  browser = null;
+}
+
+export default { json, html, script, jsonld, close };

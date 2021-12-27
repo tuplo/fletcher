@@ -156,6 +156,7 @@ function create(
     text: (url: string, options: Partial<FLETCH.FletcherUserOptions> = {}) =>
       text(url, deepMerge(defaultOptions, options)),
     browser: {
+      close: () => browser.close(),
       html: (
         url: string,
         options: Partial<FLETCH.FletcherUserOptions> = {}
