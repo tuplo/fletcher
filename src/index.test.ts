@@ -1,33 +1,16 @@
-import nock from 'nock';
-
+import './__data__';
 import fletcher from '.';
 
 describe('fletcher - HTTP client', () => {
-  beforeAll(() => {
-    const mocksDir = `${__dirname}/__data__`;
-    nock('https://foo.com')
-      .persist()
-      .get('/simple.html')
-      .replyWithFile(200, `${mocksDir}/simple.html`)
-      .get('/simple.json')
-      .replyWithFile(200, `${mocksDir}/simple.json`)
-      .get('/json-ld.html')
-      .replyWithFile(200, `${mocksDir}/json-ld.html`);
-  });
-
-  afterAll(() => {
-    nock.cleanAll();
-  });
-
   it('simple text (GET)', async () => {
-    const result = await fletcher.text('https://foo.com/simple.html');
+    const result = await fletcher.text('https://fletcher.dev/simple.html');
 
     const expected = /Simple heading/;
     expect(result).toMatch(expected);
   });
 
   it('simple html (GET)', async () => {
-    const $page = await fletcher.html('https://foo.com/simple.html');
+    const $page = await fletcher.html('https://fletcher.dev/simple.html');
     const result = $page.find('h1').text();
 
     const expected = 'Simple heading';
@@ -35,7 +18,7 @@ describe('fletcher - HTTP client', () => {
   });
 
   it('simple json (GET)', async () => {
-    const result = await fletcher.json('https://foo.com/simple.json');
+    const result = await fletcher.json('https://fletcher.dev/simple.json');
 
     const expected = { foo: 'bar' };
     expect(result).toStrictEqual(expected);
@@ -43,14 +26,16 @@ describe('fletcher - HTTP client', () => {
 
   it('simple json (GET) with generic type', async () => {
     type FooBar = { foo: string };
-    const result = await fletcher.json<FooBar>('https://foo.com/simple.json');
+    const result = await fletcher.json<FooBar>(
+      'https://fletcher.dev/simple.json'
+    );
 
     const expected: FooBar = { foo: 'bar' };
     expect(result).toStrictEqual(expected);
   });
 
   it('json-ld (GET)', async () => {
-    const result = await fletcher.jsonld('https://foo.com/json-ld.html');
+    const result = await fletcher.jsonld('https://fletcher.dev/json-ld.html');
 
     const expected = {
       '@context': 'http://schema.org',
@@ -75,5 +60,12 @@ describe('fletcher - HTTP client', () => {
     };
     expect(result).toHaveLength(1);
     expect(result[0]).toStrictEqual(expected);
+  });
+
+  it('returns the headers on a request', async () => {
+    const result = await fletcher.headers('https://fletcher.dev/headers');
+
+    const expected = { foo: 'bar' };
+    expect(result).toStrictEqual(expected);
   });
 });

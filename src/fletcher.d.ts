@@ -1,18 +1,28 @@
 /// <reference types="cheerio" />
 import type { Options as RetryOptions } from 'async-retry';
-import type { RequestInit, HeadersInit, RequestRedirect } from 'node-fetch';
 import type * as VM from 'vm';
 import type { ScreenshotOptions } from 'puppeteer-core';
+import type { Dispatcher } from 'undici';
+import type { Readable } from 'stream';
+import type { IncomingHttpHeaders } from 'http';
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
+
+export type FetchOptions = { dispatcher?: Dispatcher } & Omit<
+  Dispatcher.RequestOptions,
+  'origin' | 'path'
+>;
 
 export type ProxyConfig = {
   username?: string;
   password?: string;
   host: string;
   port: number;
+  protocol?: string;
   rejectUnauthorized?: boolean;
 };
+
+type RequestRedirect = 'follow' | 'error' | 'manual';
 
 type RequestData = Record<
   string,
@@ -20,7 +30,7 @@ type RequestData = Record<
 >;
 
 export type Headers = Partial<{
-  [key: string]: string;
+  [key: string]: string | string[];
 }>;
 
 export type FletcherBrowserUserOptions = {
@@ -35,15 +45,14 @@ export type FletcherUserOptions = {
   cache: boolean;
   delay: number;
   encoding: BufferEncoding;
-  follow: number;
   formData: RequestData;
   formUrlEncoded: Record<string, string | number | boolean>;
   jsonData: RequestData;
-  headers: HeadersInit;
+  headers: Record<string, string>;
   log: boolean;
-  method: 'GET' | 'POST' | 'HEAD';
+  maxRedirections: number;
+  method: Dispatcher.HttpMethod;
   proxy: ProxyConfig;
-  redirect: RequestRedirect;
   retry: boolean | number | RetryOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
@@ -54,18 +63,23 @@ export type FletcherUserOptions = {
 };
 
 export type FletcherOptions = {
-  url: string;
+  body?: string;
   cache: boolean;
   delay: number;
+  maxRedirections?: number | undefined; // =20 maximum redirect count. 0 to not follow redirect
+  headers: Record<string, string>;
+  method: Dispatcher.HttpMethod;
+  proxy?: ProxyConfig;
   retry: RetryOptions;
+  url: string;
   validateStatus: (statusCode: number) => boolean;
-} & RequestInit;
+};
 
 export interface Instance {
   headers: (
     url: string,
     options?: Partial<FletcherUserOptions>
-  ) => Promise<Headers>;
+  ) => Promise<IncomingHttpHeaders>;
   html: (
     url: string,
     options?: Partial<FletcherUserOptions>
@@ -107,3 +121,11 @@ export interface Instance {
     ) => Promise<unknown[]>;
   };
 }
+
+export type Response = {
+  body: Readable & Dispatcher.BodyMixin;
+  headers: IncomingHttpHeaders;
+  status: number;
+  statusText?: string;
+  text: () => Promise<string>;
+};

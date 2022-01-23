@@ -3,7 +3,7 @@
 import fletcher from './index';
 
 const fetchSpy = jest.fn();
-jest.mock('node-fetch', () => ({
+jest.mock('./helpers/fetch', () => ({
   __esModule: true,
   default: (url: string) => fetchSpy(url),
 }));
@@ -25,7 +25,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null)) {
-      const r = await fletcher.text('https://foo.com', { cache: true });
+      const r = await fletcher.text('https://fletcher.dev', { cache: true });
       result.push(r);
     }
 
@@ -42,7 +42,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null)) {
-      const r = await fletcher.html('https://foo.com', { cache: true });
+      const r = await fletcher.html('https://fletcher.dev', { cache: true });
       result.push(r);
     }
 
@@ -59,7 +59,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null)) {
-      const r = await fletcher.json('https://foo.com', { cache: true });
+      const r = await fletcher.json('https://fletcher.dev', { cache: true });
       result.push(r);
     }
 
@@ -76,7 +76,7 @@ describe('cache', () => {
 
     const result = [];
     for await (const i of new Array(3).fill(null).map((_, j) => j)) {
-      const r = await fletcher.json('https://foo.com', {
+      const r = await fletcher.json('https://fletcher.dev', {
         formData: { i },
         cache: true,
       });

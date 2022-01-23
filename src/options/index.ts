@@ -1,9 +1,8 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
-import type { HeadersInit, RequestRedirect } from 'node-fetch';
 import type { Options as RetryOptions } from 'async-retry';
+import type { HttpMethod } from 'undici/types/dispatcher';
 
-import HttpsProxyAgent from '../helpers/patched-https-proxy-agent';
 import type {
   FletcherUserOptions,
   FletcherOptions,
@@ -19,6 +18,7 @@ export function getDefaultOptions(
     headers: {
       referer: new URL(url).origin,
     },
+    method: 'GET',
     retry: {
       retries: 10,
       factor: 2,
@@ -30,7 +30,7 @@ export function getDefaultOptions(
   };
 }
 
-function fromUserOptions(
+export function toFletcherOptions(
   url: string,
   options?: Partial<FletcherUserOptions>
 ): FletcherOptions {
@@ -43,21 +43,20 @@ function fromUserOptions(
         case 'delay':
           acc.delay = Number(value);
           break;
-        case 'follow':
-          acc.follow = Number(value);
-          break;
         case 'formData':
-          const sp = new URLSearchParams(value as Record<string, string>);
-          acc.method = 'POST';
-          acc.body = sp;
-          break;
         case 'formUrlEncoded':
-          acc.body = new URLSearchParams(value as Record<string, string>);
+          acc.method = 'POST';
+          acc.headers = {
+            ...acc.headers,
+            'content-type': 'application/x-www-form-urlencoded',
+          };
+          const sp = new URLSearchParams(value as Record<string, string>);
+          acc.body = sp.toString();
           break;
         case 'headers':
           acc.headers = {
             ...(acc.headers || {}),
-            ...((value || {}) as HeadersInit),
+            ...((value || {}) as Record<string, string>),
           };
           break;
         case 'jsonData':
@@ -68,24 +67,14 @@ function fromUserOptions(
           acc.method = 'POST';
           acc.body = JSON.stringify(value);
           break;
+        case 'maxRedirections':
+          acc.maxRedirections = Number(value);
+          break;
         case 'method':
-          acc.method = value.toString();
+          acc.method = value.toString() as HttpMethod;
           break;
         case 'proxy':
-          if (typeof value === 'undefined') break;
-          const { host, port, username, password, rejectUnauthorized } =
-            value as ProxyConfig;
-          acc.agent = new HttpsProxyAgent({
-            auth: [username, password].filter(Boolean).join(':') || null,
-            host,
-            hostname: host,
-            port,
-            protocol: 'http',
-            rejectUnauthorized,
-          });
-          break;
-        case 'redirect':
-          acc.redirect = value as RequestRedirect;
+          acc.proxy = value as ProxyConfig;
           break;
         case 'retry':
           if (value === false) {
@@ -127,5 +116,3 @@ function fromUserOptions(
     } as FletcherOptions
   );
 }
-
-export default fromUserOptions;

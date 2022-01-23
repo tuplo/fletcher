@@ -1,8 +1,8 @@
-import fromUserOptions from './options';
+import { toFletcherOptions } from './options';
 import fletcher from './index';
 
 const fetchSpy = jest.fn();
-jest.mock('node-fetch', () => ({
+jest.mock('./helpers/fetch', () => ({
   __esModule: true,
   default: (url: string) => fetchSpy(url),
 }));
@@ -71,7 +71,7 @@ describe('retry', () => {
 
   describe('retry options', () => {
     it('default options', () => {
-      const result = fromUserOptions('https://foo.com');
+      const result = toFletcherOptions('https://foo.com');
       const expected = {
         factor: 2,
         maxTimeout: Infinity,
@@ -83,7 +83,7 @@ describe('retry', () => {
     });
 
     it('changes number of retries', () => {
-      const result = fromUserOptions('https://foo.com', { retry: 3 });
+      const result = toFletcherOptions('https://foo.com', { retry: 3 });
       const expected = {
         factor: 2,
         maxTimeout: Infinity,
@@ -95,7 +95,7 @@ describe('retry', () => {
     });
 
     it('disables retry', () => {
-      const result = fromUserOptions('https://foo.com', { retry: false });
+      const result = toFletcherOptions('https://foo.com', { retry: false });
       const expected = { retries: 0 };
       expect(result.retry).toStrictEqual(expected);
     });

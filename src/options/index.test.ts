@@ -1,15 +1,15 @@
-import fromUserOptions, { getDefaultOptions } from './index';
+import { toFletcherOptions, getDefaultOptions } from './index';
 
 describe('fletcher - general options', () => {
   it('delay', () => {
-    const result = fromUserOptions('https://foo.com', {
+    const result = toFletcherOptions('https://foo.com', {
       delay: 1_000,
     });
     expect(result.delay).toBe(1_000);
   });
 
   it('headers', () => {
-    const result = fromUserOptions('https://foo.com', {
+    const result = toFletcherOptions('https://foo.com', {
       headers: { foo: 'bar' },
     });
     const expected = { foo: 'bar' };
@@ -17,7 +17,7 @@ describe('fletcher - general options', () => {
   });
 
   it('urlSearchParams', () => {
-    const result = fromUserOptions('https://foo.com', {
+    const result = toFletcherOptions('https://foo.com', {
       urlSearchParams: {
         foo: 'bar',
       },
@@ -27,7 +27,7 @@ describe('fletcher - general options', () => {
   });
 
   it('formData', () => {
-    const result = fromUserOptions('https://foo.com', {
+    const result = toFletcherOptions('https://foo.com', {
       formData: {
         foo: 'bar',
         'query[post_type][]': 'films',
@@ -49,7 +49,7 @@ describe('fletcher - general options', () => {
 
   describe('proxy', () => {
     it('accepts proxy configuration', () => {
-      const result = fromUserOptions('http://foo.com', {
+      const result = toFletcherOptions('http://foo.com', {
         proxy: {
           username: 'mock-user',
           password: 'mock-passwd',
@@ -57,14 +57,14 @@ describe('fletcher - general options', () => {
           port: 76,
         },
       });
-      expect(result.agent).toBeDefined();
+      expect(result.proxy).toBeDefined();
     });
 
     it('accepts undefined as a proxy config', () => {
-      const result = fromUserOptions('http://foo.com', {
+      const result = toFletcherOptions('http://foo.com', {
         proxy: undefined,
       });
-      expect(result.agent).toBeUndefined();
+      expect(result.proxy).toBeUndefined();
     });
   });
 });

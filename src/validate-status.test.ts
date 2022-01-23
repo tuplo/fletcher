@@ -1,7 +1,7 @@
 import fletcher from './index';
 
 const fetchSpy = jest.fn();
-jest.mock('node-fetch', () => ({
+jest.mock('./helpers/fetch', () => ({
   __esModule: true,
   default: (url: string) => fetchSpy(url),
 }));

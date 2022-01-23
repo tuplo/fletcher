@@ -1,39 +1,39 @@
-import fetch from 'node-fetch';
+/* eslint-disable no-console */
 import $ from 'cheerio';
 import retry from 'async-retry';
 import deepMerge from 'deepmerge';
-import type { Response } from 'node-fetch';
 
+import fetch from './helpers/fetch';
 import type * as FLETCH from './fletcher.d';
-import fromUserOptions from './options';
+import { toFletcherOptions } from './options';
 import { getScript } from './options/script';
 import { getJsonLd } from './options/json-ld';
-import { delay, decodeEncoding } from './helpers';
 import browser from './options/browser';
 import Cache from './options/cache';
+import delay from './options/delay';
+import decodeEncoding from './helpers/decode-encoding';
 
 const cache = new Cache();
 
 function fletcher(
   userUrl: string,
   userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<Response> {
+): Promise<FLETCH.Response> {
+  const options = toFletcherOptions(userUrl, userOptions);
   const {
     url,
     delay: delayMs = 0,
-    retry: retryOptions,
     validateStatus,
-    ...options
-  } = fromUserOptions(userUrl, userOptions);
+    retry: retryOptions,
+  } = options;
 
   if (userOptions?.log) {
-    // eslint-disable-next-line no-console
     console.error(url);
   }
 
-  return delay<Response>(delayMs, () =>
+  return delay<FLETCH.Response>(delayMs, () =>
     retry(async () => {
-      let res: Response | null = null;
+      let res: FLETCH.Response;
       try {
         res = await fetch(url, options);
         if (!validateStatus(res.status)) {
@@ -43,14 +43,15 @@ function fletcher(
         return res;
       } catch (err: unknown) {
         if (userOptions?.log) {
-          // eslint-disable-next-line no-console
           console.error(err);
         }
+        // @ts-expect-error foobar
         if (!res) throw Error(err as string);
 
         if (!validateStatus(res.status)) {
           throw Error(res.statusText);
         }
+
         return res;
       }
     }, retryOptions)
@@ -129,7 +130,7 @@ async function headers(
   userOptions?: Partial<FLETCH.FletcherUserOptions>
 ): Promise<FLETCH.Headers> {
   const res = await fletcher(url, userOptions);
-  return Object.fromEntries(res.headers.entries());
+  return res.headers;
 }
 
 export type FletcherInstance = FLETCH.Instance;
@@ -181,11 +182,12 @@ function create(
 }
 
 export default Object.assign(fletcher, {
-  text,
+  browser,
+  create,
+  headers,
   html,
-  script,
   json,
   jsonld,
-  create,
-  browser,
+  script,
+  text,
 });
