@@ -11,7 +11,7 @@
     "scraping"
   ],
   "files": [
-    "dist/index.js",
+    "dist/**/*.js",
     "dist/index.d.ts",
     "dist/fletcher.d.ts"
   ],
@@ -45,7 +45,6 @@
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-jest": "26.0.0",
     "jest": "27.4.7",
-    "microbundle": "0.14.2",
     "nock": "13.2.2",
     "nyc": "15.1.0",
     "prettier": "2.5.1",

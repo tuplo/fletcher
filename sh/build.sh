@@ -2,11 +2,6 @@
 
 rimraf dist
 
-microbundle \
-  --format cjs \
-  --output dist/index.js  \
-  --no-pkg-main \
-  --target node \
-  --sourcemap false
+tsc -p tsconfig.build.json
 
 cp src/fletcher.d.ts dist/fletcher.d.ts
