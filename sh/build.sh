@@ -2,6 +2,6 @@
 
 rimraf dist
 
-tsc -p tsconfig.build.json
+tsc --project tsconfig.build.json
 
 cp src/fletcher.d.ts dist/fletcher.d.ts

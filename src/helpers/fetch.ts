@@ -15,6 +15,7 @@ function toFetchOptions(
     method = 'GET',
     proxy,
     rejectUnauthorized,
+    validateStatus,
   } = fletcherOptions;
 
   const options: FLETCH.FetchOptions = {
@@ -25,6 +26,15 @@ function toFetchOptions(
     method,
     responseType: 'text',
   };
+
+  if (validateStatus) {
+    options.validateStatus = validateStatus;
+  }
+
+  if (options.maxRedirects === 0) {
+    options.validateStatus =
+      validateStatus || ((statusCode) => statusCode >= 200 && statusCode < 400);
+  }
 
   if (typeof rejectUnauthorized !== 'undefined' && !proxy) {
     options.httpsAgent = new https.Agent({ rejectUnauthorized });
@@ -49,7 +59,6 @@ export default async function fetch(
   fletcherOptions: FLETCH.FletcherOptions
 ): Promise<FLETCH.Response> {
   const options = toFetchOptions(fletcherOptions);
-
   const { data, headers, status, statusText } = await axios(url, options);
 
   return {

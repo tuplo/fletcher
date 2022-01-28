@@ -2,10 +2,7 @@
 
 rimraf dist
 
-microbundle \
-  --format cjs \
-  --output dist/index.js  \
-  --no-pkg-main \
-  --target node \
-  --sourcemap false \
+tsc \
+  --project tsconfig.build.json \
   --watch
+
