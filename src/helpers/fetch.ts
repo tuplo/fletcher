@@ -1,4 +1,6 @@
 import axios from 'axios';
+import https from 'https';
+import HttpsProxyAgent from 'https-proxy-agent';
 
 import type * as FLETCH from '../fletcher.d';
 
@@ -12,6 +14,7 @@ function toFetchOptions(
     maxRedirections = 999, // follow all redirects by default
     method = 'GET',
     proxy,
+    rejectUnauthorized,
   } = fletcherOptions;
 
   const options: FLETCH.FetchOptions = {
@@ -23,18 +26,20 @@ function toFetchOptions(
     responseType: 'text',
   };
 
+  if (typeof rejectUnauthorized !== 'undefined' && !proxy) {
+    options.httpsAgent = new https.Agent({ rejectUnauthorized });
+  }
+
   if (proxy) {
     const { username, password, host, port, protocol = 'http' } = proxy;
 
-    options.proxy = {
-      protocol,
+    options.httpsAgent = HttpsProxyAgent({
+      auth: `${username}:${password}`,
       host,
       port,
-    };
-
-    if (username && password) {
-      options.proxy.auth = { username, password };
-    }
+      protocol,
+      rejectUnauthorized: rejectUnauthorized ?? false,
+    });
   }
 
   return options;

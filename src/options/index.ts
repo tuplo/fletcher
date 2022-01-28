@@ -80,6 +80,9 @@ export function toFletcherOptions(
         case 'proxy':
           acc.proxy = value as ProxyConfig;
           break;
+        case 'rejectUnauthorized':
+          acc.rejectUnauthorized = Boolean(value);
+          break;
         case 'retry':
           if (value === false) {
             acc.retry = {

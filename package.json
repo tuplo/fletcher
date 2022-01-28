@@ -30,6 +30,7 @@
     "axios": "0.25.0",
     "cheerio": "1.0.0-rc.10",
     "deepmerge": "4.2.2",
+    "https-proxy-agent": "5.0.0",
     "puppeteer-core": "13.1.2"
   },
   "devDependencies": {

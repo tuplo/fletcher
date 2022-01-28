@@ -15,7 +15,6 @@ export type ProxyConfig = {
   host: string;
   port: number;
   protocol?: string;
-  rejectUnauthorized?: boolean;
 };
 
 type RequestRedirect = 'follow' | 'error' | 'manual';
@@ -49,6 +48,7 @@ export type FletcherUserOptions = {
   maxRedirections: number;
   method: Method;
   proxy: ProxyConfig;
+  rejectUnauthorized?: boolean;
   retry: boolean | number | RetryOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
@@ -67,6 +67,7 @@ export type FletcherOptions = {
   headers: Record<string, string>;
   method: Method;
   proxy?: ProxyConfig;
+  rejectUnauthorized?: boolean;
   retry: RetryOptions;
   url: string;
   validateStatus: (statusCode: number) => boolean;
