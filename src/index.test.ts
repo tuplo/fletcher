@@ -68,4 +68,12 @@ describe('fletcher - HTTP client', () => {
     const expected = { foo: 'bar' };
     expect(result).toStrictEqual(expected);
   });
+
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('encoding', async () => {
+    const url = 'https://www.rtp.pt/programa/tv/p34454';
+    const result = await fletcher.text(url, { encoding: 'latin1' });
+
+    expect(result).toMatch(/programação/);
+  });
 });

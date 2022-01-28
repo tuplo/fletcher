@@ -1,5 +1,4 @@
 import { createServer } from 'http';
-import { setGlobalDispatcher, Agent } from 'undici';
 import type { Server } from 'http';
 
 import fletcher from './index';
@@ -8,12 +7,6 @@ describe('body formats', () => {
   let server: Server;
 
   beforeAll(() => {
-    const agent = new Agent({
-      keepAliveTimeout: 10,
-      keepAliveMaxTimeout: 10,
-    });
-    setGlobalDispatcher(agent);
-
     server = createServer((request, response) => {
       let body = '';
       request.on('data', (chunk) => {

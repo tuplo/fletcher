@@ -1,76 +1,28 @@
-import fs from 'fs';
-import path from 'path';
-import { setGlobalDispatcher, MockAgent } from 'undici';
+// import { mockRoutes } from 'src/mock-routes';
 
-const agent = new MockAgent();
-agent.disableNetConnect();
+// mockRoutes(
+//   'https://fletcher.dev',
+//   [
+//     { path: '/simple.html', reply: { file: 'simple.html' } },
+//     { path: '/simple.json', reply: { file: 'simple.json' } },
+//     { path: '/json-ld.html', reply: { file: 'json-ld.html' } },
+//     { path: '/inline-script.html', reply: { file: 'inline-script.html' } },
+//     { path: '/headers', reply: { headers: { foo: 'bar' } } },
+//   ],
+//   { mockFilesDir: __dirname }
+// );
 
-const pool = agent.get('https://fletcher.dev');
+import nock from 'nock';
 
-type Route = {
-  method?: string;
-  path: string;
-  reply?: {
-    body?: string | (() => string);
-    statusCode?: number;
-    file?: string;
-    headers?: Record<string, string>;
-  };
-};
-
-const routes: Route[] = [
-  {
-    path: '/simple.html',
-    reply: {
-      file: 'simple.html',
-    },
-  },
-  {
-    path: '/simple.json',
-    reply: {
-      file: 'simple.json',
-    },
-  },
-  {
-    path: '/json-ld.html',
-    reply: {
-      file: 'json-ld.html',
-    },
-  },
-  {
-    path: '/inline-script.html',
-    reply: {
-      file: 'inline-script.html',
-    },
-  },
-  {
-    path: '/headers',
-    reply: {
-      headers: { foo: 'bar' },
-    },
-  },
-];
-
-routes.forEach((route) => {
-  const { method = 'GET', reply } = route;
-
-  let body = '';
-  if (reply?.file) {
-    const filePath = path.join(__dirname, reply?.file || 'simple.html');
-    body = fs.readFileSync(filePath, 'utf8');
-  } else if (reply?.body) {
-    body = typeof reply?.body === 'function' ? reply?.body() : reply.body;
-  }
-
-  pool
-    .intercept({
-      method,
-      path: route.path,
-    })
-    .reply(reply?.statusCode || 200, body, {
-      headers: reply?.headers || {},
-    })
-    .persist();
-});
-
-setGlobalDispatcher(agent);
+nock('https://fletcher.dev')
+  .persist()
+  .get('/simple.html')
+  .replyWithFile(200, `${__dirname}/simple.html`)
+  .get('/simple.json')
+  .replyWithFile(200, `${__dirname}/simple.json`)
+  .get('/json-ld.html')
+  .replyWithFile(200, `${__dirname}/json-ld.html`)
+  .get('/inline-script.html')
+  .replyWithFile(200, `${__dirname}/inline-script.html`)
+  .get('/headers')
+  .reply(200, undefined, { foo: 'bar' });

@@ -11,7 +11,7 @@ import { getJsonLd } from './options/json-ld';
 import browser from './options/browser';
 import Cache from './options/cache';
 import delay from './options/delay';
-import decodeEncoding from './helpers/decode-encoding';
+import text2json from './helpers/text2json';
 
 const cache = new Cache();
 
@@ -58,14 +58,6 @@ function fletcher(
   );
 }
 
-async function decfletcher(
-  url: string,
-  userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<string> {
-  const res = fletcher(url, userOptions);
-  return decodeEncoding(res, userOptions?.encoding);
-}
-
 async function text(
   userUrl: string,
   userOptions?: Partial<FLETCH.FletcherUserOptions>
@@ -74,10 +66,10 @@ async function text(
   const hit = cache.hit<string>(cacheParams);
   if (hit) return hit;
 
-  const res = await decfletcher(userUrl, userOptions);
-  cache.write({ ...cacheParams, payload: res });
+  const data = await fletcher(userUrl, userOptions).then((res) => res.text());
+  cache.write({ ...cacheParams, payload: data });
 
-  return res;
+  return data;
 }
 
 async function html(
@@ -88,7 +80,7 @@ async function html(
   const hit = cache.hit(cacheParams);
   if (hit) return $.load(hit).root();
 
-  const src = await decfletcher(userUrl, userOptions);
+  const src = await fletcher(userUrl, userOptions).then((res) => res.text());
   cache.write({ ...cacheParams, payload: src });
 
   return $.load(src).root();
@@ -102,8 +94,8 @@ async function json<T = unknown>(
   const hit = cache.hit(cacheParams);
   if (hit) return JSON.parse(hit);
 
-  const res = await decfletcher(userUrl, userOptions);
-  const src = JSON.parse(res);
+  const raw = await fletcher(userUrl, userOptions).then((res) => res.text());
+  const src = text2json(raw);
   cache.write({ ...cacheParams, payload: JSON.stringify(src) });
 
   return src;

@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
 import type { Options as RetryOptions } from 'async-retry';
-import type { HttpMethod } from 'undici/types/dispatcher';
+import type { Method } from 'axios';
 
 import type {
   FletcherUserOptions,
@@ -15,6 +15,7 @@ export function getDefaultOptions(
   return {
     cache: false,
     delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
+    encoding: 'utf8',
     headers: {
       referer: new URL(url).origin,
     },
@@ -42,6 +43,9 @@ export function toFletcherOptions(
           break;
         case 'delay':
           acc.delay = Number(value);
+          break;
+        case 'encoding':
+          acc.encoding = value as BufferEncoding;
           break;
         case 'formData':
         case 'formUrlEncoded':
@@ -71,7 +75,7 @@ export function toFletcherOptions(
           acc.maxRedirections = Number(value);
           break;
         case 'method':
-          acc.method = value.toString() as HttpMethod;
+          acc.method = value.toString() as Method;
           break;
         case 'proxy':
           acc.proxy = value as ProxyConfig;

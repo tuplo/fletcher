@@ -2,16 +2,12 @@
 import type { Options as RetryOptions } from 'async-retry';
 import type * as VM from 'vm';
 import type { ScreenshotOptions } from 'puppeteer-core';
-import type { Dispatcher } from 'undici';
-import type { Readable } from 'stream';
 import type { IncomingHttpHeaders } from 'http';
+import type { Method, AxiosRequestConfig } from 'axios';
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
-export type FetchOptions = { dispatcher?: Dispatcher } & Omit<
-  Dispatcher.RequestOptions,
-  'origin' | 'path'
->;
+export type FetchOptions = AxiosRequestConfig;
 
 export type ProxyConfig = {
   username?: string;
@@ -51,7 +47,7 @@ export type FletcherUserOptions = {
   headers: Record<string, string>;
   log: boolean;
   maxRedirections: number;
-  method: Dispatcher.HttpMethod;
+  method: Method;
   proxy: ProxyConfig;
   retry: boolean | number | RetryOptions;
   scriptFindFn: (script: cheerio.Element) => boolean;
@@ -66,9 +62,10 @@ export type FletcherOptions = {
   body?: string;
   cache: boolean;
   delay: number;
+  encoding: BufferEncoding;
   maxRedirections?: number | undefined; // =20 maximum redirect count. 0 to not follow redirect
   headers: Record<string, string>;
-  method: Dispatcher.HttpMethod;
+  method: Method;
   proxy?: ProxyConfig;
   retry: RetryOptions;
   url: string;
@@ -123,7 +120,7 @@ export interface Instance {
 }
 
 export type Response = {
-  body: Readable & Dispatcher.BodyMixin;
+  // body: Readable & Dispatcher.BodyMixin;
   headers: IncomingHttpHeaders;
   status: number;
   statusText?: string;

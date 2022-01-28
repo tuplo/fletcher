@@ -1,6 +1,5 @@
-/* eslint-disable no-restricted-syntax */
-import { request, ProxyAgent } from 'undici';
-import { STATUS_CODES } from 'http';
+import axios from 'axios';
+
 import type * as FLETCH from '../fletcher.d';
 
 function toFetchOptions(
@@ -8,6 +7,7 @@ function toFetchOptions(
 ): FLETCH.FetchOptions {
   const {
     body,
+    encoding,
     headers,
     maxRedirections = 999, // follow all redirects by default
     method = 'GET',
@@ -15,22 +15,26 @@ function toFetchOptions(
   } = fletcherOptions;
 
   const options: FLETCH.FetchOptions = {
-    body,
+    data: body,
+    responseEncoding: encoding,
     headers,
-    maxRedirections,
+    maxRedirects: maxRedirections,
     method,
+    responseType: 'text',
   };
 
   if (proxy) {
     const { username, password, host, port, protocol = 'http' } = proxy;
-    const auth = [username, password].filter(Boolean).join(':');
-    const basicAuth = Buffer.from(auth).toString('base64');
 
-    options.dispatcher = new ProxyAgent(`${protocol}://${host}:${port}`);
-    options.headers = {
-      ...options.headers,
-      'proxy-authorization': `Basic ${basicAuth}`,
+    options.proxy = {
+      protocol,
+      host,
+      port,
     };
+
+    if (username && password) {
+      options.proxy.auth = { username, password };
+    }
   }
 
   return options;
@@ -40,13 +44,13 @@ export default async function fetch(
   fletcherOptions: FLETCH.FletcherOptions
 ): Promise<FLETCH.Response> {
   const options = toFetchOptions(fletcherOptions);
-  const { body, statusCode, headers } = await request(url, options);
+
+  const { data, headers, status, statusText } = await axios(url, options);
 
   return {
-    body,
     headers,
-    status: statusCode,
-    statusText: STATUS_CODES[statusCode],
-    text: () => body.text(),
+    status,
+    statusText,
+    text: async () => data,
   };
 }
