@@ -142,6 +142,10 @@ function create(
     ) => json<T>(url, deepMerge(defaultOptions, options)),
     jsonld: (url: string, options: Partial<FLETCH.FletcherUserOptions> = {}) =>
       jsonld(url, deepMerge(defaultOptions, options)),
+    response: (
+      url: string,
+      options: Partial<FLETCH.FletcherUserOptions> = {}
+    ) => fletcher(url, deepMerge(defaultOptions, options)),
     script: <T = unknown>(
       url: string,
       options: Partial<FLETCH.FletcherUserOptions> = {}

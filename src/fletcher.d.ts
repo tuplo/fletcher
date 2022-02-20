@@ -90,6 +90,10 @@ export interface Instance {
     url: string,
     options?: Partial<FletcherUserOptions>
   ) => Promise<unknown[]>;
+  response: (
+    url: string,
+    options?: Partial<FletcherUserOptions>
+  ) => Promise<Response>;
   script: <T = unknown>(
     url: string,
     options?: Partial<FletcherUserOptions>

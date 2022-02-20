@@ -29,6 +29,10 @@ const { foo } = await fletcher.script('https://foo.com/page.html', {
 
 const [jsonld] = await fletcher.jsonld('https://foo.com/page.html');
 
+const res = await fletcher.response('https://foo.com');
+console.log(res.headers);
+console.log(await res.text());
+
 // puppeteer automation
 const client = fletcher.create({
   browserWSEndpoint: 'ws://localhost:3000',
@@ -94,6 +98,10 @@ Requests a HTTP resource, returning it as a JSON object
 ### `fletcher.jsonld(url: string, options?: FletcherOptions) => unknown[]`
 
 Requests a HTTP resource, retrieving all the JSON-LD blocks found on the document
+
+### `fletcher.response(url: string, options?: FletcherOptions) => Response`
+
+Requests a HTTP resource, returning the full HTTP Response object
 
 ### `fletcher.browser.html(url: string) => cheerio.Cheerio`
 
