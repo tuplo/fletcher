@@ -1,14 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import md5 from '../helpers/md5';
 import serializeObject from '../helpers/serialize-object';
-import { FletcherUserOptions } from '../fletcher.d';
-
-type CacheParams = {
-  format: string;
-  url: string;
-  options?: Partial<FletcherUserOptions>;
-  payload?: string;
-};
+import { CacheParams } from '../fletcher.d';
 
 export default class Cache {
   db = new Map();
@@ -18,6 +11,12 @@ export default class Cache {
     if (!options?.cache) return null;
 
     const key = this.key(params);
+
+    const { cacheMethods } = options;
+    if (cacheMethods?.hit) {
+      return cacheMethods.hit(key) as T;
+    }
+
     if (this.db.has(key)) {
       return this.db.get(key) as T;
     }
@@ -30,6 +29,13 @@ export default class Cache {
     if (!options?.cache) return;
 
     const key = this.key(params);
+
+    const { cacheMethods } = options;
+    if (cacheMethods?.write) {
+      cacheMethods.write(key, payload);
+      return;
+    }
+
     this.db.set(key, payload);
   };
 
@@ -42,6 +48,11 @@ export default class Cache {
       jsonData = {},
       urlSearchParams = {},
     } = options || {};
+
+    const { cacheMethods } = options || {};
+    if (cacheMethods?.key) {
+      return cacheMethods.key(params);
+    }
 
     const seed = [
       format,

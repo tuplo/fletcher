@@ -1,9 +1,10 @@
+import type { CacheParams } from '../fletcher.d';
 import Cache from './cache';
 
 describe('cache', () => {
-  describe('computes key', () => {
-    const cache = new Cache();
+  const cache = new Cache();
 
+  describe('computes key', () => {
     it.each([
       ['https://foo1.com', '9860d2bb1ea923d6ec8dff0932290810'],
       ['https://foo2.com', 'eb9e7b1f0deb957b09dfa1bc9d241482'],
@@ -61,5 +62,66 @@ describe('cache', () => {
         expect(result).toBe(expected);
       }
     );
+  });
+
+  describe('accepts custom methods', () => {
+    const url = 'https://foo.com/page-1';
+    let cacheParams: CacheParams;
+    const defaultCacheParams: CacheParams = {
+      format: 'json',
+      url,
+      options: { cache: true },
+    };
+
+    beforeEach(() => {
+      cacheParams = JSON.parse(JSON.stringify(defaultCacheParams));
+    });
+
+    it('uses hit custom method', () => {
+      const hitSpy = jest.fn().mockReturnValue('foobar');
+      cacheParams.options = {
+        ...cacheParams.options,
+        cacheMethods: { hit: hitSpy },
+      };
+      const result = cache.hit(cacheParams);
+
+      expect(result).toBe('foobar');
+      expect(hitSpy).toHaveBeenCalledTimes(1);
+      expect(hitSpy).toHaveBeenCalledWith('7d88ae4a2b86b865dcb18c73434a4702');
+    });
+
+    it('uses write custom method', () => {
+      const writeSpy = jest.fn();
+      cacheParams = {
+        ...cacheParams,
+        options: {
+          ...cacheParams.options,
+          cacheMethods: { write: writeSpy },
+        },
+        payload: 'foobar',
+      };
+      cache.write(cacheParams);
+
+      expect(writeSpy).toHaveBeenCalledTimes(1);
+      expect(writeSpy).toHaveBeenCalledWith(
+        '7d88ae4a2b86b865dcb18c73434a4702',
+        'foobar'
+      );
+    });
+
+    it('uses key custom method', () => {
+      const keySpy = jest.fn().mockReturnValue('key-1');
+      cacheParams = {
+        ...cacheParams,
+        options: {
+          ...cacheParams.options,
+          cacheMethods: { key: keySpy },
+        },
+      };
+      cache.key(cacheParams);
+
+      expect(keySpy).toHaveBeenCalledTimes(1);
+      expect(keySpy).toHaveBeenCalledWith(cacheParams);
+    });
   });
 });

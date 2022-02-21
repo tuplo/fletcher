@@ -35,9 +35,23 @@ export type FletcherBrowserUserOptions = {
   waitForSelector: string;
 };
 
+export type CacheParams = {
+  format: string;
+  url: string;
+  options?: Partial<FletcherUserOptions>;
+  payload?: string;
+};
+
+export type FletcherCacheMethods = {
+  hit: (key: string) => null | unknown;
+  write: (key: string, payload?: string) => void;
+  key: (params: CacheParams) => string;
+};
+
 export type FletcherUserOptions = {
   browser: Partial<FletcherBrowserUserOptions>;
   cache: boolean;
+  cacheMethods: Partial<FletcherCacheMethods>;
   delay: number;
   encoding: BufferEncoding;
   formData: RequestData;
