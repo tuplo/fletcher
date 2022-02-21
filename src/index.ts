@@ -184,6 +184,7 @@ export default Object.assign(fletcher, {
   html,
   json,
   jsonld,
+  response: fletcher,
   script,
   text,
 });
