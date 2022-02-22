@@ -125,8 +125,9 @@ async function headers(
   return res.headers;
 }
 
-export type FletcherInstance = FLETCH.Instance;
-export type FletcherProxyConfig = FLETCH.ProxyConfig;
+export type UserOptions = FLETCH.FletcherUserOptions;
+export type Instance = FLETCH.Instance;
+export type ProxyConfig = FLETCH.ProxyConfig;
 
 function create(
   defaultOptions: Partial<FLETCH.FletcherUserOptions> = {}
