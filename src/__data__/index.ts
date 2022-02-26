@@ -25,4 +25,6 @@ nock('https://fletcher.dev')
   .get('/inline-script.html')
   .replyWithFile(200, `${__dirname}/inline-script.html`)
   .get('/headers')
-  .reply(200, undefined, { foo: 'bar' });
+  .reply(200, undefined, { foo: 'bar' })
+  .get('/error')
+  .reply(500, undefined, { foo: 'bar' });

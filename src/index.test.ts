@@ -69,6 +69,14 @@ describe('fletcher - HTTP client', () => {
     expect(result).toStrictEqual(expected);
   });
 
+  it('returns statusText on Error message', async () => {
+    const fn = async () =>
+      fletcher.json('https://fletcher.dev/error', { retry: false });
+
+    const expected = '500 Internal Server Error - https://fletcher.dev/error';
+    await expect(fn).rejects.toThrow(expected);
+  });
+
   // eslint-disable-next-line jest/no-disabled-tests
   it.skip('encoding', async () => {
     const url = 'https://www.rtp.pt/programa/tv/p34454';
