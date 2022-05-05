@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
 import $ from 'cheerio';
-import retry from 'async-retry';
 import deepMerge from 'deepmerge';
 
-import fetch from './helpers/fetch';
-import type * as FLETCH from './fletcher.d';
+import delay from './lib/delay';
+import retry from './lib/async-retry';
+import fetch from './lib/fetch';
+import text2json from './lib/text2json';
+
 import { toFletcherOptions } from './options';
 import { getScript } from './options/script';
 import { getJsonLd } from './options/json-ld';

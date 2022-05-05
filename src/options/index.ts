@@ -1,7 +1,8 @@
 /* eslint-disable no-case-declarations */
 import { URL, URLSearchParams } from 'url';
-import type { Options as RetryOptions } from 'async-retry';
 import type { Method } from 'axios';
+
+import type { Options as RetryOptions } from '../lib/async-retry';
 
 import type {
   FletcherUserOptions,

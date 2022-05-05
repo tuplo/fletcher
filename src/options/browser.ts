@@ -4,7 +4,8 @@ import $ from 'cheerio';
 import type {
   FletcherUserOptions,
   FletcherBrowserUserOptions,
-} from '../fletcher';
+} from 'src/fletcher.d';
+
 import { getScript } from './script';
 import { getJsonLd } from './json-ld';
 import Cache from './cache';

@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
-import md5 from '../helpers/md5';
-import serializeObject from '../helpers/serialize-object';
+import md5 from '../lib/md5';
+import serializeObject from '../lib/serialize-object';
 import { CacheParams } from '../fletcher.d';
 
 export default class Cache {

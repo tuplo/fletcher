@@ -1,7 +1,7 @@
 import vm from 'vm';
 import $ from 'cheerio';
 
-import type { FletcherUserOptions } from '../fletcher';
+import type { FletcherUserOptions } from 'src/fletcher.d';
 
 export function getScript<T>(
   $page: cheerio.Cheerio,

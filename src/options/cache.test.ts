@@ -1,4 +1,5 @@
-import type { CacheParams } from '../fletcher.d';
+import type { CacheParams } from 'src/fletcher.d';
+
 import Cache from './cache';
 
 describe('cache', () => {

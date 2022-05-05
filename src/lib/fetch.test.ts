@@ -1,5 +1,5 @@
 import '../__data__';
-import type * as FLETCH from '../fletcher.d';
+import type * as FLETCH from '../fletcher';
 import fetch from './fetch';
 
 describe('fetch', () => {
