@@ -1,9 +1,10 @@
 /// <reference types="cheerio" />
-import type { Options as RetryOptions } from 'async-retry';
 import type * as VM from 'vm';
 import type { ScreenshotOptions } from 'puppeteer-core';
 import type { IncomingHttpHeaders } from 'http';
 import type { Method, AxiosRequestConfig } from 'axios';
+
+import type { Options as RetryOptions } from './lib/async-retry';
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 

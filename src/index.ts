@@ -12,8 +12,8 @@ import { getScript } from './options/script';
 import { getJsonLd } from './options/json-ld';
 import browser from './options/browser';
 import Cache from './options/cache';
-import delay from './options/delay';
-import text2json from './helpers/text2json';
+
+import type * as FLETCH from './fletcher.d';
 
 const cache = new Cache();
 
