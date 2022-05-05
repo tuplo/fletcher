@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-rimraf dist
+main() {
+  rm -rf dist
+  tsc \
+    --project tsconfig.build.json \
+    --watch
+}
 
-tsc \
-  --project tsconfig.build.json \
-  --watch
-
+main

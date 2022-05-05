@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-rimraf dist
+main() {
+  rm -rf dist
+  tsc --project tsconfig.build.json
+  cp src/fletcher.d.ts dist/fletcher.d.ts
+}
 
-tsc --project tsconfig.build.json
-
-cp src/fletcher.d.ts dist/fletcher.d.ts
+main
