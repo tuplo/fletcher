@@ -20,10 +20,7 @@ export type ProxyConfig = {
 
 type RequestRedirect = 'follow' | 'error' | 'manual';
 
-type RequestData = Record<
-  string,
-  string | string[] | number | boolean | undefined | null
->;
+type RequestData = Record<string, unknown>;
 
 export type Headers = Partial<{
   [key: string]: string | string[];
@@ -68,6 +65,7 @@ export type FletcherUserOptions = {
   scriptFindFn: (script: cheerio.Element) => boolean;
   scriptPath: string;
   scriptSandbox: VM.Context;
+  timeout: number;
   urlSearchParams: UrlSearchParams;
   userAgent: string;
   validateStatus: (statusCode: number) => boolean;
@@ -84,6 +82,7 @@ export type FletcherOptions = {
   proxy?: ProxyConfig;
   rejectUnauthorized?: boolean;
   retry: RetryOptions;
+  timeout: number;
   url: string;
   validateStatus: (statusCode: number) => boolean;
 };

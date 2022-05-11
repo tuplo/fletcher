@@ -17,6 +17,7 @@ function toFetchOptions(
     method = 'GET',
     proxy,
     rejectUnauthorized,
+    timeout = 30_000,
     validateStatus,
   } = fletcherOptions;
 
@@ -27,6 +28,7 @@ function toFetchOptions(
     maxRedirects: maxRedirections,
     method,
     responseType: 'text',
+    timeout,
   };
 
   if (validateStatus) {

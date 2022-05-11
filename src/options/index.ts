@@ -28,6 +28,7 @@ export function getDefaultOptions(
       maxTimeout: Infinity,
       randomize: true,
     },
+    timeout: 30_000,
     validateStatus: (status: number): boolean => status >= 200 && status < 400,
   };
 }
@@ -97,6 +98,9 @@ export function toFletcherOptions(
           } else if (typeof value === 'object') {
             acc.retry = value as RetryOptions;
           }
+          break;
+        case 'timeout':
+          acc.timeout = Number(value);
           break;
         case 'urlSearchParams':
           const newUrl = new URL(url);
