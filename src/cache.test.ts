@@ -5,7 +5,7 @@ import fletcher from './index';
 const fetchSpy = jest.fn();
 jest.mock('./lib/fetch', () => ({
   __esModule: true,
-  default: (url: string) => fetchSpy(url),
+  fetch: (url: string) => fetchSpy(url),
 }));
 
 describe('cache', () => {

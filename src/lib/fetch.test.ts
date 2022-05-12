@@ -1,6 +1,6 @@
 import '../__data__';
 import type * as FLETCH from '../fletcher';
-import fetch from './fetch';
+import { fetch } from './fetch';
 
 describe('fetch', () => {
   it('includes the URL on an errored response', async () => {

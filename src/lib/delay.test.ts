@@ -1,4 +1,4 @@
-import delay from './delay';
+import { delay } from './delay';
 
 describe('delay', () => {
   it('delays execution of given function', () => {

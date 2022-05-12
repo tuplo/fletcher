@@ -11,7 +11,7 @@ interface ErrorWithBail extends Error {
 
 type AsyncFn<T> = (...args: unknown[]) => Promise<T>;
 
-export default function retry<T>(fn: AsyncFn<T>, opts: Options): Promise<T> {
+export function retry<T>(fn: AsyncFn<T>, opts: Options): Promise<T> {
   function run(
     resolve: (value: unknown) => void,
     reject: (reason?: unknown) => void

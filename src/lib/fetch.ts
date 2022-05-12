@@ -59,7 +59,7 @@ function toFetchOptions(
   return options;
 }
 
-export default async function fetch(
+export async function fetch(
   url: string,
   fletcherOptions: FLETCH.FletcherOptions
 ): Promise<FLETCH.Response> {

@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
-import md5 from '../lib/md5';
+import { md5 } from '../lib/md5';
 import serializeObject from '../lib/serialize-object';
-import { CacheParams } from '../fletcher.d';
+import type { CacheParams } from '../fletcher.d';
 
 export default class Cache {
   db = new Map();

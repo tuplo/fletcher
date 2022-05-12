@@ -2,10 +2,10 @@
 import $ from 'cheerio';
 import deepMerge from 'deepmerge';
 
-import delay from './lib/delay';
-import retry from './lib/async-retry';
-import fetch from './lib/fetch';
-import text2json from './lib/text2json';
+import { delay } from './lib/delay';
+import { retry } from './lib/async-retry';
+import { fetch } from './lib/fetch';
+import { text2json } from './lib/text2json';
 
 import { toFletcherOptions } from './options';
 import { getScript } from './options/script';
@@ -64,7 +64,8 @@ async function text(
   userUrl: string,
   userOptions?: Partial<FLETCH.FletcherUserOptions>
 ): Promise<string> {
-  const cacheParams = { format: 'text', url: userUrl, options: userOptions };
+  const cacheParams = { url: userUrl, options: userOptions, format: 'text' };
+  // const cacheParams = { format: 'text', url: userUrl, options: userOptions };
   const hit = cache.hit<string>(cacheParams);
   if (hit) return hit;
 

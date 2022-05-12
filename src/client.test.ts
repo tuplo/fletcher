@@ -3,7 +3,7 @@ import fletcher from './index';
 const fetchSpy = jest.fn();
 jest.mock('./lib/fetch', () => ({
   __esModule: true,
-  default: (url: string, options: unknown) => fetchSpy(url, options),
+  fetch: (url: string, options: unknown) => fetchSpy(url, options),
 }));
 
 describe('creates an instance with options', () => {

@@ -1,8 +1,0 @@
-{
-  "transform": {
-    "^.+\\.[jt]s$": "ts-jest"
-  },
-  "moduleNameMapper": {
-    "fletcher$": "<rootDir>/node_modules/@tuplo/fletcher/cjs"
-  }
-}

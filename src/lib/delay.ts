@@ -1,4 +1,4 @@
-export default function delay<T>(
+export function delay<T>(
   ms: number,
   fn: (...args: unknown[]) => Promise<T>
 ): Promise<T> {
