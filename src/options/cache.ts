@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { md5 } from '../lib/md5';
-import serializeObject from '../lib/serialize-object';
+import { sortObject } from '../lib/sort-object';
 import type { CacheParams } from '../fletcher.d';
 
 export default class Cache {
@@ -25,10 +25,11 @@ export default class Cache {
   };
 
   write = (params: CacheParams): void => {
-    const { options, payload } = params;
+    const { options } = params;
     if (!options?.cache) return;
 
-    const key = this.key(params);
+    const { payload, ...cacheParams } = params;
+    const key = this.key(cacheParams);
 
     const { cacheMethods } = options;
     if (cacheMethods?.write) {
@@ -41,30 +42,13 @@ export default class Cache {
 
   key = (params: CacheParams): string => {
     const { format, url, options } = params;
-    const {
-      formData = {},
-      formUrlEncoded = {},
-      headers = {},
-      jsonData = {},
-      urlSearchParams = {},
-    } = options || {};
 
     const { cacheMethods } = options || {};
     if (cacheMethods?.key) {
       return cacheMethods.key(params);
     }
 
-    const seed = [
-      format,
-      url,
-      JSON.stringify({
-        formData: serializeObject(formData),
-        formUrlEncoded: serializeObject(formUrlEncoded),
-        headers: serializeObject(headers),
-        jsonData: serializeObject(jsonData),
-        urlSearchParams: serializeObject(urlSearchParams),
-      }),
-    ]
+    const seed = [format, url, JSON.stringify(sortObject(params))]
       .filter(Boolean)
       .join('');
 

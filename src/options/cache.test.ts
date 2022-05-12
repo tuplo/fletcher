@@ -7,8 +7,8 @@ describe('cache', () => {
 
   describe('computes key', () => {
     it.each([
-      ['https://foo1.com', '9860d2bb1ea923d6ec8dff0932290810'],
-      ['https://foo2.com', 'eb9e7b1f0deb957b09dfa1bc9d241482'],
+      ['https://foo1.com', 'dc5227de0e7d376d8bc477595bf3be33'],
+      ['https://foo2.com', '79b87b20192a4b9c07ca4fa46cb72367'],
     ])('builds a unique string out of different URLs: %s', (url, expected) => {
       const cacheParams = { format: 'json', url };
       const result = cache.key(cacheParams);
@@ -16,10 +16,10 @@ describe('cache', () => {
     });
 
     it.each([
-      ['text', 'e749c83266352cfbc2e9b0087f2333a0'],
-      ['json', '94744c63b019e984a58314e09be7233b'],
-      ['html', '6b3c51560c5bb9590fed59edc48d0e30'],
-      ['script', '13288af19cb33f580e58976401fdeaad'],
+      ['text', 'ee2e2ac44dca3649f6e4fbf1772cd091'],
+      ['json', '86041d779eaaf1d7d8eb8e7c0225c9db'],
+      ['html', '2df215ab5e5a5f4d545d000ab79715cf'],
+      ['script', '5983f83badaee8c5deb71b27c1887dac'],
     ])(
       'builds a unique string out of different formats on the URL: %s',
       (format, expected) => {
@@ -30,8 +30,8 @@ describe('cache', () => {
     );
 
     it.each([
-      [{ headers: { foo: 'bar' } }, 'c7f42c503fdc30cac43d51b291f488e2'],
-      [{ headers: { bar: 'foo' } }, '3fbe3651340c892b6cf6aee5fe17a577'],
+      [{ headers: { foo: 'bar' } }, '3f375919652763146df264ee4187a2df'],
+      [{ headers: { bar: 'foo' } }, 'd411dec8e69710cb26096c71de1199a4'],
     ])(
       'builds a unique string out of different options on the URL',
       (options, expected) => {
@@ -59,7 +59,7 @@ describe('cache', () => {
       (options) => {
         const cacheParams = { format: 'json', url: 'https://foo.com', options };
         const result = cache.key(cacheParams);
-        const expected = '78fea821662f03807adabbfb82cfd298';
+        const expected = '19afdd3a772dbb3144e4aa62defff5b7';
         expect(result).toBe(expected);
       }
     );
@@ -88,7 +88,7 @@ describe('cache', () => {
 
       expect(result).toBe('foobar');
       expect(hitSpy).toHaveBeenCalledTimes(1);
-      expect(hitSpy).toHaveBeenCalledWith('7d88ae4a2b86b865dcb18c73434a4702');
+      expect(hitSpy).toHaveBeenCalledWith('657cbd01f24115a1b4a7feb46c0fa295');
     });
 
     it('uses write custom method', () => {
@@ -105,7 +105,7 @@ describe('cache', () => {
 
       expect(writeSpy).toHaveBeenCalledTimes(1);
       expect(writeSpy).toHaveBeenCalledWith(
-        '7d88ae4a2b86b865dcb18c73434a4702',
+        '657cbd01f24115a1b4a7feb46c0fa295',
         'foobar'
       );
     });
