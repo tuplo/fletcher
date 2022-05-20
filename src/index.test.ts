@@ -77,6 +77,13 @@ describe('fletcher - HTTP client', () => {
     await expect(fn).rejects.toThrow(expected);
   });
 
+  it('requests an URL with special characters', async () => {
+    const actual = await fletcher.json('https://fletcher.dev/drácula');
+
+    const expected = { foo: 'bar' };
+    expect(actual).toStrictEqual(expected);
+  });
+
   // eslint-disable-next-line jest/no-disabled-tests
   it.skip('encoding', async () => {
     const url = 'https://www.rtp.pt/programa/tv/p34454';

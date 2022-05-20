@@ -2,6 +2,7 @@ import axios from 'axios';
 import https from 'https';
 import HttpsProxyAgent from 'https-proxy-agent';
 import { STATUS_CODES } from 'http';
+import { URL } from 'url';
 
 import type { AxiosError, AxiosResponse } from 'axios';
 import type * as FLETCH from '../fletcher.d';
@@ -66,7 +67,9 @@ export async function fetch(
   const options = toFetchOptions(fletcherOptions);
 
   try {
-    const { data, headers, status, statusText } = await axios(url, options);
+    // encode special characters on the URL
+    const u = new URL(url);
+    const { data, headers, status, statusText } = await axios(u.href, options);
 
     return {
       headers,

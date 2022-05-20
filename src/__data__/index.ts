@@ -1,17 +1,3 @@
-// import { mockRoutes } from 'src/mock-routes';
-
-// mockRoutes(
-//   'https://fletcher.dev',
-//   [
-//     { path: '/simple.html', reply: { file: 'simple.html' } },
-//     { path: '/simple.json', reply: { file: 'simple.json' } },
-//     { path: '/json-ld.html', reply: { file: 'json-ld.html' } },
-//     { path: '/inline-script.html', reply: { file: 'inline-script.html' } },
-//     { path: '/headers', reply: { headers: { foo: 'bar' } } },
-//   ],
-//   { mockFilesDir: __dirname }
-// );
-
 import nock from 'nock';
 
 nock('https://fletcher.dev')
@@ -27,4 +13,6 @@ nock('https://fletcher.dev')
   .get('/headers')
   .reply(200, undefined, { foo: 'bar' })
   .get('/error')
-  .reply(500, undefined, { foo: 'bar' });
+  .reply(500, undefined, { foo: 'bar' })
+  .get('/dr%C3%A1cula')
+  .reply(200, { foo: 'bar' });
