@@ -39,7 +39,7 @@ function fletcher(
       try {
         res = await fetch(url, options);
         if (!validateStatus(res.status)) {
-          throw Error(res.statusText);
+          throw Error(`${res.status}: ${res.statusText}`);
         }
 
         return res;
@@ -47,11 +47,12 @@ function fletcher(
         if (userOptions?.log) {
           console.error(err);
         }
+
         // @ts-expect-error foobar
         if (!res) throw Error(err as string);
 
         if (!validateStatus(res.status)) {
-          throw Error(res.statusText);
+          throw Error(`${res.status}: ${res.statusText}`);
         }
 
         return res;

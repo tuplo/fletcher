@@ -15,7 +15,7 @@ describe('validateStatus', () => {
 
     const test = () => fletcher.text('http://localhost', { retry: false });
 
-    await expect(test).rejects.toThrow('Not Found');
+    await expect(test).rejects.toThrow('404: Not Found');
   });
 
   it('validates status with custom logic (error)', async () => {
@@ -30,7 +30,7 @@ describe('validateStatus', () => {
         validateStatus: (status) => status !== 202,
       });
 
-    await expect(test).rejects.toThrow('Custom error');
+    await expect(test).rejects.toThrow('202: Custom error');
   });
 
   it('accepts undefined as option (default behavior)', async () => {
@@ -45,6 +45,6 @@ describe('validateStatus', () => {
         validateStatus: undefined,
       });
 
-    await expect(test).rejects.toThrow('Internal Server Error');
+    await expect(test).rejects.toThrow('500: Internal Server Error');
   });
 });

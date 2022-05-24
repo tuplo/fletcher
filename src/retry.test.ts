@@ -40,30 +40,23 @@ describe('retry', () => {
   });
 
   it("doesn't retry if options.retry=false", async () => {
-    fetchSpy.mockResolvedValue({
-      status: 500,
-      statusText: 'Internal Server Error',
-    });
-
+    fetchSpy.mockResolvedValue({ status: 500 });
     const result = fletcher.html('http://localhost', {
       retry: false,
     });
 
-    await expect(result).rejects.toThrow('Internal Server Error');
+    await expect(result).rejects.toThrow('500: undefined');
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('retries number of times if retry:number', async () => {
     const mathRandomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.1);
-    fetchSpy.mockResolvedValue({
-      status: 500,
-      statusText: 'Internal Server Error',
-    });
-
+    fetchSpy.mockResolvedValue({ status: 500, statusText: 'foobar' });
     const r = fletcher.html('http://localhost', {
       retry: 1,
     });
-    await expect(r).rejects.toThrow('Internal Server Error');
+
+    await expect(r).rejects.toThrow('foobar');
     expect(fetchSpy).toHaveBeenCalledTimes(2);
 
     mathRandomSpy.mockRestore();
