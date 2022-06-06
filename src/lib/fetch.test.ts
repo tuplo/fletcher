@@ -11,7 +11,8 @@ describe('fetch', () => {
     const expected = {
       headers: { foo: 'bar' },
       status: 500,
-      statusText: '500 Internal Server Error - https://fletcher.dev/error',
+      statusText:
+        'Request failed with status code 500 - https://fletcher.dev/error',
       text: expect.anything(),
     };
     expect(result).toStrictEqual(expected);

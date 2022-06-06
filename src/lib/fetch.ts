@@ -1,6 +1,5 @@
 import axios from 'axios';
 import https from 'https';
-import HttpsProxyAgent from 'https-proxy-agent';
 import { STATUS_CODES } from 'http';
 import { URL } from 'url';
 
@@ -42,19 +41,26 @@ function toFetchOptions(
   }
 
   if (typeof rejectUnauthorized !== 'undefined' && !proxy) {
-    options.httpsAgent = new https.Agent({ rejectUnauthorized });
+    options.httpsAgent = new https.Agent({
+      rejectUnauthorized: rejectUnauthorized ?? false,
+    });
   }
 
   if (proxy) {
-    const { username, password, host, port, protocol = 'http' } = proxy;
+    const {
+      username = 'unknown',
+      password = 'unknown',
+      host,
+      port,
+      protocol = 'http',
+    } = proxy;
 
-    options.httpsAgent = HttpsProxyAgent({
-      auth: `${username}:${password}`,
+    options.proxy = {
       host,
       port,
       protocol,
-      rejectUnauthorized: rejectUnauthorized ?? false,
-    });
+      auth: { username, password },
+    };
   }
 
   return options;
@@ -81,12 +87,13 @@ export async function fetch(
     const error = e as AxiosError;
     const { response = {} as AxiosResponse } = error;
     const { status, headers } = response;
-    const statusText = response.statusText || STATUS_CODES[status];
+    const statusText =
+      error.message || response.statusText || STATUS_CODES[status];
 
     return {
       headers,
       status,
-      statusText: `${status} ${statusText} - ${url}`,
+      statusText: `${statusText} - ${url}`,
       text: async () => JSON.stringify({ status, statusText }),
     };
   }

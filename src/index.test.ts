@@ -73,7 +73,8 @@ describe('fletcher - HTTP client', () => {
     const fn = async () =>
       fletcher.json('https://fletcher.dev/error', { retry: false });
 
-    const expected = '500 Internal Server Error - https://fletcher.dev/error';
+    const expected =
+      '500: Request failed with status code 500 - https://fletcher.dev/error';
     await expect(fn).rejects.toThrow(expected);
   });
 
