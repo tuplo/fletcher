@@ -1,5 +1,5 @@
-import retrier from 'retry';
 import type { WrapOptions } from 'retry';
+import retrier from 'retry';
 
 export interface Options extends WrapOptions {
   onRetry?: ((e: Error, attempt: number) => unknown) | undefined;
