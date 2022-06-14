@@ -2,8 +2,8 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
 import https from 'https';
-import HttpsProxyAgent from 'https-proxy-agent';
 import { URL } from 'url';
+import { HttpsProxyAgent } from 'hpagent';
 
 import type * as FLETCH from '../fletcher.d';
 
@@ -49,11 +49,9 @@ function toFetchOptions(
 
   if (proxy) {
     const { username, password, host, port, protocol = 'http' } = proxy;
-    options.httpsAgent = HttpsProxyAgent({
-      auth: `${username}:${password}`,
-      host,
-      port,
-      protocol,
+    const auth = `${username}:${password}`;
+    options.httpsAgent = new HttpsProxyAgent({
+      proxy: `${protocol}://${auth}@${host}:${port}`,
       rejectUnauthorized: rejectUnauthorized ?? false,
     });
   }
