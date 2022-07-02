@@ -1,126 +1,127 @@
 {
-  "name": "@tuplo/fletcher",
-  "description": "Web scraping HTTP request library",
-  "version": "0.0.0-development",
-  "repository": "git@github.com:tuplo/fletcher.git",
-  "author": "Rui Costa",
-  "license": "MIT",
-  "keywords": [
-    "http-client",
-    "request",
-    "scraping"
-  ],
-  "files": [
-    "dist/**/*.js",
-    "dist/index.d.ts",
-    "dist/fletcher.d.ts",
-    "dist/lib/async-retry.d.ts"
-  ],
-  "main": "./dist/index.js",
-  "types": "dist/index.d.ts",
-  "engines": {
-    "node": ">=12"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@types/cheerio": "0.22.31",
-    "@types/retry": "0.12.2",
-    "axios": "0.27.2",
-    "cheerio": "1.0.0-rc.11",
-    "deepmerge": "4.2.2",
-    "hpagent": "1.0.0",
-    "puppeteer-core": "14.4.0",
-    "retry": "0.13.1"
-  },
-  "devDependencies": {
-    "@types/jest": "28.1.1",
-    "@types/node": "17.0.42",
-    "@typescript-eslint/eslint-plugin": "5.28.0",
-    "@typescript-eslint/parser": "5.28.0",
-    "eslint": "8.17.0",
-    "eslint-config-airbnb-base": "15.0.0",
-    "eslint-config-airbnb-typescript": "17.0.0",
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jest": "26.5.3",
-    "jest": "28.1.1",
-    "nock": "13.2.6",
-    "nyc": "15.1.0",
-    "prettier": "2.7.0",
-    "ts-jest": "28.0.5",
-    "typescript": "4.7.3"
-  },
-  "scripts": {
-    "build": "bash sh/build.sh",
-    "dev": "bash sh/dev.sh",
-    "lint:ts": "tsc --noEmit",
-    "lint": "eslint src --ext ts",
-    "test:ci:coverage": "bash sh/coverage.sh",
-    "test:ci": "jest --ci",
-    "test": "jest --watch"
-  },
-  "release": {
-    "branches": [
-      "main"
-    ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "transform": {
-      "^.+\\.(t|j)sx?$": "ts-jest"
-    },
-    "moduleNameMapper": {
-      "^src/(.*)": "<rootDir>/src/$1"
-    }
-  },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "airbnb-typescript/base",
-      "prettier",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:import/typescript",
-      "plugin:jest/all"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint",
-      "jest"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 9,
-      "project": "./tsconfig.json"
-    },
-    "env": {
-      "node": true,
-      "jest": true
-    },
-    "rules": {
-      "@typescript-eslint/comma-dangle": "off",
-      "import/no-extraneous-dependencies": "off",
-      "import/prefer-default-export": "off",
-      "jest/no-conditional-in-test": "off",
-      "jest/no-hooks": "off",
-      "jest/prefer-expect-assertions": "off"
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/*.ts"
-        ],
-        "rules": {
-          "no-undef": "off"
-        }
-      }
-    ]
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "printWidth": 80
-  }
+	"name": "@tuplo/fletcher",
+	"description": "Web scraping HTTP request library",
+	"version": "0.0.0-development",
+	"repository": "git@github.com:tuplo/fletcher.git",
+	"author": "Rui Costa",
+	"license": "MIT",
+	"keywords": [
+		"http-client",
+		"request",
+		"scraping"
+	],
+	"files": [
+		"dist/**/*.js",
+		"dist/index.d.ts",
+		"dist/fletcher.d.ts",
+		"dist/lib/async-retry.d.ts"
+	],
+	"main": "./dist/index.js",
+	"types": "dist/index.d.ts",
+	"engines": {
+		"node": ">=14"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@types/cheerio": "0.22.31",
+		"@types/retry": "0.12.2",
+		"axios": "0.27.2",
+		"cheerio": "1.0.0-rc.12",
+		"deepmerge": "4.2.2",
+		"hpagent": "1.0.0",
+		"puppeteer-core": "15.3.0",
+		"retry": "0.13.1"
+	},
+	"devDependencies": {
+		"@types/jest": "28.1.4",
+		"@types/node": "18.0.0",
+		"@typescript-eslint/eslint-plugin": "5.30.3",
+		"@typescript-eslint/parser": "5.30.3",
+		"eslint": "8.19.0",
+		"eslint-config-airbnb-base": "15.0.0",
+		"eslint-config-airbnb-typescript": "17.0.0",
+		"eslint-config-prettier": "8.5.0",
+		"eslint-plugin-import": "2.26.0",
+		"eslint-plugin-jest": "26.5.3",
+		"jest": "28.1.2",
+		"nock": "13.2.8",
+		"nyc": "15.1.0",
+		"prettier": "2.7.0",
+		"ts-jest": "28.0.5",
+		"typescript": "4.7.4"
+	},
+	"scripts": {
+		"build": "bash sh/build.sh",
+		"dev": "bash sh/dev.sh",
+		"lint:ts": "tsc --noEmit",
+		"lint": "eslint src --ext ts",
+		"test:ci:coverage": "bash sh/coverage.sh",
+		"test:ci": "jest --ci",
+		"test": "jest --watch"
+	},
+	"release": {
+		"branches": [
+			"main"
+		]
+	},
+	"jest": {
+		"roots": [
+			"<rootDir>/src"
+		],
+		"transform": {
+			"^.+\\.(t|j)sx?$": "ts-jest"
+		},
+		"moduleNameMapper": {
+			"^src/(.*)": "<rootDir>/src/$1"
+		}
+	},
+	"eslintConfig": {
+		"extends": [
+			"airbnb-base",
+			"airbnb-typescript/base",
+			"prettier",
+			"plugin:@typescript-eslint/recommended",
+			"plugin:import/typescript",
+			"plugin:jest/all"
+		],
+		"parser": "@typescript-eslint/parser",
+		"plugins": [
+			"@typescript-eslint",
+			"jest"
+		],
+		"parserOptions": {
+			"ecmaVersion": 9,
+			"project": "./tsconfig.json"
+		},
+		"env": {
+			"node": true,
+			"jest": true
+		},
+		"rules": {
+			"@typescript-eslint/comma-dangle": "off",
+			"import/no-extraneous-dependencies": "off",
+			"import/prefer-default-export": "off",
+			"jest/no-conditional-in-test": "off",
+			"jest/no-hooks": "off",
+			"jest/prefer-expect-assertions": "off"
+		},
+		"overrides": [
+			{
+				"files": [
+					"**/*.ts"
+				],
+				"rules": {
+					"no-undef": "off"
+				}
+			}
+		]
+	},
+	"prettier": {
+		"singleQuote": true,
+		"trailingComma": "es5",
+		"printWidth": 80,
+		"useTabs": true
+	}
 }
