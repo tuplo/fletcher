@@ -24,7 +24,7 @@ const heading = $page.find('body > h1');
 const { foo } = await fletcher.json('https://foo.com/page.html');
 
 const { foo } = await fletcher.script('https://foo.com/page.html', {
-  scriptPath: 'script:nth-of-type(3)',
+	scriptPath: 'script:nth-of-type(3)',
 });
 
 const [jsonld] = await fletcher.jsonld('https://foo.com/page.html');
@@ -35,7 +35,7 @@ console.log(await res.text());
 
 // puppeteer automation
 const client = fletcher.create({
-  browserWSEndpoint: 'ws://localhost:3000',
+	browserWSEndpoint: 'ws://localhost:3000',
 });
 const $page = await client.browser.html('https://foo.com');
 const { foo } = await client.browser.json('https://foo.com', /ajax-list/);
@@ -83,7 +83,7 @@ Requests a HTTP resource, finds a `script` on it, executes and returns its globa
 
 ```typescript
 const { foo } = await fletcher.script('https://foo.com/page.html', {
-  scriptPath: 'script:nth-of-type(3)',
+	scriptPath: 'script:nth-of-type(3)',
 });
 ```
 
