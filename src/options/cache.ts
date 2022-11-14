@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
-import { md5 } from '../lib/md5';
-import { sortObject } from '../lib/sort-object';
-import type { CacheParams } from '../fletcher.d';
+import { md5 } from "../helpers/md5";
+import { sortObject } from "../helpers/sort-object";
+import type { CacheParams } from "../fletcher.d";
 
 export default class Cache {
 	db = new Map();
@@ -50,7 +50,7 @@ export default class Cache {
 
 		const seed = [format, url, JSON.stringify(sortObject(params))]
 			.filter(Boolean)
-			.join('');
+			.join("");
 
 		return md5(seed);
 	};

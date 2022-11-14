@@ -1,19 +1,20 @@
 /* eslint-disable no-console */
-import $ from 'cheerio';
-import deepMerge from 'deepmerge';
+import $ from "cheerio";
+import deepMerge from "deepmerge";
 
-import { delay } from './lib/delay';
-import { retry } from './lib/async-retry';
-import { fetch } from './lib/fetch';
-import { text2json } from './lib/text2json';
+import browser from "./services/browser";
+import { fetch } from "./services/fetch";
 
-import { toFletcherOptions } from './options';
-import { getScript } from './options/script';
-import { getJsonLd } from './options/json-ld';
-import browser from './options/browser';
-import Cache from './options/cache';
+import { retry } from "./helpers/async-retry";
+import { delay } from "./helpers/delay";
+import { text2json } from "./helpers/text2json";
 
-import type * as FLETCH from './fletcher.d';
+import { toFletcherOptions } from "./options";
+import Cache from "./options/cache";
+import { getJsonLd } from "./options/json-ld";
+import { getScript } from "./options/script";
+
+import type * as FLETCH from "./fletcher.d";
 
 const cache = new Cache();
 
@@ -65,7 +66,7 @@ async function text(
 	userUrl: string,
 	userOptions?: Partial<FLETCH.FletcherUserOptions>
 ): Promise<string> {
-	const cacheParams = { url: userUrl, options: userOptions, format: 'text' };
+	const cacheParams = { url: userUrl, options: userOptions, format: "text" };
 	// const cacheParams = { format: 'text', url: userUrl, options: userOptions };
 	const hit = cache.hit<string>(cacheParams);
 	if (hit) return hit;
@@ -80,7 +81,7 @@ async function html(
 	userUrl: string,
 	userOptions?: Partial<FLETCH.FletcherUserOptions>
 ): Promise<cheerio.Cheerio> {
-	const cacheParams = { format: 'html', url: userUrl, options: userOptions };
+	const cacheParams = { format: "html", url: userUrl, options: userOptions };
 	const hit = cache.hit(cacheParams);
 	if (hit) return $.load(hit).root();
 
@@ -94,7 +95,7 @@ async function json<T = unknown>(
 	userUrl: string,
 	userOptions?: Partial<FLETCH.FletcherUserOptions>
 ): Promise<T> {
-	const cacheParams = { format: 'json', url: userUrl, options: userOptions };
+	const cacheParams = { format: "json", url: userUrl, options: userOptions };
 	const hit = cache.hit(cacheParams);
 	if (hit) return JSON.parse(hit);
 

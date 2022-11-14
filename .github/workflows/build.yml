@@ -12,10 +12,11 @@ jobs:
         node-version: [14.x, 16.x, 18.x]
     steps:
       - uses: actions/checkout@master
-      - run: yarn --frozen-lockfile
-      - run: yarn lint
-      - run: yarn lint:ts
-      - run: yarn test:ci
+      - run: |
+          yarn --frozen-lockfile
+          yarn lint
+          yarn lint:ts
+          yarn test:ci
 
   test-coverage:
     needs: test
@@ -51,8 +52,9 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
-      - run: yarn build
+      - run: |
+          yarn --frozen-lockfile
+          yarn build
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v2
         env:

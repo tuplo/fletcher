@@ -1,11 +1,11 @@
-import type { AxiosError, AxiosResponse } from 'axios';
-import axios from 'axios';
-import { STATUS_CODES } from 'http';
-import https from 'https';
-import { URL } from 'url';
-import { HttpsProxyAgent } from 'hpagent';
+import type { AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
+import { STATUS_CODES } from "http";
+import https from "https";
+import { URL } from "url";
+import { HttpsProxyAgent } from "hpagent";
 
-import type * as FLETCH from '../fletcher.d';
+import type * as FLETCH from "../fletcher";
 
 function toFetchOptions(
 	fletcherOptions: FLETCH.FletcherOptions
@@ -15,7 +15,7 @@ function toFetchOptions(
 		encoding,
 		headers,
 		maxRedirections = 999, // follow all redirects by default
-		method = 'GET',
+		method = "GET",
 		proxy,
 		rejectUnauthorized,
 		timeout = 30_000,
@@ -28,7 +28,7 @@ function toFetchOptions(
 		headers,
 		maxRedirects: maxRedirections,
 		method,
-		responseType: 'text',
+		responseType: "text",
 		timeout,
 	};
 
@@ -41,14 +41,14 @@ function toFetchOptions(
 			validateStatus || ((statusCode) => statusCode >= 200 && statusCode < 400);
 	}
 
-	if (typeof rejectUnauthorized !== 'undefined' && !proxy) {
+	if (typeof rejectUnauthorized !== "undefined" && !proxy) {
 		options.httpsAgent = new https.Agent({
 			rejectUnauthorized: rejectUnauthorized ?? false,
 		});
 	}
 
 	if (proxy) {
-		const { username, password, host, port, protocol = 'http' } = proxy;
+		const { username, password, host, port, protocol = "http" } = proxy;
 		const auth = `${username}:${password}`;
 		options.httpsAgent = new HttpsProxyAgent({
 			proxy: `${protocol}://${auth}@${host}:${port}`,

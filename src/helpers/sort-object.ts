@@ -3,7 +3,7 @@ export function sortObject(obj: unknown): unknown {
 		return obj.map((item) => sortObject(item));
 	}
 
-	if (typeof obj === 'object' && obj !== null) {
+	if (typeof obj === "object" && obj !== null) {
 		return Object.keys(obj)
 			.sort((a, b) => a.localeCompare(b))
 			.reduce((acc, key) => {

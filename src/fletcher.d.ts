@@ -1,10 +1,10 @@
 /// <reference types="cheerio" />
-import type * as VM from 'vm';
-import type { ScreenshotOptions } from 'puppeteer-core';
-import type { IncomingHttpHeaders } from 'http';
-import type { Method, AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig, Method } from "axios";
+import type { IncomingHttpHeaders } from "http";
+import type { ScreenshotOptions } from "puppeteer-core";
+import type * as VM from "vm";
 
-import type { Options as RetryOptions } from './lib/async-retry';
+import type { Options as RetryOptions } from "./helpers/async-retry";
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
@@ -18,7 +18,7 @@ export type ProxyConfig = {
 	protocol?: string;
 };
 
-type RequestRedirect = 'follow' | 'error' | 'manual';
+type RequestRedirect = "follow" | "error" | "manual";
 
 type RequestData = Record<string, unknown>;
 

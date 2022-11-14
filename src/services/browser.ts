@@ -1,14 +1,14 @@
-import puppeteer from 'puppeteer-core';
-import $ from 'cheerio';
+import puppeteer from "puppeteer-core";
+import $ from "cheerio";
 
 import type {
 	FletcherUserOptions,
 	FletcherBrowserUserOptions,
-} from 'src/fletcher.d';
+} from "src/fletcher.d";
 
-import { getScript } from './script';
-import { getJsonLd } from './json-ld';
-import Cache from './cache';
+import { getScript } from "../options/script";
+import { getJsonLd } from "../options/json-ld";
+import Cache from "../options/cache";
 
 type ExecutorFn<T = unknown> = (page: puppeteer.Page) => Promise<T>;
 
@@ -31,7 +31,7 @@ async function fetch<T>(
 		} else {
 			browser = await puppeteer.launch({
 				headless: true,
-				args: ['--no-sandbox', '--disable-gpu'],
+				args: ["--no-sandbox", "--disable-gpu"],
 			});
 		}
 	}
@@ -44,24 +44,24 @@ async function fetch<T>(
 	}
 
 	if (proxy) {
-		const { username = '', password = '' } = proxy;
+		const { username = "", password = "" } = proxy;
 		await page.authenticate({ username, password });
 	}
 
 	const { blockedResourceTypes } = browserOptions as FletcherBrowserUserOptions;
 	const shouldBlockResourceTypes =
-		typeof blockedResourceTypes === 'undefined' ||
+		typeof blockedResourceTypes === "undefined" ||
 		Array.isArray(blockedResourceTypes);
 	if (shouldBlockResourceTypes) {
 		const blockResourceTypes = blockedResourceTypes || [
-			'stylesheet',
-			'image',
-			'font',
-			'media',
+			"stylesheet",
+			"image",
+			"font",
+			"media",
 		];
-		const rgBlockedResourceTypesRg = new RegExp(blockResourceTypes.join('|'));
+		const rgBlockedResourceTypesRg = new RegExp(blockResourceTypes.join("|"));
 		await page.setRequestInterception(true);
-		page.on('request', async (request) => {
+		page.on("request", async (request) => {
 			if (rgBlockedResourceTypesRg.test(request.resourceType())) {
 				request.abort();
 			} else {
@@ -87,12 +87,12 @@ async function html(
 		console.error(url);
 	}
 
-	const cacheParams = { format: 'html', url, options };
+	const cacheParams = { format: "html", url, options };
 
 	const executor = async (page: puppeteer.Page) => {
 		await page.goto(url, {
 			timeout: 0,
-			waitUntil: 'networkidle0',
+			waitUntil: "networkidle0",
 		});
 
 		if (browserOptions?.screenshot) {
@@ -121,7 +121,7 @@ async function json<T>(
 	options: Partial<FletcherUserOptions> = {}
 ): Promise<T> {
 	const cacheParams = {
-		format: 'json',
+		format: "json",
 		url: pageUrl,
 		options: { requestUrl, ...options },
 	};
@@ -140,10 +140,10 @@ async function json<T>(
 				}
 			);
 
-			page.on('response', async (response) => {
+			page.on("response", async (response) => {
 				const url = response.url();
 				if (requestUrl instanceof RegExp && !requestUrl.test(url)) return;
-				if (typeof requestUrl === 'string' && url !== requestUrl) return;
+				if (typeof requestUrl === "string" && url !== requestUrl) return;
 
 				store.data = await response.json();
 			});

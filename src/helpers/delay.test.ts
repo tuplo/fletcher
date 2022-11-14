@@ -1,7 +1,7 @@
-import { delay } from './delay';
+import { delay } from "./delay";
 
-describe('delay', () => {
-	it('delays execution of given function', () => {
+describe("delay", () => {
+	it("delays execution of given function", () => {
 		jest.useFakeTimers();
 		const fnSpy = jest.fn();
 

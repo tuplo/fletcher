@@ -1,26 +1,26 @@
 /* eslint-disable no-case-declarations */
-import { URL, URLSearchParams } from 'url';
-import type { Method } from 'axios';
+import { URL, URLSearchParams } from "url";
+import type { Method } from "axios";
 
-import type { Options as RetryOptions } from '../lib/async-retry';
+import type { Options as RetryOptions } from "../helpers/async-retry";
 
 import type {
 	FletcherUserOptions,
 	FletcherOptions,
 	ProxyConfig,
-} from '../fletcher.d';
+} from "../fletcher.d";
 
 export function getDefaultOptions(
-	url = 'http://foo.com'
-): Omit<FletcherOptions, 'url'> {
+	url = "http://foo.com"
+): Omit<FletcherOptions, "url"> {
 	return {
 		cache: false,
-		delay: process.env.NODE_ENV === 'test' ? 0 : 1_000,
-		encoding: 'utf8',
+		delay: process.env.NODE_ENV === "test" ? 0 : 1_000,
+		encoding: "utf8",
 		headers: {
 			referer: new URL(url).origin,
 		},
-		method: 'GET',
+		method: "GET",
 		retry: {
 			retries: 10,
 			factor: 2,
@@ -40,80 +40,80 @@ export function toFletcherOptions(
 	return Object.entries(options || {}).reduce(
 		(acc, [key, value]) => {
 			switch (key) {
-				case 'cache':
+				case "cache":
 					acc.cache = Boolean(value);
 					break;
-				case 'delay':
+				case "delay":
 					acc.delay = Number(value);
 					break;
-				case 'encoding':
+				case "encoding":
 					acc.encoding = value as BufferEncoding;
 					break;
-				case 'formData':
-				case 'formUrlEncoded':
-					acc.method = 'POST';
+				case "formData":
+				case "formUrlEncoded":
+					acc.method = "POST";
 					acc.headers = {
 						...acc.headers,
-						'content-type': 'application/x-www-form-urlencoded',
+						"content-type": "application/x-www-form-urlencoded",
 					};
 					const sp = new URLSearchParams(value as Record<string, string>);
 					acc.body = sp.toString();
 					break;
-				case 'headers':
+				case "headers":
 					acc.headers = {
 						...(acc.headers || {}),
 						...((value || {}) as Record<string, string>),
 					};
 					break;
-				case 'jsonData':
+				case "jsonData":
 					acc.headers = {
 						...acc.headers,
-						'content-type': 'application/json',
+						"content-type": "application/json",
 					};
-					acc.method = 'POST';
+					acc.method = "POST";
 					acc.body = JSON.stringify(value);
 					break;
-				case 'maxRedirections':
+				case "maxRedirections":
 					acc.maxRedirections = Number(value);
 					break;
-				case 'method':
+				case "method":
 					acc.method = value.toString() as Method;
 					break;
-				case 'proxy':
+				case "proxy":
 					acc.proxy = value as ProxyConfig;
 					break;
-				case 'rejectUnauthorized':
+				case "rejectUnauthorized":
 					acc.rejectUnauthorized = Boolean(value);
 					break;
-				case 'retry':
+				case "retry":
 					if (value === false) {
 						acc.retry = {
 							retries: 0,
 						};
-					} else if (typeof value === 'number') {
+					} else if (typeof value === "number") {
 						acc.retry = {
 							...acc.retry,
 							retries: value,
 						};
-					} else if (typeof value === 'object') {
+					} else if (typeof value === "object") {
 						acc.retry = value as RetryOptions;
 					}
 					break;
-				case 'timeout':
+				case "timeout":
 					acc.timeout = Number(value);
 					break;
-				case 'urlSearchParams':
+				case "urlSearchParams":
 					const newUrl = new URL(url);
 					newUrl.search = new URLSearchParams(value as string).toString();
 					acc.url = newUrl.href;
 					break;
-				case 'userAgent':
+				case "userAgent":
 					acc.headers = {
 						...(acc.headers || {}),
-						'user-agent': value.toString(),
+						"user-agent": value.toString(),
 					};
 					break;
-				case 'validateStatus':
+				case "validateStatus":
 					const validateFn = value as (status: number) => boolean;
 					acc.validateStatus = validateFn ?? acc.validateStatus;
 					break;

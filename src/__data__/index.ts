@@ -1,18 +1,18 @@
-import nock from 'nock';
+import nock from "nock";
 
-nock('https://fletcher.dev')
+nock("https://fletcher.dev")
 	.persist()
-	.get('/simple.html')
+	.get("/simple.html")
 	.replyWithFile(200, `${__dirname}/simple.html`)
-	.get('/simple.json')
+	.get("/simple.json")
 	.replyWithFile(200, `${__dirname}/simple.json`)
-	.get('/json-ld.html')
+	.get("/json-ld.html")
 	.replyWithFile(200, `${__dirname}/json-ld.html`)
-	.get('/inline-script.html')
+	.get("/inline-script.html")
 	.replyWithFile(200, `${__dirname}/inline-script.html`)
-	.get('/headers')
-	.reply(200, undefined, { foo: 'bar' })
-	.get('/error')
-	.reply(500, undefined, { foo: 'bar' })
-	.get('/dr%C3%A1cula')
-	.reply(200, { foo: 'bar' });
+	.get("/headers")
+	.reply(200, undefined, { foo: "bar" })
+	.get("/error")
+	.reply(500, undefined, { foo: "bar" })
+	.get("/dr%C3%A1cula")
+	.reply(200, { foo: "bar" });
