@@ -1,16 +1,15 @@
-import "./__data__";
 import fletcher from ".";
 
 describe("fletcher - HTTP client", () => {
 	it("simple text (GET)", async () => {
-		const result = await fletcher.text("https://fletcher.dev/simple.html");
+		const result = await fletcher.text("https://fletcher.dev/file/simple.html");
 
 		const expected = /Simple heading/;
 		expect(result).toMatch(expected);
 	});
 
 	it("simple html (GET)", async () => {
-		const $page = await fletcher.html("https://fletcher.dev/simple.html");
+		const $page = await fletcher.html("https://fletcher.dev/file/simple.html");
 		const result = $page.find("h1").text();
 
 		const expected = "Simple heading";
@@ -18,7 +17,7 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("simple json (GET)", async () => {
-		const result = await fletcher.json("https://fletcher.dev/simple.json");
+		const result = await fletcher.json("https://fletcher.dev/file/simple.json");
 
 		const expected = { foo: "bar" };
 		expect(result).toStrictEqual(expected);
@@ -27,7 +26,7 @@ describe("fletcher - HTTP client", () => {
 	it("simple json (GET) with generic type", async () => {
 		type FooBar = { foo: string };
 		const result = await fletcher.json<FooBar>(
-			"https://fletcher.dev/simple.json"
+			"https://fletcher.dev/file/simple.json"
 		);
 
 		const expected: FooBar = { foo: "bar" };
@@ -35,7 +34,9 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("json-ld (GET)", async () => {
-		const result = await fletcher.jsonld("https://fletcher.dev/json-ld.html");
+		const result = await fletcher.jsonld(
+			"https://fletcher.dev/file/json-ld.html"
+		);
 
 		const expected = {
 			"@context": "http://schema.org",
@@ -63,10 +64,10 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("returns the headers on a request", async () => {
-		const result = await fletcher.headers("https://fletcher.dev/headers");
+		const actual = await fletcher.headers("https://fletcher.dev/headers");
 
 		const expected = { foo: "bar" };
-		expect(result).toMatchObject(expected);
+		expect(actual).toMatchObject(expected);
 	});
 
 	it("returns statusText on Error message", async () => {

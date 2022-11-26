@@ -1,12 +1,11 @@
-import type * as FLETCH from "../fletcher.d";
-import "../__data__";
-import { fetch } from "./fetch";
+import type * as FLETCH from "../fletcher";
+import { fletch } from "./fletch";
 
-describe("fetch", () => {
+describe("fletch", () => {
 	it("includes the URL on an errored response", async () => {
 		const url = "https://fletcher.dev/error";
 		const options = { method: "GET" } as FLETCH.FletcherOptions;
-		const result = await fetch(url, options);
+		const result = await fletch(url, options);
 
 		const expected = {
 			headers: { foo: "bar" },

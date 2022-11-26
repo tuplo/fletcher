@@ -1,14 +1,14 @@
 import fletcher from "./index";
 
-const fetchSpy = jest.fn();
-jest.mock("./services/fetch", () => ({
+const fletchSpy = jest.fn();
+jest.mock("./services/fletch", () => ({
 	__esModule: true,
-	fetch: (url: string) => fetchSpy(url),
+	fletch: (url: string) => fletchSpy(url),
 }));
 
 describe("validateStatus", () => {
 	it("validates status with default logic", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 404,
 			statusText: "Not Found",
 		});
@@ -19,7 +19,7 @@ describe("validateStatus", () => {
 	});
 
 	it("validates status with custom logic (error)", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 202,
 			statusText: "Custom error",
 		});
@@ -34,7 +34,7 @@ describe("validateStatus", () => {
 	});
 
 	it("accepts undefined as option (default behavior)", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 500,
 			statusText: "Internal Server Error",
 		});

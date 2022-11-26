@@ -1,9 +1,8 @@
 import type { AxiosError, AxiosResponse } from "axios";
 import axios from "axios";
-import { STATUS_CODES } from "http";
-import https from "https";
-import { URL } from "url";
 import { HttpsProxyAgent } from "hpagent";
+import { STATUS_CODES } from "node:http";
+import https from "node:https";
 
 import type * as FLETCH from "../fletcher";
 
@@ -59,7 +58,7 @@ function toFetchOptions(
 	return options;
 }
 
-export async function fetch(
+export async function fletch(
 	url: string,
 	fletcherOptions: FLETCH.FletcherOptions
 ): Promise<FLETCH.Response> {

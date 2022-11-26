@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-import { URL, URLSearchParams } from "url";
 import type { Method } from "axios";
 
 import type { Options as RetryOptions } from "../helpers/async-retry";

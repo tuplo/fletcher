@@ -2,23 +2,23 @@
 /* eslint-disable no-restricted-syntax */
 import fletcher from "./index";
 
-const fetchSpy = jest.fn();
-jest.mock("./services/fetch", () => ({
+const fletchSpy = jest.fn();
+jest.mock("./services/fletch", () => ({
 	__esModule: true,
-	fetch: (url: string) => fetchSpy(url),
+	fletch: (url: string) => fletchSpy(url),
 }));
 
 describe("cache", () => {
 	afterEach(() => {
-		fetchSpy.mockClear();
+		fletchSpy.mockClear();
 	});
 
 	afterAll(() => {
-		fetchSpy.mockRestore();
+		fletchSpy.mockRestore();
 	});
 
 	it("caches requests with the same url (text)", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 200,
 			text: async () => "foobar",
 		});
@@ -30,12 +30,12 @@ describe("cache", () => {
 		}
 
 		const expected = ["foobar", "foobar", "foobar"];
-		expect(fetchSpy).toHaveBeenCalledTimes(1);
+		expect(fletchSpy).toHaveBeenCalledTimes(1);
 		expect(result).toStrictEqual(expected);
 	});
 
 	it("caches requests with the same url (html)", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 200,
 			text: async () => "<h1>foobar</h1>",
 		});
@@ -47,12 +47,12 @@ describe("cache", () => {
 		}
 
 		const expected = ["foobar", "foobar", "foobar"];
-		expect(fetchSpy).toHaveBeenCalledTimes(1);
+		expect(fletchSpy).toHaveBeenCalledTimes(1);
 		expect(result.map((r) => r.find("h1").text())).toStrictEqual(expected);
 	});
 
 	it("caches requests with the same url (json)", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 200,
 			text: async () => JSON.stringify({ foo: "bar" }),
 		});
@@ -64,12 +64,12 @@ describe("cache", () => {
 		}
 
 		const expected = [{ foo: "bar" }, { foo: "bar" }, { foo: "bar" }];
-		expect(fetchSpy).toHaveBeenCalledTimes(1);
+		expect(fletchSpy).toHaveBeenCalledTimes(1);
 		expect(result).toStrictEqual(expected);
 	});
 
 	it("doesn't cache requests with different options", async () => {
-		fetchSpy.mockResolvedValue({
+		fletchSpy.mockResolvedValue({
 			status: 200,
 			text: async () => JSON.stringify({ foo: "bar" }),
 		});
@@ -84,7 +84,7 @@ describe("cache", () => {
 		}
 
 		const expected = [{ foo: "bar" }, { foo: "bar" }, { foo: "bar" }];
-		expect(fetchSpy).toHaveBeenCalledTimes(3);
+		expect(fletchSpy).toHaveBeenCalledTimes(3);
 		expect(result).toStrictEqual(expected);
 	});
 });

@@ -1,13 +1,12 @@
 import $ from "cheerio";
 
-import "./__data__";
 import fletcher from "./index";
 
 describe("fletcher - inline scripts", () => {
 	it("evaluates a script and returns its global scope", async () => {
 		type PageData = { pageData: { foo: string } };
 		const result = await fletcher.script<PageData>(
-			"https://fletcher.dev/inline-script.html",
+			"https://fletcher.dev/file/inline-script.html",
 			{ scriptPath: "script:nth-of-type(1)" }
 		);
 
@@ -17,7 +16,7 @@ describe("fletcher - inline scripts", () => {
 
 	it("uses a function to find a script element", async () => {
 		const result = await fletcher.script(
-			"https://fletcher.dev/inline-script.html",
+			"https://fletcher.dev/file/inline-script.html",
 			{
 				scriptFindFn: (script: cheerio.Element) =>
 					/findThisVar/.test($(script).html() || ""),
@@ -30,7 +29,7 @@ describe("fletcher - inline scripts", () => {
 
 	it("throws if options are not provided", async () => {
 		const result = async () => {
-			await fletcher.script("https://fletcher.dev/inline-script.html");
+			await fletcher.script("https://fletcher.dev/file/inline-script.html");
 		};
 
 		const expected = new Error(
@@ -42,7 +41,7 @@ describe("fletcher - inline scripts", () => {
 
 	it("should return an empty object if script element is empty", async () => {
 		const result = await fletcher.script(
-			"https://fletcher.dev/inline-script.html",
+			"https://fletcher.dev/file/inline-script.html",
 			{
 				scriptPath: "script#foobar",
 			}

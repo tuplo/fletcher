@@ -3,7 +3,7 @@ import $ from "cheerio";
 import deepMerge from "deepmerge";
 
 import browser from "./services/browser";
-import { fetch } from "./services/fetch";
+import { fletch } from "./services/fletch";
 
 import { retry } from "./helpers/async-retry";
 import { delay } from "./helpers/delay";
@@ -38,7 +38,7 @@ function fletcher(
 		retry(async () => {
 			let res: FLETCH.Response;
 			try {
-				res = await fetch(url, options);
+				res = await fletch(url, options);
 				if (!validateStatus(res.status)) {
 					throw Error(`${res.status}: ${res.statusText}`);
 				}

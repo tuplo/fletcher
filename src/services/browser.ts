@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer-core";
+import type { Page, Browser } from "puppeteer-core";
 import $ from "cheerio";
 
 import type {
@@ -10,11 +11,11 @@ import { getScript } from "../options/script";
 import { getJsonLd } from "../options/json-ld";
 import Cache from "../options/cache";
 
-type ExecutorFn<T = unknown> = (page: puppeteer.Page) => Promise<T>;
+type ExecutorFn<T = unknown> = (page: Page) => Promise<T>;
 
 const cache = new Cache();
 
-let browser: puppeteer.Browser | null = null;
+let browser: Browser | null = null;
 
 async function fetch<T>(
 	executor: ExecutorFn<T>,
@@ -89,7 +90,7 @@ async function html(
 
 	const cacheParams = { format: "html", url, options };
 
-	const executor = async (page: puppeteer.Page) => {
+	const executor = async (page: Page) => {
 		await page.goto(url, {
 			timeout: 0,
 			waitUntil: "networkidle0",
@@ -126,7 +127,7 @@ async function json<T>(
 		options: { requestUrl, ...options },
 	};
 
-	const executor = (page: puppeteer.Page): Promise<T> =>
+	const executor = (page: Page): Promise<T> =>
 		new Promise((resolve) => {
 			const store = new Proxy(
 				{ data: null },
