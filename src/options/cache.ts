@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
-import type { ICacheParams } from "src/fletcher.d";
-import { md5 } from "src/helpers/md5";
-import { sortObject } from "src/helpers/sort-object";
+import type { ICacheParams } from "../fletcher.d";
+import { md5 } from "../helpers/md5";
+import { sortObject } from "../helpers/sort-object";
 
 export class Cache {
 	db = new Map();

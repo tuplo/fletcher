@@ -100,7 +100,7 @@ async function html(
 async function json<T = unknown>(
 	userUrl: string,
 	userOptions?: Partial<IFletcherUserOptions>
-) {
+): Promise<T> {
 	const cacheParams = { format: "json", url: userUrl, options: userOptions };
 	const hit = cache.hit(cacheParams);
 	if (hit) return JSON.parse(hit);
@@ -109,7 +109,7 @@ async function json<T = unknown>(
 	const src = text2json(raw);
 	cache.write({ ...cacheParams, payload: JSON.stringify(src) });
 
-	return src as T;
+	return src;
 }
 
 async function script<T = unknown>(

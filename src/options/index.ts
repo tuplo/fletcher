@@ -5,8 +5,8 @@ import type {
 	IFletcherOptions,
 	IFletcherUserOptions,
 	IProxyConfig,
-} from "src/fletcher.d";
-import type { IOptions as RetryOptions } from "src/helpers/async-retry";
+} from "../fletcher.d";
+import type { IOptions as RetryOptions } from "../helpers/async-retry";
 
 export function getDefaultOptions(
 	url = "http://foo.com"

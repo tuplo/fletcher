@@ -5,10 +5,10 @@ import puppeteer from "puppeteer-core";
 import type {
 	IFletcherBrowserUserOptions,
 	IFletcherUserOptions,
-} from "src/fletcher.d";
-import { Cache } from "src/options/cache";
-import { getJsonLd } from "src/options/json-ld";
-import { getScript } from "src/options/script";
+} from "../fletcher.d";
+import { Cache } from "../options/cache";
+import { getJsonLd } from "../options/json-ld";
+import { getScript } from "../options/script";
 
 interface IExecutorFn<T = unknown> {
 	(page: Page): Promise<T>;
