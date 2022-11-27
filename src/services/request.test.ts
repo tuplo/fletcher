@@ -49,11 +49,11 @@ describe("request", () => {
 				headers: {
 					accept: "application/json, text/plain, */*",
 					"accept-encoding": "gzip, deflate, br",
-					connection: "keep-alive",
+					connection: expect.anything(),
 					"content-length": "13",
 					"content-type": "application/x-www-form-urlencoded",
 					host: `localhost:${port}`,
-					"user-agent": "axios/1.2.0",
+					"user-agent": expect.anything(),
 				},
 			};
 			expect(JSON.parse(req)).toStrictEqual(expectedRequest);
