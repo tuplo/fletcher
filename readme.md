@@ -14,27 +14,48 @@ HTTP request library, focused on web scraping.
 
 ## Usage
 
+Fetch a HTML page and parse it using `cheerio`.
+
 ```typescript
-import fletcher from '@tuplo/fletcher';
+import fetch from '@tuplo/fletcher';
 
-const $page = await fletcher.html('https://foo.com/page.html');
+const $page = await fetch.html('https://foo.com/page.html');
 const heading = $page.find('body > h1');
+```
 
-const { foo } = await fletcher.json('https://foo.com/page.html');
+Fetch a JSON file and parse it.
 
-const { foo } = await fletcher.script('https://foo.com/page.html', {
-	scriptPath: 'script:nth-of-type(3)',
+```typescript
+const { foo } = await fetch.json('https://foo.com/page.html');
+```
+
+Find a script on a page and evaluate it.
+
+```typescript
+const { foo } = await fetch.script('https://foo.com/page.html', {
+  scriptPath: 'script:nth-of-type(3)',
 });
+```
 
-const [jsonld] = await fletcher.jsonld('https://foo.com/page.html');
+Find JSON-LD metadata on a page.
 
-const res = await fletcher.response('https://foo.com');
+```typescript
+const [jsonld] = await fetch.jsonld('https://foo.com/page.html');
+```
+
+Work with the raw Response.
+
+```typescript
+const res = await fetch.response('https://foo.com');
 console.log(res.headers);
 console.log(await res.text());
+```
 
-// puppeteer automation
-const client = fletcher.create({
-	browserWSEndpoint: 'ws://localhost:3000',
+Work with `Puppeteer` for headless browser automation.
+
+```typescript
+const client = fetch.create({
+  browserWSEndpoint: 'ws://localhost:3000',
 });
 const $page = await client.browser.html('https://foo.com');
 const { foo } = await client.browser.json('https://foo.com', /ajax-list/);
@@ -63,11 +84,11 @@ const { foo } = await client.browser.json('https://foo.com', /ajax-list/);
 
 ## API
 
-### `fletcher(url: string, options?: FletcherOptions) => http.Response`
+##### `fletcher(url: string, options?: FletcherOptions) => http.Response`
 
 Generic utility to return a HTTP Response
 
-### `fletcher.html(url: string, options?: FletcherOptions) => cheerio.Cheerio`
+##### `fletcher.html(url: string, options?: FletcherOptions) => cheerio.Cheerio`
 
 Requests a HTTP resource, parses it using Cheerio and returns its
 
@@ -76,7 +97,7 @@ const $page = await fletcher.html('https://foo.com/page.html');
 const heading = $page.find('body > h1');
 ```
 
-### `fletcher.script<T>(url: string, options?: FletcherOptions) => T`
+##### `fletcher.script<T>(url: string, options?: FletcherOptions) => T`
 
 Requests a HTTP resource, finds a `script` on it, executes and returns its global context.
 
@@ -86,31 +107,31 @@ const { foo } = await fletcher.script('https://foo.com/page.html', {
 });
 ```
 
-### `fletcher.text(url: string, options?: FletcherOptions) => string`
+##### `fletcher.text(url: string, options?: FletcherOptions) => string`
 
 Requests a HTTP resource, returning it as a `string`
 
-### `fletcher.json<T>(url: string, options?: FletcherOptions) => T`
+##### `fletcher.json<T>(url: string, options?: FletcherOptions) => T`
 
 Requests a HTTP resource, returning it as a JSON object
 
-### `fletcher.jsonld(url: string, options?: FletcherOptions) => unknown[]`
+##### `fletcher.jsonld(url: string, options?: FletcherOptions) => unknown[]`
 
 Requests a HTTP resource, retrieving all the JSON-LD blocks found on the document
 
-### `fletcher.response(url: string, options?: FletcherOptions) => Response`
+##### `fletcher.response(url: string, options?: FletcherOptions) => Response`
 
 Requests a HTTP resource, returning the full HTTP Response object
 
-### `fletcher.browser.html(url: string) => cheerio.Cheerio`
+##### `fletcher.browser.html(url: string) => cheerio.Cheerio`
 
 Requests a HTTP resource using Puppeteer/Chrome, parses it using Cheerio and returns its.
 
-### `fletcher.browser.json<T>(url: string, requestUrl: string | RegExp) => T`
+##### `fletcher.browser.json<T>(url: string, requestUrl: string | RegExp) => T`
 
 Requests a HTTP resource using Puppeteer/Chrome, intercepts a request made by that page and returns it as a JSON object
 
-### `fletcher.create(options: FletcherOptions) => Object`
+##### `fletcher.create(options: FletcherOptions) => Object`
 
 Creates a new instance of fletcher with a custom config
 
