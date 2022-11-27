@@ -3,25 +3,31 @@ import $ from "cheerio";
 import deepMerge from "deepmerge";
 
 import browser from "./services/browser";
-import { fletch } from "./services/fletch";
+import { request } from "./services/request";
 
 import { retry } from "./helpers/async-retry";
 import { delay } from "./helpers/delay";
 import { text2json } from "./helpers/text2json";
 
 import { toFletcherOptions } from "./options";
-import Cache from "./options/cache";
+import { Cache } from "./options/cache";
 import { getJsonLd } from "./options/json-ld";
 import { getScript } from "./options/script";
 
-import type * as FLETCH from "./fletcher.d";
+import type { IFletcherUserOptions, IInstance, IResponse } from "./fletcher.d";
+
+export type {
+	IFletcherUserOptions as IUserOptions,
+	IInstance,
+	IProxyConfig,
+} from "./fletcher.d";
 
 const cache = new Cache();
 
 function fletcher(
 	userUrl: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<FLETCH.Response> {
+	userOptions?: Partial<IFletcherUserOptions>
+): Promise<IResponse> {
 	const options = toFletcherOptions(userUrl, userOptions);
 	const {
 		url,
@@ -34,11 +40,11 @@ function fletcher(
 		console.error(url);
 	}
 
-	return delay<FLETCH.Response>(delayMs, () =>
+	return delay<IResponse>(delayMs, () =>
 		retry(async () => {
-			let res: FLETCH.Response;
+			let res: IResponse;
 			try {
-				res = await fletch(url, options);
+				res = await request(url, options);
 				if (!validateStatus(res.status)) {
 					throw Error(`${res.status}: ${res.statusText}`);
 				}
@@ -64,8 +70,8 @@ function fletcher(
 
 async function text(
 	userUrl: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<string> {
+	userOptions?: Partial<IFletcherUserOptions>
+) {
 	const cacheParams = { url: userUrl, options: userOptions, format: "text" };
 	// const cacheParams = { format: 'text', url: userUrl, options: userOptions };
 	const hit = cache.hit<string>(cacheParams);
@@ -79,8 +85,8 @@ async function text(
 
 async function html(
 	userUrl: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<cheerio.Cheerio> {
+	userOptions?: Partial<IFletcherUserOptions>
+) {
 	const cacheParams = { format: "html", url: userUrl, options: userOptions };
 	const hit = cache.hit(cacheParams);
 	if (hit) return $.load(hit).root();
@@ -93,8 +99,8 @@ async function html(
 
 async function json<T = unknown>(
 	userUrl: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<T> {
+	userOptions?: Partial<IFletcherUserOptions>
+) {
 	const cacheParams = { format: "json", url: userUrl, options: userOptions };
 	const hit = cache.hit(cacheParams);
 	if (hit) return JSON.parse(hit);
@@ -103,84 +109,72 @@ async function json<T = unknown>(
 	const src = text2json(raw);
 	cache.write({ ...cacheParams, payload: JSON.stringify(src) });
 
-	return src;
+	return src as T;
 }
 
 async function script<T = unknown>(
 	userUrl: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<T> {
+	userOptions?: Partial<IFletcherUserOptions>
+) {
 	const $page = await html(userUrl, userOptions);
 	return getScript<T>($page, userOptions);
 }
 
 async function jsonld(
 	userUrl: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<unknown[]> {
+	userOptions?: Partial<IFletcherUserOptions>
+) {
 	const $page = await html(userUrl, userOptions);
 	return getJsonLd($page);
 }
 
 async function headers(
 	url: string,
-	userOptions?: Partial<FLETCH.FletcherUserOptions>
-): Promise<FLETCH.Headers> {
+	userOptions?: Partial<IFletcherUserOptions>
+) {
 	const res = await fletcher(url, userOptions);
 	return res.headers;
 }
 
-export type UserOptions = FLETCH.FletcherUserOptions;
-export type Instance = FLETCH.Instance;
-export type ProxyConfig = FLETCH.ProxyConfig;
-
-function create(
-	defaultOptions: Partial<FLETCH.FletcherUserOptions> = {}
-): FLETCH.Instance {
+function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 	return {
-		headers: (url: string, options: Partial<FLETCH.FletcherUserOptions> = {}) =>
+		headers: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			headers(url, deepMerge(defaultOptions, options)),
-		html: (url: string, options: Partial<FLETCH.FletcherUserOptions> = {}) =>
+		html: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			html(url, deepMerge(defaultOptions, options)),
 		json: <T = unknown>(
 			url: string,
-			options: Partial<FLETCH.FletcherUserOptions> = {}
+			options: Partial<IFletcherUserOptions> = {}
 		) => json<T>(url, deepMerge(defaultOptions, options)),
-		jsonld: (url: string, options: Partial<FLETCH.FletcherUserOptions> = {}) =>
+		jsonld: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			jsonld(url, deepMerge(defaultOptions, options)),
-		response: (
-			url: string,
-			options: Partial<FLETCH.FletcherUserOptions> = {}
-		) => fletcher(url, deepMerge(defaultOptions, options)),
+		response: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
+			fletcher(url, deepMerge(defaultOptions, options)),
 		script: <T = unknown>(
 			url: string,
-			options: Partial<FLETCH.FletcherUserOptions> = {}
+			options: Partial<IFletcherUserOptions> = {}
 		) => script<T>(url, deepMerge(defaultOptions, options)),
-		text: (url: string, options: Partial<FLETCH.FletcherUserOptions> = {}) =>
+		text: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			text(url, deepMerge(defaultOptions, options)),
 		browser: {
 			close: () => browser.close(),
 			html: (
 				url: string,
-				options: Partial<FLETCH.FletcherUserOptions> = {}
+				options: Partial<IFletcherUserOptions> = {}
 			): Promise<cheerio.Cheerio> =>
 				browser.html(url, deepMerge(defaultOptions, options)),
 			json: <T>(
 				pageUrl: string,
 				requestUrl: string | RegExp,
-				options: Partial<FLETCH.FletcherUserOptions> = {}
+				options: Partial<IFletcherUserOptions> = {}
 			): Promise<T> =>
 				browser.json(pageUrl, requestUrl, deepMerge(defaultOptions, options)),
-			script: <T>(
-				url: string,
-				options: Partial<FLETCH.FletcherUserOptions> = {}
-			) => browser.script<T>(url, deepMerge(defaultOptions, options)),
-			jsonld: (
-				url: string,
-				options: Partial<FLETCH.FletcherUserOptions> = {}
-			) => browser.jsonld(url, deepMerge(defaultOptions, options)),
+			script: <T>(url: string, options: Partial<IFletcherUserOptions> = {}) =>
+				browser.script<T>(url, deepMerge(defaultOptions, options)),
+			jsonld: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
+				browser.jsonld(url, deepMerge(defaultOptions, options)),
 		},
-	};
+	} as IInstance;
 }
 
 export default Object.assign(fletcher, {

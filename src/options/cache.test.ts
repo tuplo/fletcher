@@ -1,6 +1,6 @@
-import type { CacheParams } from "src/fletcher.d";
+import type { ICacheParams } from "src/fletcher.d";
 
-import Cache from "./cache";
+import { Cache } from "./cache";
 
 describe("cache", () => {
 	const cache = new Cache();
@@ -67,8 +67,8 @@ describe("cache", () => {
 
 	describe("accepts custom methods", () => {
 		const url = "https://foo.com/page-1";
-		let cacheParams: CacheParams;
-		const defaultCacheParams: CacheParams = {
+		let cacheParams: ICacheParams;
+		const defaultCacheParams: ICacheParams = {
 			format: "json",
 			url,
 			options: { cache: true },

@@ -1,55 +1,51 @@
 /// <reference types="cheerio" />
 import type { AxiosRequestConfig, Method } from "axios";
 import type { IncomingHttpHeaders } from "http";
+import type * as VM from "node:vm";
 import type { ScreenshotOptions } from "puppeteer-core";
-import type * as VM from "vm";
 
-import type { Options as RetryOptions } from "./helpers/async-retry";
+import type { IOptions as RetryOptions } from "./helpers/async-retry";
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
 export type FetchOptions = AxiosRequestConfig;
 
-export type ProxyConfig = {
+export interface IProxyConfig {
 	username?: string;
 	password?: string;
 	host: string;
 	port: number;
 	protocol?: string;
-};
+}
 
 type RequestRedirect = "follow" | "error" | "manual";
 
 type RequestData = Record<string, unknown>;
 
-export type Headers = Partial<{
-	[key: string]: string | string[];
-}>;
-
-export type FletcherBrowserUserOptions = {
+export interface IFletcherBrowserUserOptions {
 	blockedResourceTypes: boolean | string[];
 	endpoint: string;
 	screenshot: ScreenshotOptions;
 	waitForSelector: string;
-};
+}
 
-export type CacheParams = {
+export interface ICacheParams {
 	format: string;
 	url: string;
-	options?: Partial<FletcherUserOptions>;
+	options?: Partial<IFletcherUserOptions>;
 	payload?: string;
-};
+}
 
-export type FletcherCacheMethods = {
+export interface IFletcherCacheMethods {
 	hit: (key: string) => null | unknown;
 	write: (key: string, payload?: string) => void;
-	key: (params: CacheParams) => string;
-};
+	key: (params: ICacheParams) => string;
+}
 
-export type FletcherUserOptions = {
-	browser: Partial<FletcherBrowserUserOptions>;
+export interface IFletcherUserOptions {
+	browser: Partial<IFletcherBrowserUserOptions>;
 	cache: boolean;
-	cacheMethods: Partial<FletcherCacheMethods>;
+	cacheMethods: Partial<IFletcherCacheMethods>;
 	delay: number;
 	encoding: BufferEncoding;
 	formData: RequestData;
@@ -59,7 +55,7 @@ export type FletcherUserOptions = {
 	log: boolean;
 	maxRedirections: number;
 	method: Method;
-	proxy: ProxyConfig;
+	proxy: IProxyConfig;
 	rejectUnauthorized?: boolean;
 	retry: boolean | number | RetryOptions;
 	scriptFindFn: (script: cheerio.Element) => boolean;
@@ -69,9 +65,9 @@ export type FletcherUserOptions = {
 	urlSearchParams: UrlSearchParams;
 	userAgent: string;
 	validateStatus: (statusCode: number) => boolean;
-};
+}
 
-export type FletcherOptions = {
+export interface IFletcherOptions {
 	body?: string;
 	cache: boolean;
 	delay: number;
@@ -79,69 +75,53 @@ export type FletcherOptions = {
 	maxRedirections?: number | undefined; // =20 maximum redirect count. 0 to not follow redirect
 	headers: Record<string, string>;
 	method: Method;
-	proxy?: ProxyConfig;
+	proxy?: IProxyConfig;
 	rejectUnauthorized?: boolean;
 	retry: RetryOptions;
 	timeout: number;
 	url: string;
 	validateStatus: (statusCode: number) => boolean;
-};
+}
 
-export interface Instance {
-	headers: (
-		url: string,
-		options?: Partial<FletcherUserOptions>
-	) => Promise<IncomingHttpHeaders>;
-	html: (
-		url: string,
-		options?: Partial<FletcherUserOptions>
-	) => Promise<cheerio.Cheerio>;
+interface IInstanceMethod<T> {
+	(url: string, options?: Partial<IFletcherUserOptions>): Promise<T>;
+}
+
+export interface IInstance {
+	headers: IInstanceMethod<IncomingHttpHeaders>;
+	html: IInstanceMethod<cheerio.Cheerio>;
 	json: <T = unknown>(
 		url: string,
-		options?: Partial<FletcherUserOptions>
+		options?: Partial<IFletcherUserOptions>
 	) => Promise<T>;
-	jsonld: (
-		url: string,
-		options?: Partial<FletcherUserOptions>
-	) => Promise<unknown[]>;
-	response: (
-		url: string,
-		options?: Partial<FletcherUserOptions>
-	) => Promise<Response>;
+	jsonld: IInstanceMethod<unknown[]>;
+	response: IInstanceMethod<IResponse>;
 	script: <T = unknown>(
 		url: string,
-		options?: Partial<FletcherUserOptions>
+		options?: Partial<IFletcherUserOptions>
 	) => Promise<T>;
-	text: (
-		url: string,
-		options?: Partial<FletcherUserOptions>
-	) => Promise<string>;
+	text: IInstanceMethod<string>;
 	browser: {
 		close: () => Promise<void>;
 		json: <T = unknown>(
 			url: string,
 			requestUrl: string | RegExp,
-			options?: Partial<FletcherUserOptions>
+			options?: Partial<IFletcherUserOptions>
 		) => Promise<T>;
-		html: (
-			url: string,
-			options?: Partial<FletcherUserOptions>
-		) => Promise<cheerio.Cheerio>;
+		html: IInstanceMethod<cheerio.Cheerio>;
+
 		script: <T = unknown>(
 			url: string,
-			options?: Partial<FletcherUserOptions>
+			options?: Partial<IFletcherUserOptions>
 		) => Promise<T>;
-		jsonld: (
-			url: string,
-			options?: Partial<FletcherUserOptions>
-		) => Promise<unknown[]>;
+		jsonld: IInstanceMethod<unknown[]>;
 	};
 }
 
-export type Response = {
+export interface IResponse {
 	// body: Readable & Dispatcher.BodyMixin;
 	headers: IncomingHttpHeaders;
 	status: number;
 	statusText?: string;
 	text: () => Promise<string>;
-};
+}

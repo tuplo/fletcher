@@ -1,25 +1,26 @@
-import puppeteer from "puppeteer-core";
-import type { Page, Browser } from "puppeteer-core";
 import $ from "cheerio";
+import type { Browser, Page } from "puppeteer-core";
+import puppeteer from "puppeteer-core";
 
 import type {
-	FletcherUserOptions,
-	FletcherBrowserUserOptions,
+	IFletcherBrowserUserOptions,
+	IFletcherUserOptions,
 } from "src/fletcher.d";
+import { Cache } from "src/options/cache";
+import { getJsonLd } from "src/options/json-ld";
+import { getScript } from "src/options/script";
 
-import { getScript } from "../options/script";
-import { getJsonLd } from "../options/json-ld";
-import Cache from "../options/cache";
-
-type ExecutorFn<T = unknown> = (page: Page) => Promise<T>;
+interface IExecutorFn<T = unknown> {
+	(page: Page): Promise<T>;
+}
 
 const cache = new Cache();
 
 let browser: Browser | null = null;
 
-async function fetch<T>(
-	executor: ExecutorFn<T>,
-	options: Partial<FletcherUserOptions> = {}
+async function request<T>(
+	executor: IExecutorFn<T>,
+	options: Partial<IFletcherUserOptions> = {}
 ) {
 	const { userAgent, proxy } = options;
 	const { browser: browserOptions } = options;
@@ -49,7 +50,8 @@ async function fetch<T>(
 		await page.authenticate({ username, password });
 	}
 
-	const { blockedResourceTypes } = browserOptions as FletcherBrowserUserOptions;
+	const { blockedResourceTypes } =
+		browserOptions as IFletcherBrowserUserOptions;
 	const shouldBlockResourceTypes =
 		typeof blockedResourceTypes === "undefined" ||
 		Array.isArray(blockedResourceTypes);
@@ -62,11 +64,11 @@ async function fetch<T>(
 		];
 		const rgBlockedResourceTypesRg = new RegExp(blockResourceTypes.join("|"));
 		await page.setRequestInterception(true);
-		page.on("request", async (request) => {
-			if (rgBlockedResourceTypesRg.test(request.resourceType())) {
-				request.abort();
+		page.on("request", async (req) => {
+			if (rgBlockedResourceTypesRg.test(req.resourceType())) {
+				req.abort();
 			} else {
-				request.continue();
+				req.continue();
 			}
 		});
 	}
@@ -77,10 +79,7 @@ async function fetch<T>(
 	return res;
 }
 
-async function html(
-	url: string,
-	options: Partial<FletcherUserOptions> = {}
-): Promise<cheerio.Cheerio> {
+async function html(url: string, options: Partial<IFletcherUserOptions> = {}) {
 	const { browser: browserOptions } = options;
 
 	if (options?.log) {
@@ -113,14 +112,14 @@ async function html(
 	const hit = cache.hit(cacheParams);
 	if (hit) return $.load(hit).root();
 
-	return fetch(executor, options);
+	return request(executor, options);
 }
 
 async function json<T>(
 	pageUrl: string,
 	requestUrl: string | RegExp,
-	options: Partial<FletcherUserOptions> = {}
-): Promise<T> {
+	options: Partial<IFletcherUserOptions> = {}
+) {
 	const cacheParams = {
 		format: "json",
 		url: pageUrl,
@@ -155,15 +154,15 @@ async function json<T>(
 	const hit = cache.hit(cacheParams);
 	if (hit) return JSON.parse(hit);
 
-	return fetch<T>(executor, options);
+	return request<T>(executor, options);
 }
 
-async function script<T>(url: string, options: Partial<FletcherUserOptions>) {
+async function script<T>(url: string, options: Partial<IFletcherUserOptions>) {
 	const $page = await html(url, options);
 	return getScript<T>($page, options);
 }
 
-async function jsonld<T>(url: string, options: Partial<FletcherUserOptions>) {
+async function jsonld<T>(url: string, options: Partial<IFletcherUserOptions>) {
 	const $page = await html(url, options);
 	return getJsonLd<T>($page);
 }

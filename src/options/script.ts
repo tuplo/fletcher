@@ -1,14 +1,13 @@
-import vm from "node:vm";
 import $ from "cheerio";
+import vm from "node:vm";
 
-import type { FletcherUserOptions } from "src/fletcher.d";
+import type { IFletcherUserOptions } from "src/fletcher.d";
 
 export function getScript<T>(
 	$page: cheerio.Cheerio,
-	userOptions?: Partial<FletcherUserOptions>
+	userOptions: Partial<IFletcherUserOptions> = {}
 ) {
-	const { scriptPath, scriptFindFn, scriptSandbox } =
-		userOptions || ({} as FletcherUserOptions);
+	const { scriptPath, scriptFindFn, scriptSandbox } = userOptions;
 	if (!scriptPath && !scriptFindFn)
 		throw new Error("fletch.script: scriptPath or scriptFindFn are required");
 
@@ -20,7 +19,7 @@ export function getScript<T>(
 		$el = $(elScript);
 	}
 
-	if (!$el) {
+	if (!$el || $el?.length === 0) {
 		throw new Error("fletch.script: script element not found");
 	}
 

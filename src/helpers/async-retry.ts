@@ -1,7 +1,7 @@
 import type { WrapOptions } from "retry";
 import retrier from "retry";
 
-export interface Options extends WrapOptions {
+export interface IOptions extends WrapOptions {
 	onRetry?: ((e: Error, attempt: number) => unknown) | undefined;
 }
 
@@ -13,7 +13,7 @@ interface IAsyncFn<T> {
 	(...args: unknown[]): Promise<T>;
 }
 
-export function retry<T>(fn: IAsyncFn<T>, opts: Options): Promise<T> {
+export function retry<T>(fn: IAsyncFn<T>, opts: IOptions): Promise<T> {
 	function run(
 		resolve: (value: unknown) => void,
 		reject: (reason?: unknown) => void

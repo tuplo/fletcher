@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this */
-import { md5 } from "../helpers/md5";
-import { sortObject } from "../helpers/sort-object";
-import type { CacheParams } from "../fletcher.d";
+import type { ICacheParams } from "src/fletcher.d";
+import { md5 } from "src/helpers/md5";
+import { sortObject } from "src/helpers/sort-object";
 
-export default class Cache {
+export class Cache {
 	db = new Map();
 
-	hit = <T = string>(params: CacheParams): null | T => {
+	hit = <T = string>(params: ICacheParams): null | T => {
 		const { options } = params;
 		if (!options?.cache) return null;
 
@@ -24,7 +24,7 @@ export default class Cache {
 		return null;
 	};
 
-	write = (params: CacheParams): void => {
+	write = (params: ICacheParams): void => {
 		const { options } = params;
 		if (!options?.cache) return;
 
@@ -40,7 +40,7 @@ export default class Cache {
 		this.db.set(key, payload);
 	};
 
-	key = (params: CacheParams): string => {
+	key = (params: ICacheParams): string => {
 		const { format, url, options } = params;
 
 		const { cacheMethods } = options || {};

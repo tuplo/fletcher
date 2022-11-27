@@ -1,17 +1,16 @@
 /* eslint-disable no-case-declarations */
 import type { Method } from "axios";
 
-import type { Options as RetryOptions } from "../helpers/async-retry";
-
 import type {
-	FletcherUserOptions,
-	FletcherOptions,
-	ProxyConfig,
-} from "../fletcher.d";
+	IFletcherOptions,
+	IFletcherUserOptions,
+	IProxyConfig,
+} from "src/fletcher.d";
+import type { IOptions as RetryOptions } from "src/helpers/async-retry";
 
 export function getDefaultOptions(
 	url = "http://foo.com"
-): Omit<FletcherOptions, "url"> {
+): Omit<IFletcherOptions, "url"> {
 	return {
 		cache: false,
 		delay: process.env.NODE_ENV === "test" ? 0 : 1_000,
@@ -34,8 +33,8 @@ export function getDefaultOptions(
 
 export function toFletcherOptions(
 	url: string,
-	options?: Partial<FletcherUserOptions>
-): FletcherOptions {
+	options?: Partial<IFletcherUserOptions>
+) {
 	return Object.entries(options || {}).reduce(
 		(acc, [key, value]) => {
 			switch (key) {
@@ -79,7 +78,7 @@ export function toFletcherOptions(
 					acc.method = value.toString() as Method;
 					break;
 				case "proxy":
-					acc.proxy = value as ProxyConfig;
+					acc.proxy = value as IProxyConfig;
 					break;
 				case "rejectUnauthorized":
 					acc.rejectUnauthorized = Boolean(value);
@@ -124,6 +123,6 @@ export function toFletcherOptions(
 		{
 			...getDefaultOptions(url),
 			url,
-		} as FletcherOptions
+		} as IFletcherOptions
 	);
 }
