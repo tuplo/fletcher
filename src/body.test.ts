@@ -1,9 +1,28 @@
+import { server, getRandomPort } from "src/mocks";
+
 import fletcher from "./index";
 
 describe("body formats", () => {
+	let url: URL;
+	let port: number;
+
+	beforeAll(async () => {
+		port = await getRandomPort();
+		server.listen(port);
+	});
+
+	beforeEach(() => {
+		url = new URL("http://localhost");
+		url.port = `${port}`;
+	});
+
+	afterAll(async () => {
+		server.close();
+	});
+
 	it("formData", async () => {
-		const url = "https://fletcher.dev/body";
-		const result = await fletcher.json(url, {
+		url.pathname = "/anything";
+		const result = await fletcher.json(url.href, {
 			formData: { foo: "bar", baz: "quz" },
 		});
 
@@ -18,8 +37,8 @@ describe("body formats", () => {
 	});
 
 	it("formUrlEncoded", async () => {
-		const url = "https://fletcher.dev/body";
-		const actual = await fletcher.json(url, {
+		url.pathname = "/anything";
+		const actual = await fletcher.json(url.href, {
 			formUrlEncoded: { foo: "bar", baz: "quz" },
 		});
 
@@ -34,8 +53,8 @@ describe("body formats", () => {
 	});
 
 	it("jsonData", async () => {
-		const url = "https://fletcher.dev/body";
-		const result = await fletcher.json(url, {
+		url.pathname = "/anything";
+		const result = await fletcher.json(url.href, {
 			jsonData: { foo: "bar", baz: "quz" },
 		});
 

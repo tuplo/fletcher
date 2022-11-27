@@ -10,7 +10,6 @@ HTTP request library, focused on web scraping.
   <a href="https://codeclimate.com/github/tuplo/fletcher/test_coverage">
     <img src="https://api.codeclimate.com/v1/badges/4a26597a1e38d18ba6d5/test_coverage" />
   </a>
-  <img src="https://github.com/tuplo/fletcher/workflows/Build/badge.svg">
 </p>
 
 ## Usage

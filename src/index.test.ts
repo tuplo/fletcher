@@ -1,15 +1,36 @@
-import fletcher from ".";
+import { server, getRandomPort } from "src/mocks";
+
+import fletcher from "./index";
 
 describe("fletcher - HTTP client", () => {
+	let url: URL;
+	let port: number;
+
+	beforeAll(async () => {
+		port = await getRandomPort();
+		server.listen(port);
+	});
+
+	beforeEach(() => {
+		url = new URL("http://localhost");
+		url.port = `${port}`;
+	});
+
+	afterAll(async () => {
+		server.close();
+	});
+
 	it("simple text (GET)", async () => {
-		const result = await fletcher.text("https://fletcher.dev/file/simple.html");
+		url.pathname = "/file/simple.html";
+		const result = await fletcher.text(url.href);
 
 		const expected = /Simple heading/;
 		expect(result).toMatch(expected);
 	});
 
 	it("simple html (GET)", async () => {
-		const $page = await fletcher.html("https://fletcher.dev/file/simple.html");
+		url.pathname = "/file/simple.html";
+		const $page = await fletcher.html(url.href);
 		const result = $page.find("h1").text();
 
 		const expected = "Simple heading";
@@ -17,26 +38,25 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("simple json (GET)", async () => {
-		const result = await fletcher.json("https://fletcher.dev/file/simple.json");
+		url.pathname = "/file/simple.json";
+		const result = await fletcher.json(url.href);
 
 		const expected = { foo: "bar" };
 		expect(result).toStrictEqual(expected);
 	});
 
 	it("simple json (GET) with generic type", async () => {
+		url.pathname = "/file/simple.json";
 		type FooBar = { foo: string };
-		const result = await fletcher.json<FooBar>(
-			"https://fletcher.dev/file/simple.json"
-		);
+		const result = await fletcher.json<FooBar>(url.href);
 
 		const expected: FooBar = { foo: "bar" };
 		expect(result).toStrictEqual(expected);
 	});
 
 	it("json-ld (GET)", async () => {
-		const result = await fletcher.jsonld(
-			"https://fletcher.dev/file/json-ld.html"
-		);
+		url.pathname = "/file/json-ld.html";
+		const result = await fletcher.jsonld(url.href);
 
 		const expected = {
 			"@context": "http://schema.org",
@@ -64,23 +84,24 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("returns the headers on a request", async () => {
-		const actual = await fletcher.headers("https://fletcher.dev/headers");
+		url.pathname = "/headers";
+		const actual = await fletcher.headers(url.href);
 
 		const expected = { foo: "bar" };
 		expect(actual).toMatchObject(expected);
 	});
 
 	it("returns statusText on Error message", async () => {
-		const fn = async () =>
-			fletcher.json("https://fletcher.dev/error", { retry: false });
+		url.pathname = "/error";
+		const fn = async () => fletcher.json(url.href, { retry: false });
 
-		const expected =
-			"500: Request failed with status code 500 - https://fletcher.dev/error";
+		const expected = `500: Internal Server Error - http://localhost:${port}/error`;
 		await expect(fn).rejects.toThrow(expected);
 	});
 
 	it("requests an URL with special characters", async () => {
-		const actual = await fletcher.json("https://fletcher.dev/drácula");
+		url.pathname = "/drácula";
+		const actual = await fletcher.json(url.href);
 
 		const expected = { foo: "bar" };
 		expect(actual).toStrictEqual(expected);
@@ -88,8 +109,8 @@ describe("fletcher - HTTP client", () => {
 
 	// eslint-disable-next-line jest/no-disabled-tests
 	it.skip("encoding", async () => {
-		const url = "https://www.rtp.pt/programa/tv/p34454";
-		const result = await fletcher.text(url, { encoding: "latin1" });
+		const url2 = "https://www.rtp.pt/programa/tv/p34454";
+		const result = await fletcher.text(url2, { encoding: "latin1" });
 
 		expect(result).toMatch(/programação/);
 	});
