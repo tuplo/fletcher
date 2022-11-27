@@ -1,24 +1,24 @@
 import { toFletcherOptions } from "./options";
 import fletcher from "./index";
 
-const fletchSpy = jest.fn();
-jest.mock("./services/fletch", () => ({
+const requestSpy = jest.fn();
+jest.mock("./services/request", () => ({
 	__esModule: true,
-	fletch: (url: string) => fletchSpy(url),
+	request: (url: string) => requestSpy(url),
 }));
 
 describe("retry", () => {
 	afterEach(() => {
-		fletchSpy.mockClear();
+		requestSpy.mockClear();
 	});
 
 	afterAll(() => {
-		fletchSpy.mockRestore();
+		requestSpy.mockRestore();
 	});
 
 	it("retries failed request", async () => {
 		let i = 0;
-		fletchSpy.mockImplementation(() => {
+		requestSpy.mockImplementation(() => {
 			i += 1;
 			return {
 				status: i < 3 ? 500 : 200,
@@ -36,28 +36,28 @@ describe("retry", () => {
 			},
 		});
 
-		expect(fletchSpy).toHaveBeenCalledTimes(3);
+		expect(requestSpy).toHaveBeenCalledTimes(3);
 	});
 
 	it("doesn't retry if options.retry=false", async () => {
-		fletchSpy.mockResolvedValue({ status: 500 });
+		requestSpy.mockResolvedValue({ status: 500 });
 		const result = fletcher.html("http://localhost", {
 			retry: false,
 		});
 
 		await expect(result).rejects.toThrow("500: undefined");
-		expect(fletchSpy).toHaveBeenCalledTimes(1);
+		expect(requestSpy).toHaveBeenCalledTimes(1);
 	});
 
 	it("retries number of times if retry:number", async () => {
 		const mathRandomSpy = jest.spyOn(Math, "random").mockReturnValue(0.1);
-		fletchSpy.mockResolvedValue({ status: 500, statusText: "foobar" });
+		requestSpy.mockResolvedValue({ status: 500, statusText: "foobar" });
 		const r = fletcher.html("http://localhost", {
 			retry: 1,
 		});
 
 		await expect(r).rejects.toThrow("foobar");
-		expect(fletchSpy).toHaveBeenCalledTimes(2);
+		expect(requestSpy).toHaveBeenCalledTimes(2);
 
 		mathRandomSpy.mockRestore();
 	});
