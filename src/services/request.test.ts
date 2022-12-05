@@ -48,7 +48,7 @@ describe("request", () => {
 				body: '{"foo":"bar"}',
 				headers: {
 					accept: "application/json, text/plain, */*",
-					"accept-encoding": "gzip, deflate, br",
+					"accept-encoding": "gzip, compress, deflate, br",
 					connection: expect.anything(),
 					"content-length": "13",
 					"content-type": "application/x-www-form-urlencoded",

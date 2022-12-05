@@ -37,7 +37,7 @@
 	"dependencies": {
 		"@types/cheerio": "0.22.31",
 		"@types/retry": "0.12.2",
-		"axios": "1.2.0",
+		"axios": "1.2.1",
 		"cheerio": "1.0.0-rc.12",
 		"deepmerge": "4.2.2",
 		"hpagent": "1.2.0",
@@ -45,12 +45,12 @@
 		"retry": "0.13.1"
 	},
 	"devDependencies": {
-		"@types/jest": "29.2.3",
+		"@types/jest": "29.2.4",
 		"@types/mime": "3.0.1",
-		"@types/node": "18.11.9",
-		"@typescript-eslint/eslint-plugin": "5.44.0",
-		"@typescript-eslint/parser": "5.44.0",
-		"eslint": "8.28.0",
+		"@types/node": "18.11.11",
+		"@typescript-eslint/eslint-plugin": "5.45.1",
+		"@typescript-eslint/parser": "5.45.1",
+		"eslint": "8.29.0",
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-config-airbnb-typescript": "17.0.0",
 		"eslint-config-prettier": "8.5.0",
