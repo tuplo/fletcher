@@ -94,10 +94,11 @@ describe("request", () => {
 			url.searchParams.append("url", "/redirected");
 			const actual = await request(url.href);
 			const body = await actual.text();
+			const json = JSON.parse(body);
 
 			const expected = { url: "/redirected" };
 			expect(actual.status).toBe(200);
-			expect(body).toStrictEqual(expected);
+			expect(json).toStrictEqual(expected);
 		});
 
 		it("doesn't follow redirects", async () => {
