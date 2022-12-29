@@ -6,7 +6,7 @@ import https from "node:https";
 
 import type { IFletcherOptions, IResponse } from "../fletcher";
 
-function toAxiosOptions(fletcherOptions: Partial<IFletcherOptions>) {
+function toAxiosOptions(fletcherOptions?: Partial<IFletcherOptions>) {
 	const {
 		body,
 		encoding,
@@ -17,7 +17,7 @@ function toAxiosOptions(fletcherOptions: Partial<IFletcherOptions>) {
 		rejectUnauthorized,
 		timeout = 30_000,
 		validateStatus,
-	} = fletcherOptions;
+	} = fletcherOptions || {};
 
 	const options: AxiosRequestConfig = {
 		maxRedirects: maxRedirections,
@@ -72,7 +72,7 @@ export async function request(
 	try {
 		// encode special characters on the URL
 		const u = new URL(url);
-		const options = userOptions ? toAxiosOptions(userOptions) : undefined;
+		const options = toAxiosOptions(userOptions);
 		const response = await axios(u.href, options);
 		const { data, headers, status, statusText } = response;
 
