@@ -1,8 +1,10 @@
+import { vi } from "vitest";
+
 import { toFletcherOptions } from "./options";
 import fletcher from "./index";
 
-const requestSpy = jest.fn();
-jest.mock<typeof import("./services/request")>("./services/request", () => ({
+const requestSpy = vi.fn();
+vi.mock("./services/request", () => ({
 	__esModule: true,
 	request: (url: string) => requestSpy(url),
 }));
@@ -50,7 +52,7 @@ describe("retry", () => {
 	});
 
 	it("retries number of times if retry:number", async () => {
-		const mathRandomSpy = jest.spyOn(Math, "random").mockReturnValue(0.1);
+		const mathRandomSpy = vi.spyOn(Math, "random").mockReturnValue(0.1);
 		requestSpy.mockResolvedValue({ status: 500, statusText: "foobar" });
 		const r = fletcher.html("http://localhost", {
 			retry: 1,

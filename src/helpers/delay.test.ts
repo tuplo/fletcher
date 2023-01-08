@@ -1,15 +1,17 @@
+import { vi } from "vitest";
+
 import { delay } from "./delay";
 
 describe("delay", () => {
 	it("delays execution of given function", () => {
-		jest.useFakeTimers();
-		const fnSpy = jest.fn();
+		vi.useFakeTimers();
+		const fnSpy = vi.fn();
 
 		delay(30_000, fnSpy);
 		expect(fnSpy).not.toHaveBeenCalled();
-		jest.advanceTimersByTime(30_000);
+		vi.advanceTimersByTime(30_000);
 		expect(fnSpy).toHaveBeenCalledTimes(1);
 
-		jest.useRealTimers();
+		vi.useRealTimers();
 	});
 });

@@ -1,3 +1,5 @@
+import { vi } from "vitest";
+
 import type { ICacheParams } from "src/fletcher.d";
 
 import { Cache } from "./cache";
@@ -79,7 +81,7 @@ describe("cache", () => {
 		});
 
 		it("uses hit custom method", () => {
-			const hitSpy = jest.fn().mockReturnValue("foobar");
+			const hitSpy = vi.fn().mockReturnValue("foobar");
 			cacheParams.options = {
 				...cacheParams.options,
 				cacheMethods: { hit: hitSpy },
@@ -92,7 +94,7 @@ describe("cache", () => {
 		});
 
 		it("uses write custom method", () => {
-			const writeSpy = jest.fn();
+			const writeSpy = vi.fn();
 			cacheParams = {
 				...cacheParams,
 				options: {
@@ -111,7 +113,7 @@ describe("cache", () => {
 		});
 
 		it("uses key custom method", () => {
-			const keySpy = jest.fn().mockReturnValue("key-1");
+			const keySpy = vi.fn().mockReturnValue("key-1");
 			cacheParams = {
 				...cacheParams,
 				options: {

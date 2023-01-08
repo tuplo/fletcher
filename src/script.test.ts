@@ -55,7 +55,6 @@ describe("inline scripts", () => {
 		const expected = new Error(
 			"fletch.script: scriptPath or scriptFindFn are required"
 		);
-		// eslint-disable-next-line jest/no-test-return-statement
 		return expect(actual).rejects.toThrow(expected);
 	});
 

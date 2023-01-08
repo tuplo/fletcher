@@ -201,7 +201,6 @@ describe("request", () => {
 	});
 
 	describe("proxy", () => {
-		// eslint-disable-next-line jest/no-disabled-tests
 		it.skip("uses a proxy", async () => {
 			url.pathname = "/ip";
 			const proxy = {

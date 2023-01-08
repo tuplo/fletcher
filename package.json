@@ -11,12 +11,23 @@
 		"scraping"
 	],
 	"files": [
-		"dist/**/*.js",
+		"dist/index.mjs",
 		"dist/index.d.ts",
 		"dist/fletcher.d.ts",
 		"dist/helpers/async-retry.d.ts"
 	],
-	"main": "./dist/index.js",
+	"main": "./cjs/index.js",
+	"module": "./dist/index.mjs",
+	"exports": {
+		".": [
+			{
+				"import": "./dist/index.mjs",
+				"require": "./cjs/index.js",
+				"default": "./dist/index.mjs"
+			},
+			"./dist/index.mjs"
+		]
+	},
 	"types": "dist/index.d.ts",
 	"engines": {
 		"node": ">=14"
@@ -29,10 +40,10 @@
 		"coverage": "tsx sh/coverage.ts",
 		"dev": "tsx sh/dev.ts",
 		"format": "prettier --write src",
-		"lint:ts": "tsc --noEmit --project tsconfig.build.json",
+		"lint:ts": "tsc --noEmit",
 		"lint": "eslint src --ext ts",
-		"test:ci": "jest --ci",
-		"test": "jest --watch"
+		"test:ci": "vitest run",
+		"test": "vitest --watch"
 	},
 	"dependencies": {
 		"@types/cheerio": "0.22.31",
@@ -45,25 +56,22 @@
 		"retry": "0.13.1"
 	},
 	"devDependencies": {
-		"@types/jest": "29.2.5",
 		"@types/mime": "3.0.1",
 		"@types/node": "18.11.18",
 		"@typescript-eslint/eslint-plugin": "5.48.0",
 		"@typescript-eslint/parser": "5.48.0",
+		"esbuild": "0.16.15",
 		"eslint": "8.31.0",
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-config-airbnb-typescript": "17.0.0",
 		"eslint-config-prettier": "8.6.0",
 		"eslint-plugin-import": "2.26.0",
-		"eslint-plugin-jest": "27.2.1",
-		"jest": "29.3.1",
 		"mime": "3.0.0",
 		"nyc": "15.1.0",
 		"prettier": "2.8.2",
-		"ts-jest": "29.0.3",
-		"ts-node": "10.9.1",
 		"tsx": "3.12.1",
 		"typescript": "4.9.4",
+		"vitest": "0.26.3",
 		"zx": "7.1.1"
 	}
 }

@@ -107,7 +107,6 @@ describe("fletcher - HTTP client", () => {
 		expect(actual).toStrictEqual(expected);
 	});
 
-	// eslint-disable-next-line jest/no-disabled-tests
 	it.skip("encoding", async () => {
 		const url2 = "https://www.rtp.pt/programa/tv/p34454";
 		const result = await fletcher.text(url2, { encoding: "latin1" });

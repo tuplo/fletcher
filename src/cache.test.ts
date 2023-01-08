@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-restricted-syntax */
+import { vi } from "vitest";
+
 import fletcher from "./index";
 
-const requestSpy = jest.fn();
-jest.mock<typeof import("./services/request")>("./services/request", () => ({
+const requestSpy = vi.fn();
+vi.mock("./services/request", () => ({
 	request: (url: string) => requestSpy(url),
 }));
 
