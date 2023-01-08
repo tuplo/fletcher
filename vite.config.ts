@@ -6,6 +6,9 @@ process.env.DB_FILE_CMS = ":memory:";
 export default defineConfig({
 	test: {
 		globals: true,
+		coverage: {
+			reporter: ["lcov"],
+		},
 	},
 	resolve: {
 		alias: {
