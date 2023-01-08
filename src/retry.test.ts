@@ -2,7 +2,7 @@ import { toFletcherOptions } from "./options";
 import fletcher from "./index";
 
 const requestSpy = jest.fn();
-jest.mock("./services/request", () => ({
+jest.mock<typeof import("./services/request")>("./services/request", () => ({
 	__esModule: true,
 	request: (url: string) => requestSpy(url),
 }));
