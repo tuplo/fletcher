@@ -11,18 +11,19 @@
 		"scraping"
 	],
 	"files": [
+		"dist/index.cjs",
 		"dist/index.mjs",
 		"dist/index.d.ts",
 		"dist/fletcher.d.ts",
 		"dist/helpers/async-retry.d.ts"
 	],
-	"main": "./cjs/index.js",
+	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"exports": {
 		".": [
 			{
 				"import": "./dist/index.mjs",
-				"require": "./cjs/index.js",
+				"require": "./dist/index.cjs",
 				"default": "./dist/index.mjs"
 			},
 			"./dist/index.mjs"
