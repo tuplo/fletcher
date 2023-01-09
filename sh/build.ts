@@ -9,6 +9,7 @@ async function main() {
 		"--platform=node",
 		"--external:puppeteer-core",
 		"--external:axios",
+		"--external:hpagent",
 	];
 
 	await $`esbuild src/index.ts --outfile=dist/index.cjs ${flags}`;
