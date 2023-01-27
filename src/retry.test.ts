@@ -23,7 +23,7 @@ describe("retry", () => {
 		requestSpy.mockImplementation(() => {
 			i += 1;
 			return {
-				status: i < 3 ? 500 : 200,
+				statusCode: i < 3 ? 500 : 200,
 				text: () => "<html></html>",
 			};
 		});
@@ -42,7 +42,7 @@ describe("retry", () => {
 	});
 
 	it("doesn't retry if options.retry=false", async () => {
-		requestSpy.mockResolvedValue({ status: 500 });
+		requestSpy.mockResolvedValue({ statusCode: 500 });
 		const result = fletcher.html("http://localhost", {
 			retry: false,
 		});
@@ -53,7 +53,7 @@ describe("retry", () => {
 
 	it("retries number of times if retry:number", async () => {
 		const mathRandomSpy = vi.spyOn(Math, "random").mockReturnValue(0.1);
-		requestSpy.mockResolvedValue({ status: 500, statusText: "foobar" });
+		requestSpy.mockResolvedValue({ statusCode: 500, statusMessage: "foobar" });
 		const r = fletcher.html("http://localhost", {
 			retry: 1,
 		});

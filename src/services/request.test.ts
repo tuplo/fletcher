@@ -35,8 +35,8 @@ describe("request", () => {
 				headers: {
 					date: "2022-12-25T00:00:00.000Z",
 				},
-				status: 200,
-				statusText: "OK",
+				statusCode: 200,
+				statusMessage: "OK",
 				text: expect.anything(),
 			};
 			expect(actual).toMatchObject(expected);
@@ -97,7 +97,7 @@ describe("request", () => {
 			const json = JSON.parse(body);
 
 			const expected = { url: "/redirected" };
-			expect(actual.status).toBe(200);
+			expect(actual.statusCode).toBe(200);
 			expect(json).toStrictEqual(expected);
 		});
 
@@ -107,21 +107,21 @@ describe("request", () => {
 			url.searchParams.append("url", "/redirected");
 			const actual = await request(url.href, { maxRedirections: 0 });
 
-			expect(actual.status).toBe(302);
-			expect(actual.statusText).toBe("Found");
+			expect(actual.statusCode).toBe(302);
+			expect(actual.statusMessage).toBe("Found");
 		});
 	});
 
 	describe("errors", () => {
 		it("includes the URL on an errored response", async () => {
 			url.pathname = "/error";
-			const result = await request(url.href);
+			const actual = await request(url.href);
 
 			const expected = {
-				status: 500,
-				statusText: `Internal Server Error - http://localhost:${port}/error`,
+				statusCode: 500,
+				statusMessage: `Internal Server Error - http://localhost:${port}/error`,
 			};
-			expect(result).toMatchObject(expected);
+			expect(actual).toMatchObject(expected);
 		});
 	});
 
@@ -149,7 +149,7 @@ describe("request", () => {
 			});
 
 			const expected = `unable to verify the first certificate - https://localhost:${httpsPort}/`;
-			expect(actual.statusText).toBe(expected);
+			expect(actual.statusMessage).toBe(expected);
 		});
 
 		it("doesn't reject unauthorized", async () => {
@@ -158,7 +158,7 @@ describe("request", () => {
 			});
 
 			const expected = "OK";
-			expect(actual.statusText).toBe(expected);
+			expect(actual.statusMessage).toBe(expected);
 		});
 	});
 
@@ -170,8 +170,8 @@ describe("request", () => {
 				const actual = await request(url.href);
 
 				const expected = STATUS_CODES[statusCode];
-				expect(actual.status).toBe(statusCode);
-				expect(actual.statusText).toBe(expected);
+				expect(actual.statusCode).toBe(statusCode);
+				expect(actual.statusMessage).toBe(expected);
 			}
 		);
 
@@ -182,8 +182,8 @@ describe("request", () => {
 				const actual = await request(url.href);
 
 				const expected = `${STATUS_CODES[statusCode]} - http://localhost:${port}/status-code/${statusCode}`;
-				expect(actual.status).toBe(statusCode);
-				expect(actual.statusText).toBe(expected);
+				expect(actual.statusCode).toBe(statusCode);
+				expect(actual.statusMessage).toBe(expected);
 			}
 		);
 
@@ -195,8 +195,8 @@ describe("request", () => {
 			const actual = await request(url.href, options);
 
 			const expected = "Internal Server Error";
-			expect(actual.status).toBe(500);
-			expect(actual.statusText).toBe(expected);
+			expect(actual.statusCode).toBe(500);
+			expect(actual.statusMessage).toBe(expected);
 		});
 	});
 

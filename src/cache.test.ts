@@ -20,7 +20,7 @@ describe("cache", () => {
 
 	it("caches requests with the same url (text)", async () => {
 		requestSpy.mockResolvedValue({
-			status: 200,
+			statusCode: 200,
 			text: async () => "foobar",
 		});
 
@@ -37,7 +37,7 @@ describe("cache", () => {
 
 	it("caches requests with the same url (html)", async () => {
 		requestSpy.mockResolvedValue({
-			status: 200,
+			statusCode: 200,
 			text: async () => "<h1>foobar</h1>",
 		});
 
@@ -54,7 +54,7 @@ describe("cache", () => {
 
 	it("caches requests with the same url (json)", async () => {
 		requestSpy.mockResolvedValue({
-			status: 200,
+			statusCode: 200,
 			text: async () => JSON.stringify({ foo: "bar" }),
 		});
 
@@ -71,7 +71,7 @@ describe("cache", () => {
 
 	it("doesn't cache requests with different options", async () => {
 		requestSpy.mockResolvedValue({
-			status: 200,
+			statusCode: 200,
 			text: async () => JSON.stringify({ foo: "bar" }),
 		});
 

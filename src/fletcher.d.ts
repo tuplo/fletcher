@@ -1,6 +1,6 @@
 /// <reference types="cheerio" />
-import type { AxiosRequestConfig, Method } from "axios";
-import type { IncomingHttpHeaders } from "http";
+import type { AxiosRequestConfig, AxiosResponseHeaders, Method } from "axios";
+import type { IncomingHttpHeaders } from "node:http";
 import type * as VM from "node:vm";
 import type { ScreenshotOptions } from "puppeteer-core";
 
@@ -120,8 +120,8 @@ export interface IInstance {
 
 export interface IResponse {
 	// body: Readable & Dispatcher.BodyMixin;
-	headers: IncomingHttpHeaders;
-	status: number;
-	statusText?: string;
+	headers: AxiosResponseHeaders;
+	statusCode: number;
+	statusMessage?: string;
 	text: () => Promise<string>;
 }

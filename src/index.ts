@@ -42,11 +42,11 @@ function fletcher(
 
 	return delay<IResponse>(delayMs, () =>
 		retry(async () => {
-			let res: IResponse;
+			let res: IResponse | undefined;
 			try {
 				res = await request(url, options);
-				if (!validateStatus(res.status)) {
-					throw Error(`${res.status}: ${res.statusText}`);
+				if (!validateStatus(res.statusCode)) {
+					throw Error(`${res.statusCode}: ${res.statusMessage}`);
 				}
 
 				return res;
@@ -55,11 +55,10 @@ function fletcher(
 					console.error(err);
 				}
 
-				// @ts-expect-error foobar
 				if (!res) throw Error(err as string);
 
-				if (!validateStatus(res.status)) {
-					throw Error(`${res.status}: ${res.statusText}`);
+				if (!validateStatus(res.statusCode)) {
+					throw Error(`${res.statusCode}: ${res.statusMessage}`);
 				}
 
 				return res;
@@ -73,7 +72,6 @@ async function text(
 	userOptions?: Partial<IFletcherUserOptions>
 ) {
 	const cacheParams = { url: userUrl, options: userOptions, format: "text" };
-	// const cacheParams = { format: 'text', url: userUrl, options: userOptions };
 	const hit = cache.hit<string>(cacheParams);
 	if (hit) return hit;
 

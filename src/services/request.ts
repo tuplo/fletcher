@@ -1,10 +1,15 @@
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import type {
+	AxiosError,
+	AxiosRequestConfig,
+	AxiosResponse,
+	AxiosResponseHeaders,
+} from "axios";
 import axios from "axios";
 import { HttpsProxyAgent } from "hpagent";
 import { STATUS_CODES } from "node:http";
 import https from "node:https";
 
-import type { IFletcherOptions, IResponse } from "../fletcher";
+import type { IFletcherOptions, IResponse } from "../fletcher.d";
 
 function toAxiosOptions(fletcherOptions?: Partial<IFletcherOptions>) {
 	const {
@@ -74,26 +79,31 @@ export async function request(
 		const u = new URL(url);
 		const options = toAxiosOptions(userOptions);
 		const response = await axios(u.href, options);
-		const { data, headers, status, statusText } = response;
+		const {
+			data,
+			headers,
+			status: statusCode,
+			statusText: statusMessage,
+		} = response;
 
 		return {
-			headers,
-			status,
-			statusText,
+			headers: headers as AxiosResponseHeaders,
+			statusCode,
+			statusMessage,
 			text: async () => data,
 		};
 	} catch (e) {
 		const error = e as AxiosError;
 		const { response = {} as AxiosResponse } = error;
-		const { status, headers } = response;
-		const statusText =
-			response.statusText || error.message || STATUS_CODES[status];
+		const { status: statusCode, headers } = response;
+		const statusMessage =
+			response.statusText || error.message || STATUS_CODES[statusCode];
 
 		return {
 			headers,
-			status,
-			statusText: `${statusText} - ${url}`,
-			text: async () => JSON.stringify({ status, statusText }),
+			statusCode,
+			statusMessage: `${statusMessage} - ${url}`,
+			text: async () => JSON.stringify({ statusCode, statusMessage }),
 		} as IResponse;
 	}
 }
