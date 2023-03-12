@@ -17,6 +17,7 @@ import { getScript } from "./options/script";
 import type { IFletcherUserOptions, IInstance, IResponse } from "./fletcher.d";
 
 export type {
+	ICacheParams,
 	IFletcherUserOptions as IUserOptions,
 	IInstance,
 	IProxyConfig,
