@@ -12,7 +12,7 @@ async function main() {
 		"--external:hpagent",
 	];
 
-	await $`esbuild src/index.ts --outfile=dist/index.cjs ${flags}`;
+	await $`esbuild src/cjs/index.cjs --outfile=dist/index.cjs ${flags}`;
 	await $`esbuild src/index.ts --format=esm --outfile=dist/index.mjs ${flags}`;
 
 	await $`cp src/fletcher.d.ts dist/fletcher.d.ts`;
