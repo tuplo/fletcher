@@ -13,6 +13,7 @@ import { toFletcherOptions } from "./options";
 import { Cache } from "./options/cache";
 import { getJsonLd } from "./options/json-ld";
 import { getScript } from "./options/script";
+import { getEmbeddedJson } from "./options/embedded-json";
 
 import type { IFletcherUserOptions, IInstance, IResponse } from "./fletcher.d";
 
@@ -135,8 +136,18 @@ async function headers(
 	return res.headers;
 }
 
+async function embeddedJson(
+	userUrl: string,
+	userOptions?: Partial<IFletcherUserOptions>
+) {
+	const $page = await html(userUrl, userOptions);
+	return getEmbeddedJson($page, userOptions);
+}
+
 function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 	return {
+		embeddedJson: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
+			embeddedJson(url, deepMerge(defaultOptions, options)),
 		headers: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			headers(url, deepMerge(defaultOptions, options)),
 		html: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
@@ -179,6 +190,7 @@ function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 export default Object.assign(fletcher, {
 	browser,
 	create,
+	embeddedJson,
 	headers,
 	html,
 	json,

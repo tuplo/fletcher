@@ -47,6 +47,7 @@ export interface IFletcherUserOptions {
 	cache: boolean;
 	cacheMethods: Partial<IFletcherCacheMethods>;
 	delay: number;
+	embeddedJsonSelector: string;
 	encoding: BufferEncoding;
 	formData: RequestData;
 	formUrlEncoded: Record<string, string | number | boolean>;
@@ -88,6 +89,10 @@ interface IInstanceMethod<T> {
 }
 
 export interface IInstance {
+	embeddedJson: <T = unknown>(
+		url: string,
+		options?: Partial<IFletcherUserOptions>
+	) => Promise<T>;
 	headers: IInstanceMethod<IncomingHttpHeaders>;
 	html: IInstanceMethod<cheerio.Cheerio>;
 	json: <T = unknown>(
