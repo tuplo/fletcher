@@ -1,11 +1,9 @@
-import "zx/globals";
+import { $ } from "@tuplo/shell";
 
 async function main() {
 	await $`rm -rf dist`;
 
-	const flags = ["--project tsconfig.build.json", "--watch"].flatMap((f) =>
-		f.split(" ")
-	);
+	const flags = ["--project tsconfig.build.json", "--watch"];
 	await $`tsc ${flags}`;
 }
 
