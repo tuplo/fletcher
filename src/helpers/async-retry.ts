@@ -1,5 +1,4 @@
-import type { WrapOptions } from "retry";
-import retrier from "retry";
+import retrier, { type WrapOptions } from "retry";
 
 export interface IOptions extends WrapOptions {
 	onRetry?: ((e: Error, attempt: number) => unknown) | undefined;

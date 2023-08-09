@@ -1,7 +1,9 @@
 import fs from "node:fs";
-import type { IncomingMessage, ServerResponse } from "node:http";
-import { STATUS_CODES } from "node:http";
-
+import {
+	STATUS_CODES,
+	type ServerResponse,
+	type IncomingMessage,
+} from "node:http";
 import https from "node:https";
 
 async function requestListener(

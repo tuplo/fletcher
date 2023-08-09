@@ -59,27 +59,27 @@
 		"cheerio": "1.0.0-rc.12",
 		"deepmerge": "4.3.1",
 		"hpagent": "1.2.0",
-		"puppeteer-core": "20.8.3",
+		"puppeteer-core": "21.0.2",
 		"retry": "0.13.1"
 	},
 	"devDependencies": {
 		"@tuplo/shell": "1.2.0",
 		"@types/mime": "3.0.1",
-		"@types/node": "20.4.2",
-		"@typescript-eslint/eslint-plugin": "6.1.0",
-		"@typescript-eslint/parser": "6.1.0",
-		"@vitest/coverage-v8": "0.33.0",
-		"esbuild": "0.18.14",
-		"eslint": "8.45.0",
+		"@types/node": "20.4.9",
+		"@typescript-eslint/eslint-plugin": "6.3.0",
+		"@typescript-eslint/parser": "6.3.0",
+		"@vitest/coverage-v8": "0.34.1",
+		"esbuild": "0.19.0",
+		"eslint": "8.46.0",
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-config-airbnb-typescript": "17.1.0",
-		"eslint-config-prettier": "8.8.0",
-		"eslint-plugin-import": "2.27.5",
+		"eslint-config-prettier": "9.0.0",
+		"eslint-plugin-import": "2.28.0",
 		"mime": "3.0.0",
 		"nyc": "15.1.0",
-		"prettier": "3.0.0",
+		"prettier": "3.0.1",
 		"tsx": "3.12.7",
 		"typescript": "5.1.6",
-		"vitest": "0.33.0"
+		"vitest": "0.34.1"
 	}
 }

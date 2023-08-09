@@ -1,5 +1,6 @@
-import $ from "cheerio";
 import vm from "node:vm";
+
+import $ from "cheerio";
 
 import type { IFletcherUserOptions } from "../fletcher.d";
 

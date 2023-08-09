@@ -1,11 +1,14 @@
-import mime from "mime/lite";
-import type { TranscodeEncoding } from "node:buffer";
-import buffer from "node:buffer";
+import buffer, { type TranscodeEncoding } from "node:buffer";
 import fs from "node:fs";
-import type { IncomingMessage, ServerResponse } from "node:http";
-import http, { STATUS_CODES } from "node:http";
+import http, {
+	STATUS_CODES,
+	type IncomingMessage,
+	type ServerResponse,
+} from "node:http";
 import net from "node:net";
 import path from "node:path";
+
+import mime from "mime/lite";
 
 async function extractBody(request: IncomingMessage) {
 	return new Promise((resolve) => {

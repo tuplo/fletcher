@@ -1,3 +1,6 @@
+import { STATUS_CODES } from "node:http";
+import https from "node:https";
+
 import type {
 	AxiosError,
 	AxiosRequestConfig,
@@ -6,8 +9,6 @@ import type {
 } from "axios";
 import axios from "axios";
 import { HttpsProxyAgent } from "hpagent";
-import { STATUS_CODES } from "node:http";
-import https from "node:https";
 
 import type { IFletcherOptions, IResponse } from "../fletcher.d";
 

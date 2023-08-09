@@ -1,4 +1,5 @@
 import $ from "cheerio";
+
 import { getScript } from "./script";
 
 describe("get script", () => {

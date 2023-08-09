@@ -1,7 +1,8 @@
 /// <reference types="cheerio" />
-import type { AxiosRequestConfig, AxiosResponseHeaders, Method } from "axios";
 import type { IncomingHttpHeaders } from "node:http";
 import type * as VM from "node:vm";
+
+import type { AxiosRequestConfig, AxiosResponseHeaders, Method } from "axios";
 import type { ScreenshotOptions } from "puppeteer-core";
 
 import type { IOptions as RetryOptions } from "./helpers/async-retry";

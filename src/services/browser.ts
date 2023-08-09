@@ -1,6 +1,5 @@
 import $ from "cheerio";
-import type { Browser, Page } from "puppeteer-core";
-import puppeteer from "puppeteer-core";
+import puppeteer, { type Browser, type Page } from "puppeteer-core";
 
 import type {
 	IFletcherBrowserUserOptions,
