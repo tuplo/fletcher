@@ -1,8 +1,8 @@
-/// <reference types="cheerio" />
 import type { IncomingHttpHeaders } from "node:http";
 import type * as VM from "node:vm";
 
 import type { AxiosRequestConfig, AxiosResponseHeaders, Method } from "axios";
+import type { AnyNode, Cheerio, Element } from "cheerio";
 import type { ScreenshotOptions } from "puppeteer-core";
 
 import type { IOptions as RetryOptions } from "./helpers/async-retry";
@@ -60,7 +60,7 @@ export interface IFletcherUserOptions {
 	proxy: IProxyConfig;
 	rejectUnauthorized?: boolean;
 	retry: boolean | number | RetryOptions;
-	scriptFindFn: (script: cheerio.Element) => boolean;
+	scriptFindFn: (script: Element) => boolean;
 	scriptPath: string;
 	scriptSandbox: VM.Context;
 	timeout: number;
@@ -95,7 +95,7 @@ export interface IInstance {
 		options?: Partial<IFletcherUserOptions>
 	) => Promise<T>;
 	headers: IInstanceMethod<IncomingHttpHeaders>;
-	html: IInstanceMethod<cheerio.Cheerio>;
+	html: IInstanceMethod<Cheerio<AnyNode>>;
 	json: <T = unknown>(
 		url: string,
 		options?: Partial<IFletcherUserOptions>
@@ -114,7 +114,7 @@ export interface IInstance {
 			requestUrl: string | RegExp,
 			options?: Partial<IFletcherUserOptions>
 		) => Promise<T>;
-		html: IInstanceMethod<cheerio.Cheerio>;
+		html: IInstanceMethod<Cheerio<AnyNode>>;
 
 		script: <T = unknown>(
 			url: string,

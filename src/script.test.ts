@@ -1,4 +1,4 @@
-import $ from "cheerio";
+import $, { type Element } from "cheerio";
 
 import { server, getRandomPort } from "src/mocks";
 
@@ -38,7 +38,7 @@ describe("inline scripts", () => {
 	it("uses a function to find a script element", async () => {
 		url.pathname = "/file/inline-script.html";
 		const actual = await fletcher.script(url.href, {
-			scriptFindFn: (script: cheerio.Element) =>
+			scriptFindFn: (script: Element) =>
 				/findThisVar/.test($(script).html() || ""),
 		});
 

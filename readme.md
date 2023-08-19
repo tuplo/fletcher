@@ -88,7 +88,7 @@ const { foo } = await client.browser.json('https://foo.com', /ajax-list/);
 
 Generic utility to return a HTTP Response
 
-##### `fletcher.html(url: string, options?: FletcherOptions) => cheerio.Cheerio`
+##### `fletcher.html(url: string, options?: FletcherOptions) => Cheerio<AnyNode>`
 
 Requests a HTTP resource, parses it using Cheerio and returns its
 
@@ -123,7 +123,7 @@ Requests a HTTP resource, retrieving all the JSON-LD blocks found on the documen
 
 Requests a HTTP resource, returning the full HTTP Response object
 
-##### `fletcher.browser.html(url: string) => cheerio.Cheerio`
+##### `fletcher.browser.html(url: string) => Cheerio<AnyNode>`
 
 Requests a HTTP resource using Puppeteer/Chrome, parses it using Cheerio and returns its.
 

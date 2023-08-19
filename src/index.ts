@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import $ from "cheerio";
+import $, { type AnyNode, type Cheerio } from "cheerio";
 import deepMerge from "deepmerge";
 
 import browser from "./services/browser";
@@ -11,17 +11,17 @@ import { text2json } from "./helpers/text2json";
 
 import { toFletcherOptions } from "./options";
 import { Cache } from "./options/cache";
+import { getEmbeddedJson } from "./options/embedded-json";
 import { getJsonLd } from "./options/json-ld";
 import { getScript } from "./options/script";
-import { getEmbeddedJson } from "./options/embedded-json";
 
 import type { IFletcherUserOptions, IInstance, IResponse } from "./fletcher.d";
 
 export type {
 	ICacheParams,
-	IFletcherUserOptions as IUserOptions,
 	IInstance,
 	IProxyConfig,
+	IFletcherUserOptions as IUserOptions,
 } from "./fletcher.d";
 
 const cache = new Cache();
@@ -171,7 +171,7 @@ function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 			html: (
 				url: string,
 				options: Partial<IFletcherUserOptions> = {}
-			): Promise<cheerio.Cheerio> =>
+			): Promise<Cheerio<AnyNode>> =>
 				browser.html(url, deepMerge(defaultOptions, options)),
 			json: <T>(
 				pageUrl: string,

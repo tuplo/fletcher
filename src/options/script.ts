@@ -1,11 +1,11 @@
 import vm from "node:vm";
 
-import $ from "cheerio";
+import $, { type Cheerio, type AnyNode } from "cheerio";
 
 import type { IFletcherUserOptions } from "../fletcher.d";
 
 export function getScript<T>(
-	$page: cheerio.Cheerio,
+	$page: Cheerio<AnyNode>,
 	userOptions: Partial<IFletcherUserOptions> = {}
 ) {
 	const { scriptPath, scriptFindFn, scriptSandbox } = userOptions;
@@ -13,7 +13,7 @@ export function getScript<T>(
 		throw new Error("fletch.script: scriptPath or scriptFindFn are required");
 	}
 
-	let $el: cheerio.Cheerio | null | undefined = null;
+	let $el: Cheerio<AnyNode> | null | undefined = null;
 	if (scriptPath) {
 		$el = $page.find(scriptPath);
 	} else if (scriptFindFn) {

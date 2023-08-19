@@ -1,4 +1,4 @@
-import $ from "cheerio";
+import $, { type Element } from "cheerio";
 
 import { getScript } from "./script";
 
@@ -29,8 +29,7 @@ describe("get script", () => {
     `;
 		const $page = $.load(html).root();
 		const options = {
-			scriptFindFn: (s: cheerio.Element) =>
-				/foo/.test($(s).html() || "unknown"),
+			scriptFindFn: (s: Element) => /foo/.test($(s).html() || "unknown"),
 		};
 		const actual = getScript($page, options);
 
@@ -51,8 +50,7 @@ describe("get script", () => {
 		const html = "<html />";
 		const $page = $.load(html).root();
 		const options = {
-			scriptFindFn: (s: cheerio.Element) =>
-				/foo/.test($(s).html() || "unknown"),
+			scriptFindFn: (s: Element) => /foo/.test($(s).html() || "unknown"),
 		};
 		const actual = () => getScript($page, options);
 

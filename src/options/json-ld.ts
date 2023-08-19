@@ -1,6 +1,6 @@
-import $ from "cheerio";
+import $, { type AnyNode, type Cheerio } from "cheerio";
 
-export function getJsonLd<T>($page: cheerio.Cheerio) {
+export function getJsonLd<T>($page: Cheerio<AnyNode>) {
 	return $page
 		.find('script[type="application/ld+json"]')
 		.toArray()
