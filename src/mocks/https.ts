@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import {
 	STATUS_CODES,
-	type ServerResponse,
 	type IncomingMessage,
+	type ServerResponse,
 } from "node:http";
 import https from "node:https";
 

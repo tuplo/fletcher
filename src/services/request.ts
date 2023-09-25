@@ -1,16 +1,15 @@
 import { STATUS_CODES } from "node:http";
 import https from "node:https";
 
-import type {
-	AxiosError,
-	AxiosRequestConfig,
-	AxiosResponse,
-	AxiosResponseHeaders,
+import axios, {
+	type AxiosError,
+	type AxiosRequestConfig,
+	type AxiosResponse,
+	type AxiosResponseHeaders,
 } from "axios";
-import axios from "axios";
 import { HttpsProxyAgent } from "hpagent";
 
-import type { IFletcherOptions, IResponse } from "../fletcher.d";
+import { type IFletcherOptions, type IResponse } from "../fletcher.d";
 
 function toAxiosOptions(fletcherOptions?: Partial<IFletcherOptions>) {
 	const {
@@ -86,6 +85,11 @@ export async function request(
 			status: statusCode,
 			statusText: statusMessage,
 		} = response;
+
+		if (userOptions?.onAfterRequest) {
+			const r = userOptions.onAfterRequest({ response });
+			await Promise.resolve(r);
+		}
 
 		return {
 			headers: headers as AxiosResponseHeaders,

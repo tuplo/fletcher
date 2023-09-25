@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import type { ICacheParams } from "src/fletcher.d";
+import { type ICacheParams } from "src/fletcher.d";
 
 import { Cache } from "./cache";
 

@@ -1,6 +1,6 @@
 import { STATUS_CODES } from "node:http";
 
-import type { IFletcherOptions } from "src/fletcher";
+import { type IFletcherOptions } from "src/fletcher";
 import { getRandomPort, server } from "src/mocks";
 import { server as httpsServer } from "src/mocks/https";
 
@@ -216,6 +216,38 @@ describe("request", () => {
 			const actual = JSON.parse(body);
 
 			expect(actual.origin).toBe(proxy.host);
+		});
+	});
+
+	describe("onAfterRequest", () => {
+		it("calls postRequest (sync)", async () => {
+			const onAfterRequestSpy = vi.fn();
+			url.pathname = "/anything";
+			const options = { onAfterRequest: onAfterRequestSpy };
+			await request(url.href, options);
+
+			const expected = {
+				response: expect.anything(),
+			};
+			expect(onAfterRequestSpy).toHaveBeenCalledTimes(1);
+			expect(onAfterRequestSpy).toHaveBeenCalledWith(expected);
+		});
+
+		it("calls postRequest (async)", async () => {
+			const onAfterRequestSpy = vi.fn().mockReturnValue(
+				new Promise((resolve) => {
+					resolve(undefined);
+				})
+			);
+			url.pathname = "/anything";
+			const options = { onAfterRequest: onAfterRequestSpy };
+			await request(url.href, options);
+
+			const expected = {
+				response: expect.anything(),
+			};
+			expect(onAfterRequestSpy).toHaveBeenCalledTimes(1);
+			expect(onAfterRequestSpy).toHaveBeenCalledWith(expected);
 		});
 	});
 });

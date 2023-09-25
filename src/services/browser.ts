@@ -1,9 +1,9 @@
 import $ from "cheerio";
 import puppeteer, { type Browser, type Page } from "puppeteer-core";
 
-import type {
-	IFletcherBrowserUserOptions,
-	IFletcherUserOptions,
+import {
+	type IFletcherBrowserUserOptions,
+	type IFletcherUserOptions,
 } from "../fletcher.d";
 import { Cache } from "../options/cache";
 import { getJsonLd } from "../options/json-ld";

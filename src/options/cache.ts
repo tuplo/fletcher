@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import type { ICacheParams } from "../fletcher.d";
+import { type ICacheParams } from "../fletcher.d";
 import { md5 } from "../helpers/md5";
 import { sortObject } from "../helpers/sort-object";
 

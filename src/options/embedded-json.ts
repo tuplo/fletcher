@@ -1,6 +1,6 @@
 import { type AnyNode, type Cheerio } from "cheerio";
 
-import type { IFletcherUserOptions } from "../fletcher.d";
+import { type IFletcherUserOptions } from "../fletcher.d";
 
 export function getEmbeddedJson<T>(
 	$page: Cheerio<AnyNode>,

@@ -1,8 +1,8 @@
 import vm from "node:vm";
 
-import $, { type Cheerio, type AnyNode } from "cheerio";
+import $, { type AnyNode, type Cheerio } from "cheerio";
 
-import type { IFletcherUserOptions } from "../fletcher.d";
+import { type IFletcherUserOptions } from "../fletcher.d";
 
 export function getScript<T>(
 	$page: Cheerio<AnyNode>,

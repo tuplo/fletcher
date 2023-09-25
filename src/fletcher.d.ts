@@ -1,11 +1,16 @@
-import type { IncomingHttpHeaders } from "node:http";
+import { type IncomingHttpHeaders } from "node:http";
 import type * as VM from "node:vm";
 
-import type { AxiosRequestConfig, AxiosResponseHeaders, Method } from "axios";
-import type { AnyNode, Cheerio, Element } from "cheerio";
-import type { ScreenshotOptions } from "puppeteer-core";
+import {
+	type AxiosRequestConfig,
+	type AxiosResponseHeaders,
+	type Method,
+	type AxiosResponse,
+} from "axios";
+import { type AnyNode, type Cheerio, type Element } from "cheerio";
+import { type ScreenshotOptions } from "puppeteer-core";
 
-import type { IOptions as RetryOptions } from "./helpers/async-retry";
+import { type IOptions as IRetryOptions } from "./helpers/async-retry";
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
@@ -22,6 +27,14 @@ export interface IProxyConfig {
 type RequestRedirect = "follow" | "error" | "manual";
 
 type RequestData = Record<string, unknown>;
+
+interface IOnAfterRequestArgs {
+	response: AxiosResponse;
+}
+
+export interface IOnAfterRequestFn {
+	(args: IOnAfterRequestArgs): Promise<void> | void;
+}
 
 export interface IFletcherBrowserUserOptions {
 	blockedResourceTypes: boolean | string[];
@@ -57,9 +70,10 @@ export interface IFletcherUserOptions {
 	log: boolean;
 	maxRedirections: number;
 	method: Method;
+	onAfterRequest?: IOnAfterRequestFn;
 	proxy: IProxyConfig;
 	rejectUnauthorized?: boolean;
-	retry: boolean | number | RetryOptions;
+	retry: boolean | number | IRetryOptions;
 	scriptFindFn: (script: Element) => boolean;
 	scriptPath: string;
 	scriptSandbox: VM.Context;
@@ -77,9 +91,10 @@ export interface IFletcherOptions {
 	maxRedirections?: number | undefined; // =20 maximum redirect count. 0 to not follow redirect
 	headers: Record<string, string>;
 	method: Method;
+	onAfterRequest?: IOnAfterRequestFn;
 	proxy?: IProxyConfig;
 	rejectUnauthorized?: boolean;
-	retry: RetryOptions;
+	retry: IRetryOptions;
 	timeout: number;
 	url: string;
 	validateStatus: (statusCode: number) => boolean;

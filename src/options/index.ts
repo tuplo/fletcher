@@ -1,12 +1,13 @@
 /* eslint-disable no-case-declarations */
-import type { Method } from "axios";
+import { type Method } from "axios";
 
-import type {
-	IFletcherOptions,
-	IFletcherUserOptions,
-	IProxyConfig,
+import {
+	type IFletcherOptions,
+	type IFletcherUserOptions,
+	type IOnAfterRequestFn,
+	type IProxyConfig,
 } from "../fletcher.d";
-import type { IOptions as RetryOptions } from "../helpers/async-retry";
+import { type IOptions as RetryOptions } from "../helpers/async-retry";
 
 export function getDefaultOptions(
 	url = "http://foo.com"
@@ -76,6 +77,9 @@ export function toFletcherOptions(
 					break;
 				case "method":
 					acc.method = value.toString() as Method;
+					break;
+				case "onAfterRequest":
+					acc.onAfterRequest = value as IOnAfterRequestFn;
 					break;
 				case "proxy":
 					acc.proxy = value as IProxyConfig;
