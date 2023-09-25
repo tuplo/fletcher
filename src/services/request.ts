@@ -99,16 +99,17 @@ export async function request(
 		};
 	} catch (e) {
 		const error = e as AxiosError;
-		const { response = {} as AxiosResponse } = error;
+		const { response = {} as AxiosResponse, cause } = error;
 		const { status: statusCode, headers } = response;
+
 		const statusMessage =
 			response.statusText || error.message || STATUS_CODES[statusCode];
 
 		return {
 			headers,
-			statusCode,
+			statusCode: statusCode || error.code,
 			statusMessage: `${statusMessage} - ${url}`,
-			text: async () => JSON.stringify({ statusCode, statusMessage }),
+			text: async () => JSON.stringify({ statusCode, statusMessage, cause }),
 		} as IResponse;
 	}
 }
