@@ -147,7 +147,12 @@ async function json<T>(
 				store.data = await response.json();
 			});
 
-			page.goto(pageUrl);
+			page.goto(pageUrl).then(async () => {
+				const { onPageReady } = options.browser || {};
+				if (onPageReady) {
+					await onPageReady(page);
+				}
+			});
 		});
 
 	const hit = cache.hit(cacheParams);

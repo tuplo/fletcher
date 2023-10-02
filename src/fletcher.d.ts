@@ -3,12 +3,12 @@ import type * as VM from "node:vm";
 
 import {
 	type AxiosRequestConfig,
+	type AxiosResponse,
 	type AxiosResponseHeaders,
 	type Method,
-	type AxiosResponse,
 } from "axios";
 import { type AnyNode, type Cheerio, type Element } from "cheerio";
-import { type ScreenshotOptions } from "puppeteer-core";
+import { type Page, type ScreenshotOptions } from "puppeteer-core";
 
 import { type IOptions as IRetryOptions } from "./helpers/async-retry";
 
@@ -39,6 +39,7 @@ export interface IOnAfterRequestFn {
 export interface IFletcherBrowserUserOptions {
 	blockedResourceTypes: boolean | string[];
 	endpoint: string;
+	onPageReady: (page: Page) => Promise<unknown>;
 	screenshot: ScreenshotOptions;
 	waitForSelector: string;
 }
