@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import $, { type AnyNode, type Cheerio } from "cheerio";
 import deepMerge from "deepmerge";
+import { Cookie, CookieJar } from "tough-cookie";
 
 import browser from "./services/browser";
 import { request } from "./services/request";
@@ -136,6 +137,33 @@ async function headers(
 	return res.headers;
 }
 
+async function cookies(
+	url: string,
+	userOptions?: Partial<IFletcherUserOptions>
+) {
+	const res = await fletcher(url, userOptions);
+	const { "set-cookie": setCookies } = res.headers;
+	if (!setCookies) {
+		return new CookieJar();
+	}
+
+	const cookieList = Array.isArray(setCookies)
+		? (setCookies
+				.map((cookie) => Cookie.parse(cookie))
+				.filter(Boolean) as Cookie[])
+		: [Cookie.parse(setCookies)];
+
+	const cookieJar = new CookieJar();
+	// eslint-disable-next-line no-restricted-syntax
+	for await (const cookie of cookieList) {
+		if (cookie) {
+			await cookieJar.setCookie(cookie, url);
+		}
+	}
+
+	return cookieJar;
+}
+
 async function embeddedJson(
 	userUrl: string,
 	userOptions?: Partial<IFletcherUserOptions>
@@ -150,6 +178,8 @@ function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 			embeddedJson(url, deepMerge(defaultOptions, options)),
 		headers: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			headers(url, deepMerge(defaultOptions, options)),
+		cookies: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
+			cookies(url, deepMerge(defaultOptions, options)),
 		html: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			html(url, deepMerge(defaultOptions, options)),
 		json: <T = unknown>(

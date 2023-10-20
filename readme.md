@@ -12,6 +12,17 @@ HTTP request library, focused on web scraping.
   </a>
 </p>
 
+
+## Install
+
+```bash
+$ npm install @tuplo/fletcher
+
+# or with yarn
+$ yarn add @tuplo/fletcher
+```
+
+
 ## Usage
 
 Fetch a HTML page and parse it using `cheerio`.
@@ -112,6 +123,10 @@ const { foo } = await fletcher.script('https://foo.com/page.html', {
 
 Requests a HTTP resource, returning it as a `string`
 
+##### `fletcher.cookies(url: string, options?: FletcherOptions) => CookieJar`
+
+Requests a HTTP resources, returning the cookies returned with it.
+
 ##### `fletcher.json<T>(url: string, options?: FletcherOptions) => T`
 
 Requests a HTTP resource, returning it as a JSON object
@@ -139,13 +154,4 @@ Creates a new instance of fletcher with a custom config
 ```typescript
 const instance = fletcher.create({ headers: { foo: 'bar' } });
 await instance.json('http://foo.com');
-```
-
-## Install
-
-```bash
-$ npm install @tuplo/fletcher
-
-# or with yarn
-$ yarn add @tuplo/fletcher
 ```
