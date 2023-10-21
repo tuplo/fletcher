@@ -13,6 +13,7 @@
 	"files": [
 		"dist/fletcher.d.ts",
 		"dist/helpers/async-retry.d.ts",
+		"dist/helpers/cookie-jar.d.ts",
 		"dist/index.cjs",
 		"dist/index.d.ts",
 		"dist/index.mjs"
