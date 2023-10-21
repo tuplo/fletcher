@@ -9,9 +9,9 @@ import {
 } from "axios";
 import { type AnyNode, type Cheerio, type Element } from "cheerio";
 import { type Page, type ScreenshotOptions } from "puppeteer-core";
-import { type CookieJar } from "tough-cookie";
 
 import { type IOptions as IRetryOptions } from "./helpers/async-retry";
+import { CookieJar } from "./helpers/cookie-jar";
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 

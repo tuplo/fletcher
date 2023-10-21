@@ -140,6 +140,14 @@ async function requestListener(
 		return;
 	}
 
+	if (/^\/set-cookie/.test(url)) {
+		const { cookie } = JSON.parse(body as string);
+
+		response.setHeader("set-cookie", cookie);
+		response.end();
+		return;
+	}
+
 	response.statusCode = 404;
 	response.statusMessage = STATUS_CODES[404] || "";
 	response.end();

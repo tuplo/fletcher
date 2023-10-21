@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import $, { type AnyNode, type Cheerio } from "cheerio";
 import deepMerge from "deepmerge";
-import { Cookie, CookieJar } from "tough-cookie";
 
 import browser from "./services/browser";
 import { request } from "./services/request";
@@ -9,6 +8,7 @@ import { request } from "./services/request";
 import { retry } from "./helpers/async-retry";
 import { delay } from "./helpers/delay";
 import { text2json } from "./helpers/text2json";
+import { CookieJar } from "./helpers/cookie-jar";
 
 import { toFletcherOptions } from "./options";
 import { Cache } from "./options/cache";
@@ -143,25 +143,11 @@ async function cookies(
 ) {
 	const res = await fletcher(url, userOptions);
 	const { "set-cookie": setCookies } = res.headers;
-	if (!setCookies) {
-		return new CookieJar();
-	}
 
-	const cookieList = Array.isArray(setCookies)
-		? (setCookies
-				.map((cookie) => Cookie.parse(cookie))
-				.filter(Boolean) as Cookie[])
-		: [Cookie.parse(setCookies)];
+	const jar = new CookieJar();
+	jar.setCookies(setCookies);
 
-	const cookieJar = new CookieJar();
-	// eslint-disable-next-line no-restricted-syntax
-	for await (const cookie of cookieList) {
-		if (cookie) {
-			await cookieJar.setCookie(cookie, url);
-		}
-	}
-
-	return cookieJar;
+	return jar;
 }
 
 async function embeddedJson(
@@ -219,6 +205,7 @@ function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 
 export default Object.assign(fletcher, {
 	browser,
+	cookies,
 	create,
 	embeddedJson,
 	headers,
