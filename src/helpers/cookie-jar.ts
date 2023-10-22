@@ -4,7 +4,6 @@ import Cookie from "cookie";
 export interface ICookie {
 	key: string;
 	value: string;
-	serialized: string;
 }
 
 export class CookieJar {
@@ -21,7 +20,12 @@ export class CookieJar {
 	}
 
 	getCookieString() {
-		return this.cookies.map((cookie) => cookie.serialized).join("; ");
+		return this.cookies
+			.map((cookie) => {
+				const { key, value } = cookie;
+				return `${key}=${value}`;
+			})
+			.join("; ");
 	}
 
 	getCookies() {
@@ -37,7 +41,6 @@ export class CookieJar {
 			...cookie,
 			key,
 			value,
-			serialized: Cookie.serialize(key, value),
 		} as ICookie;
 	}
 }
