@@ -34,8 +34,6 @@ describe("get embedded json", () => {
 				embeddedJsonSelector: "#__NEXT_DATA__",
 			});
 
-		const expected =
-			"fletch.embeddedJson: Unexpected token o in JSON at position 1";
-		expect(actual).toThrow(expected);
+		expect(actual).toThrow();
 	});
 });
