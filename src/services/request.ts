@@ -76,9 +76,9 @@ export async function request(
 ) {
 	try {
 		// encode special characters on the URL
-		const u = new URL(url);
+		const uri = new URL(url);
 		const options = toAxiosOptions(userOptions);
-		const response = await axios(u.href, options);
+		const response = await axios(uri.href, options);
 		const {
 			data,
 			headers,
