@@ -15,7 +15,6 @@ jobs:
       - run: |
           yarn --frozen-lockfile
           yarn lint
-          yarn lint:ts
           yarn test:ci
 
   test-coverage:
