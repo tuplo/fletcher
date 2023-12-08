@@ -9,9 +9,9 @@ import { Cache } from "../options/cache";
 import { getJsonLd } from "../options/json-ld";
 import { getScript } from "../options/script";
 
-interface IExecutorFn<T = unknown> {
+type IExecutorFn<T = unknown> = {
 	(page: Page): Promise<T>;
-}
+};
 
 const cache = new Cache();
 

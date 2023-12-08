@@ -57,9 +57,9 @@ describe("creates an instance with options", () => {
 	it("simple json (GET) with generic type", async () => {
 		uri.pathname = "/file/simple.json";
 		const client = fletcher.create({ headers: { foo: "bar" } });
-		interface IFooBar {
+		type IFooBar = {
 			foo: string;
-		}
+		};
 		const actual = await client.json<IFooBar>(uri.href);
 
 		const expected: IFooBar = { foo: "bar" };

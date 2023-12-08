@@ -19,48 +19,48 @@ export type FetchOptions = AxiosRequestConfig;
 
 export { type ICookie, type CookieJar };
 
-export interface IProxyConfig {
+export type IProxyConfig = {
 	username?: string;
 	password?: string;
 	host: string;
 	port: number;
 	protocol?: string;
-}
+};
 
 type RequestRedirect = "follow" | "error" | "manual";
 
 type RequestData = Record<string, unknown>;
 
-interface IOnAfterRequestArgs {
+type IOnAfterRequestArgs = {
 	response: AxiosResponse;
-}
+};
 
-export interface IOnAfterRequestFn {
+export type IOnAfterRequestFn = {
 	(args: IOnAfterRequestArgs): Promise<void> | void;
-}
+};
 
-export interface IFletcherBrowserUserOptions {
+export type IFletcherBrowserUserOptions = {
 	blockedResourceTypes: boolean | string[];
 	endpoint: string;
 	onPageReady: (page: Page) => Promise<unknown>;
 	screenshot: ScreenshotOptions;
 	waitForSelector: string;
-}
+};
 
-export interface ICacheParams {
+export type ICacheParams = {
 	format: string;
 	url: string;
 	options?: Partial<IFletcherUserOptions>;
 	payload?: string;
-}
+};
 
-export interface IFletcherCacheMethods {
+export type IFletcherCacheMethods = {
 	hit: (key: string) => null | unknown;
 	write: (key: string, payload?: string) => void;
 	key: (params: ICacheParams) => string;
-}
+};
 
-export interface IFletcherUserOptions {
+export type IFletcherUserOptions = {
 	browser: Partial<IFletcherBrowserUserOptions>;
 	cache: boolean;
 	cacheMethods: Partial<IFletcherCacheMethods>;
@@ -85,9 +85,9 @@ export interface IFletcherUserOptions {
 	urlSearchParams: UrlSearchParams;
 	userAgent: string;
 	validateStatus: (statusCode: number) => boolean;
-}
+};
 
-export interface IFletcherOptions {
+export type IFletcherOptions = {
 	body?: string;
 	cache: boolean;
 	delay: number;
@@ -102,13 +102,13 @@ export interface IFletcherOptions {
 	timeout: number;
 	url: string;
 	validateStatus: (statusCode: number) => boolean;
-}
+};
 
-interface IInstanceMethod<T> {
+type IInstanceMethod<T> = {
 	(url: string, options?: Partial<IFletcherUserOptions>): Promise<T>;
-}
+};
 
-export interface IInstance {
+export type IInstance = {
 	embeddedJson: <T = unknown>(
 		url: string,
 		options?: Partial<IFletcherUserOptions>
@@ -142,12 +142,12 @@ export interface IInstance {
 		) => Promise<T>;
 		jsonld: IInstanceMethod<unknown[]>;
 	};
-}
+};
 
-export interface IResponse {
+export type IResponse = {
 	// body: Readable & Dispatcher.BodyMixin;
 	headers: AxiosResponseHeaders;
 	statusCode: number;
 	statusMessage?: string;
 	text: () => Promise<string>;
-}
+};

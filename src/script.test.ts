@@ -24,9 +24,9 @@ describe("inline scripts", () => {
 
 	it("evaluates a script and returns its global scope", async () => {
 		uri.pathname = "/file/inline-script.html";
-		interface IPageData {
+		type IPageData = {
 			pageData: { foo: string };
-		}
+		};
 		const actual = await fletcher.script<IPageData>(uri.href, {
 			scriptPath: "script:nth-of-type(1)",
 		});

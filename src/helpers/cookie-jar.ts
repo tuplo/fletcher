@@ -1,10 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import Cookie from "cookie";
 
-export interface ICookie {
+export type ICookie = {
 	key: string;
 	value: string;
-}
+};
 
 export class CookieJar {
 	cookies: ICookie[] = [];
