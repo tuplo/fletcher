@@ -3,7 +3,7 @@ import { server, getRandomPort } from "src/mocks";
 import fletcher from "./index";
 
 describe("cookies", () => {
-	let url: URL;
+	let uri: URL;
 	let port: number;
 
 	const cookie = [
@@ -26,8 +26,8 @@ describe("cookies", () => {
 	});
 
 	beforeEach(() => {
-		url = new URL("http://localhost");
-		url.port = `${port}`;
+		uri = new URL("http://localhost");
+		uri.port = `${port}`;
 	});
 
 	afterAll(async () => {
@@ -35,8 +35,8 @@ describe("cookies", () => {
 	});
 
 	it("should return cookies", async () => {
-		url.pathname = "/set-cookie";
-		const cookieJar = await fletcher.cookies(url.href, {
+		uri.pathname = "/set-cookie";
+		const cookieJar = await fletcher.cookies(uri.href, {
 			jsonData: { cookie },
 		});
 		const actual = cookieJar.getCookies();
@@ -45,8 +45,8 @@ describe("cookies", () => {
 	});
 
 	it("returns cookie string with key=value pairs", async () => {
-		url.pathname = "/set-cookie";
-		const cookieJar = await fletcher.cookies(url.href, {
+		uri.pathname = "/set-cookie";
+		const cookieJar = await fletcher.cookies(uri.href, {
 			jsonData: { cookie },
 		});
 		const actual = cookieJar.getCookieString();
@@ -57,8 +57,8 @@ describe("cookies", () => {
 	});
 
 	it("can add more cookies to returned cookie jar", async () => {
-		url.pathname = "/set-cookie";
-		const cookieJar = await fletcher.cookies(url.href, {
+		uri.pathname = "/set-cookie";
+		const cookieJar = await fletcher.cookies(uri.href, {
 			jsonData: { cookie: ["c1=foobar", "c2=foobar"] },
 		});
 		cookieJar.setCookie("c3=foobar");

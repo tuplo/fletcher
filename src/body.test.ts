@@ -3,7 +3,7 @@ import { server, getRandomPort } from "src/mocks";
 import fletcher from "./index";
 
 describe("body formats", () => {
-	let url: URL;
+	let uri: URL;
 	let port: number;
 
 	beforeAll(async () => {
@@ -12,8 +12,8 @@ describe("body formats", () => {
 	});
 
 	beforeEach(() => {
-		url = new URL("http://localhost");
-		url.port = `${port}`;
+		uri = new URL("http://localhost");
+		uri.port = `${port}`;
 	});
 
 	afterAll(async () => {
@@ -21,8 +21,8 @@ describe("body formats", () => {
 	});
 
 	it("formData", async () => {
-		url.pathname = "/anything";
-		const result = await fletcher.json(url.href, {
+		uri.pathname = "/anything";
+		const result = await fletcher.json(uri.href, {
 			formData: { foo: "bar", baz: "quz" },
 		});
 
@@ -37,8 +37,8 @@ describe("body formats", () => {
 	});
 
 	it("formUrlEncoded", async () => {
-		url.pathname = "/anything";
-		const actual = await fletcher.json(url.href, {
+		uri.pathname = "/anything";
+		const actual = await fletcher.json(uri.href, {
 			formUrlEncoded: { foo: "bar", baz: "quz" },
 		});
 
@@ -53,8 +53,8 @@ describe("body formats", () => {
 	});
 
 	it("jsonData", async () => {
-		url.pathname = "/anything";
-		const result = await fletcher.json(url.href, {
+		uri.pathname = "/anything";
+		const result = await fletcher.json(uri.href, {
 			jsonData: { foo: "bar", baz: "quz" },
 		});
 

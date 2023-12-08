@@ -5,7 +5,7 @@ import { server, getRandomPort } from "src/mocks";
 import fletcher from "./index";
 
 describe("inline scripts", () => {
-	let url: URL;
+	let uri: URL;
 	let port: number;
 
 	beforeAll(async () => {
@@ -14,8 +14,8 @@ describe("inline scripts", () => {
 	});
 
 	beforeEach(() => {
-		url = new URL("http://localhost");
-		url.port = `${port}`;
+		uri = new URL("http://localhost");
+		uri.port = `${port}`;
 	});
 
 	afterAll(async () => {
@@ -23,11 +23,11 @@ describe("inline scripts", () => {
 	});
 
 	it("evaluates a script and returns its global scope", async () => {
-		url.pathname = "/file/inline-script.html";
+		uri.pathname = "/file/inline-script.html";
 		interface IPageData {
 			pageData: { foo: string };
 		}
-		const actual = await fletcher.script<IPageData>(url.href, {
+		const actual = await fletcher.script<IPageData>(uri.href, {
 			scriptPath: "script:nth-of-type(1)",
 		});
 
@@ -36,8 +36,8 @@ describe("inline scripts", () => {
 	});
 
 	it("uses a function to find a script element", async () => {
-		url.pathname = "/file/inline-script.html";
-		const actual = await fletcher.script(url.href, {
+		uri.pathname = "/file/inline-script.html";
+		const actual = await fletcher.script(uri.href, {
 			scriptFindFn: (script: Element) =>
 				/findThisVar/.test($(script).html() || ""),
 		});
@@ -47,9 +47,9 @@ describe("inline scripts", () => {
 	});
 
 	it("throws if options are not provided", async () => {
-		url.pathname = "/file/inline-script.html";
+		uri.pathname = "/file/inline-script.html";
 		const actual = async () => {
-			await fletcher.script(url.href);
+			await fletcher.script(uri.href);
 		};
 
 		const expected = new Error(
@@ -59,8 +59,8 @@ describe("inline scripts", () => {
 	});
 
 	it("should return an empty object if script element is empty", async () => {
-		url.pathname = "/file/inline-script.html";
-		const actual = await fletcher.script(url.href, {
+		uri.pathname = "/file/inline-script.html";
+		const actual = await fletcher.script(uri.href, {
 			scriptPath: "#empty-script",
 		});
 

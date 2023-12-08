@@ -3,7 +3,7 @@ import { server, getRandomPort } from "src/mocks";
 import fletcher from "./index";
 
 describe("fletcher - HTTP client", () => {
-	let url: URL;
+	let uri: URL;
 	let port: number;
 
 	beforeAll(async () => {
@@ -12,8 +12,8 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	beforeEach(() => {
-		url = new URL("http://localhost");
-		url.port = `${port}`;
+		uri = new URL("http://localhost");
+		uri.port = `${port}`;
 	});
 
 	afterAll(async () => {
@@ -21,16 +21,16 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("simple text (GET)", async () => {
-		url.pathname = "/file/simple.html";
-		const result = await fletcher.text(url.href);
+		uri.pathname = "/file/simple.html";
+		const result = await fletcher.text(uri.href);
 
 		const expected = /Simple heading/;
 		expect(result).toMatch(expected);
 	});
 
 	it("simple html (GET)", async () => {
-		url.pathname = "/file/simple.html";
-		const $page = await fletcher.html(url.href);
+		uri.pathname = "/file/simple.html";
+		const $page = await fletcher.html(uri.href);
 		const result = $page.find("h1").text();
 
 		const expected = "Simple heading";
@@ -38,25 +38,25 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("simple json (GET)", async () => {
-		url.pathname = "/file/simple.json";
-		const result = await fletcher.json(url.href);
+		uri.pathname = "/file/simple.json";
+		const result = await fletcher.json(uri.href);
 
 		const expected = { foo: "bar" };
 		expect(result).toStrictEqual(expected);
 	});
 
 	it("simple json (GET) with generic type", async () => {
-		url.pathname = "/file/simple.json";
+		uri.pathname = "/file/simple.json";
 		type FooBar = { foo: string };
-		const result = await fletcher.json<FooBar>(url.href);
+		const result = await fletcher.json<FooBar>(uri.href);
 
 		const expected: FooBar = { foo: "bar" };
 		expect(result).toStrictEqual(expected);
 	});
 
 	it("json-ld (GET)", async () => {
-		url.pathname = "/file/json-ld.html";
-		const result = await fletcher.jsonld(url.href);
+		uri.pathname = "/file/json-ld.html";
+		const result = await fletcher.jsonld(uri.href);
 
 		const expected = {
 			"@context": "http://schema.org",
@@ -84,24 +84,24 @@ describe("fletcher - HTTP client", () => {
 	});
 
 	it("returns the headers on a request", async () => {
-		url.pathname = "/headers";
-		const actual = await fletcher.headers(url.href);
+		uri.pathname = "/headers";
+		const actual = await fletcher.headers(uri.href);
 
 		const expected = { foo: "bar" };
 		expect(actual).toMatchObject(expected);
 	});
 
 	it("returns statusText on Error message", async () => {
-		url.pathname = "/error";
-		const fn = async () => fletcher.json(url.href, { retry: false });
+		uri.pathname = "/error";
+		const fn = async () => fletcher.json(uri.href, { retry: false });
 
 		const expected = `500: Internal Server Error - http://localhost:${port}/error`;
 		await expect(fn).rejects.toThrow(expected);
 	});
 
 	it("requests an URL with special characters", async () => {
-		url.pathname = "/drácula";
-		const actual = await fletcher.json(url.href);
+		uri.pathname = "/drácula";
+		const actual = await fletcher.json(uri.href);
 
 		const expected = { foo: "bar" };
 		expect(actual).toStrictEqual(expected);

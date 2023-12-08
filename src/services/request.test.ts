@@ -7,7 +7,7 @@ import { server as httpsServer } from "src/mocks/https";
 import { request } from "./request";
 
 describe("request", () => {
-	let url: URL;
+	let uri: URL;
 	let port: number;
 
 	beforeAll(async () => {
@@ -16,8 +16,8 @@ describe("request", () => {
 	});
 
 	beforeEach(() => {
-		url = new URL("http://localhost");
-		url.port = `${port}`;
+		uri = new URL("http://localhost");
+		uri.port = `${port}`;
 	});
 
 	afterAll(async () => {
@@ -26,10 +26,10 @@ describe("request", () => {
 
 	describe("body", () => {
 		it("includes body on request", async () => {
-			url.pathname = "/anything";
+			uri.pathname = "/anything";
 			const body = JSON.stringify({ foo: "bar" });
 			const options = { method: "POST", body } as IFletcherOptions;
-			const actual = await request(url.href, options);
+			const actual = await request(uri.href, options);
 
 			const expected = {
 				headers: {
@@ -64,8 +64,8 @@ describe("request", () => {
 		it.each<BufferEncoding>(["latin1", "utf8", "binary", "ucs2", "utf16le"])(
 			"sets response encoding: %s",
 			async (encoding) => {
-				url.pathname = `/encoding/${encoding}`;
-				const response = await request(url.href, { encoding });
+				uri.pathname = `/encoding/${encoding}`;
+				const response = await request(uri.href, { encoding });
 				const actual = await response.text();
 
 				const expected = "Opinião";
@@ -76,9 +76,9 @@ describe("request", () => {
 
 	describe("headers", () => {
 		it("includes custom headers", async () => {
-			url.pathname = "/anything";
+			uri.pathname = "/anything";
 			const options = { headers: { foo: "bar", baz: "buz" } };
-			const response = await request(url.href, options);
+			const response = await request(uri.href, options);
 			const body = await response.text();
 			const actual = JSON.parse(body);
 
@@ -89,10 +89,10 @@ describe("request", () => {
 
 	describe("redirects", () => {
 		it("follows a redirect", async () => {
-			url.pathname = "/redirect-to";
-			url.searchParams.append("statusCode", "302");
-			url.searchParams.append("url", "/redirected");
-			const actual = await request(url.href);
+			uri.pathname = "/redirect-to";
+			uri.searchParams.append("statusCode", "302");
+			uri.searchParams.append("url", "/redirected");
+			const actual = await request(uri.href);
 			const body = await actual.text();
 			const json = JSON.parse(body);
 
@@ -102,10 +102,10 @@ describe("request", () => {
 		});
 
 		it("doesn't follow redirects", async () => {
-			url.pathname = "/redirect-to";
-			url.searchParams.append("statusCode", "302");
-			url.searchParams.append("url", "/redirected");
-			const actual = await request(url.href, { maxRedirections: 0 });
+			uri.pathname = "/redirect-to";
+			uri.searchParams.append("statusCode", "302");
+			uri.searchParams.append("url", "/redirected");
+			const actual = await request(uri.href, { maxRedirections: 0 });
 
 			expect(actual.statusCode).toBe(302);
 			expect(actual.statusMessage).toBe("Found");
@@ -114,8 +114,8 @@ describe("request", () => {
 
 	describe("errors", () => {
 		it("includes the URL on an errored response", async () => {
-			url.pathname = "/error";
-			const actual = await request(url.href);
+			uri.pathname = "/error";
+			const actual = await request(uri.href);
 
 			const expected = {
 				statusCode: 500,
@@ -126,7 +126,7 @@ describe("request", () => {
 	});
 
 	describe("rejectUnauthorized", () => {
-		let httpsUrl: URL;
+		let httpsUri: URL;
 		let httpsPort: number;
 
 		beforeAll(async () => {
@@ -135,8 +135,8 @@ describe("request", () => {
 		});
 
 		beforeEach(() => {
-			httpsUrl = new URL("https://localhost");
-			httpsUrl.port = `${httpsPort}`;
+			httpsUri = new URL("https://localhost");
+			httpsUri.port = `${httpsPort}`;
 		});
 
 		afterAll(async () => {
@@ -144,16 +144,16 @@ describe("request", () => {
 		});
 
 		it("rejects unauthorized", async () => {
-			const actual = await request(httpsUrl.href, {
+			const actual = await request(httpsUri.href, {
 				rejectUnauthorized: true,
 			});
 
-			const expected = `unable to verify the first certificate - https://localhost:${httpsPort}/`;
+			const expected = `certificate has expired - https://localhost:${httpsPort}/`;
 			expect(actual.statusMessage).toBe(expected);
 		});
 
 		it("doesn't reject unauthorized", async () => {
-			const actual = await request(httpsUrl.href, {
+			const actual = await request(httpsUri.href, {
 				rejectUnauthorized: false,
 			});
 
@@ -166,8 +166,8 @@ describe("request", () => {
 		it.each([200, 201])(
 			"handles success status codes: %s",
 			async (statusCode) => {
-				url.pathname = `/status-code/${statusCode}`;
-				const actual = await request(url.href);
+				uri.pathname = `/status-code/${statusCode}`;
+				const actual = await request(uri.href);
 
 				const expected = STATUS_CODES[statusCode];
 				expect(actual.statusCode).toBe(statusCode);
@@ -178,8 +178,8 @@ describe("request", () => {
 		it.each([301, 302, 400, 401, 404, 500])(
 			"handles error status codes: %s",
 			async (statusCode) => {
-				url.pathname = `/status-code/${statusCode}`;
-				const actual = await request(url.href);
+				uri.pathname = `/status-code/${statusCode}`;
+				const actual = await request(uri.href);
 
 				const expected = `${STATUS_CODES[statusCode]} - http://localhost:${port}/status-code/${statusCode}`;
 				expect(actual.statusCode).toBe(statusCode);
@@ -188,11 +188,11 @@ describe("request", () => {
 		);
 
 		it("custom callback for validating status code", async () => {
-			url.pathname = "/status-code/500";
+			uri.pathname = "/status-code/500";
 			const options = {
 				validateStatus: (statusCode: number) => statusCode === 500,
 			} as IFletcherOptions;
-			const actual = await request(url.href, options);
+			const actual = await request(uri.href, options);
 
 			const expected = "Internal Server Error";
 			expect(actual.statusCode).toBe(500);
@@ -202,7 +202,7 @@ describe("request", () => {
 
 	describe("proxy", () => {
 		it.skip("uses a proxy", async () => {
-			url.pathname = "/ip";
+			uri.pathname = "/ip";
 			const proxy = {
 				username: "<username>",
 				password: "<password>",
@@ -210,8 +210,8 @@ describe("request", () => {
 				port: 666,
 			};
 
-			const u = new URL("https://httpbin.org/ip");
-			const response = await request(u.href, { proxy });
+			const uri2 = new URL("https://httpbin.org/ip");
+			const response = await request(uri2.href, { proxy });
 			const body = await response.text();
 			const actual = JSON.parse(body);
 
@@ -222,9 +222,9 @@ describe("request", () => {
 	describe("onAfterRequest", () => {
 		it("calls postRequest (sync)", async () => {
 			const onAfterRequestSpy = vi.fn();
-			url.pathname = "/anything";
+			uri.pathname = "/anything";
 			const options = { onAfterRequest: onAfterRequestSpy };
-			await request(url.href, options);
+			await request(uri.href, options);
 
 			const expected = {
 				response: expect.anything(),
@@ -239,9 +239,9 @@ describe("request", () => {
 					resolve(undefined);
 				})
 			);
-			url.pathname = "/anything";
+			uri.pathname = "/anything";
 			const options = { onAfterRequest: onAfterRequestSpy };
-			await request(url.href, options);
+			await request(uri.href, options);
 
 			const expected = {
 				response: expect.anything(),
