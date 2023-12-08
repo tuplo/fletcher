@@ -13,9 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - run: |
-          yarn --frozen-lockfile
-          yarn lint
-          yarn test:ci
+          npm ci --no-audit
+          npm run lint
+          npm run test:ci
 
   test-coverage:
     needs: test
@@ -29,13 +29,13 @@ jobs:
       - uses: actions/cache@main
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn install --frozen-lockfile
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - run: npm ci
       - uses: paambaati/codeclimate-action@v2.7.2
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: yarn coverage
+          coverageCommand: npm run coverage
           debug: true
 
   publish-to-npm:
@@ -50,10 +50,10 @@ jobs:
       - uses: actions/cache@main
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - run: |
-          yarn --frozen-lockfile
-          yarn build
+          npm ci
+          npm run build
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@main
         env:
