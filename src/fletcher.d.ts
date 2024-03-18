@@ -11,13 +11,13 @@ import { type AnyNode, type Cheerio, type Element } from "cheerio";
 import { type Page, type ScreenshotOptions } from "puppeteer-core";
 
 import { type IOptions as IRetryOptions } from "./helpers/async-retry";
-import { type ICookie, type CookieJar } from "./helpers/cookie-jar";
+import { type CookieJar } from "./helpers/cookie-jar";
 
 export type UrlSearchParams = Record<string, string | number | undefined>;
 
 export type FetchOptions = AxiosRequestConfig;
 
-export { type ICookie, type CookieJar };
+export { type ICookie, type CookieJar } from "./helpers/cookie-jar";
 
 export type IProxyConfig = {
 	username?: string;

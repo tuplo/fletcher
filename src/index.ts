@@ -23,6 +23,8 @@ export type {
 	IInstance,
 	IProxyConfig,
 	IFletcherUserOptions as IUserOptions,
+	ICookie,
+	CookieJar,
 } from "./fletcher.d";
 
 const cache = new Cache();
