@@ -9,6 +9,10 @@ export type ICookie = {
 export class CookieJar {
 	cookies: ICookie[] = [];
 
+	find(key: string) {
+		return this.cookies.find((cookie) => cookie.key === key);
+	}
+
 	setCookie(cookie: string | ICookie) {
 		const c =
 			typeof cookie === "string" ? this.parseCookieFromString(cookie) : cookie;
