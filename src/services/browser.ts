@@ -15,26 +15,24 @@ type IExecutorFn<T = unknown> = {
 
 const cache = new Cache();
 
-let browser: Browser | null = null;
+let browser: Browser | undefined;
 
 async function request<T>(
 	executor: IExecutorFn<T>,
 	options: Partial<IFletcherUserOptions> = {}
 ) {
-	const { userAgent, proxy } = options;
+	const { proxy, userAgent } = options;
 	const { browser: browserOptions } = options;
 
 	if (!browser) {
-		if (browserOptions?.endpoint) {
-			browser = await puppeteer.connect({
-				browserWSEndpoint: browserOptions.endpoint,
-			});
-		} else {
-			browser = await puppeteer.launch({
-				headless: true,
-				args: ["--no-sandbox", "--disable-gpu"],
-			});
-		}
+		browser = browserOptions?.endpoint
+			? await puppeteer.connect({
+					browserWSEndpoint: browserOptions.endpoint,
+				})
+			: await puppeteer.launch({
+					args: ["--no-sandbox", "--disable-gpu"],
+					headless: true,
+				});
 	}
 
 	if (!browser) throw new Error("Can't launch puppeteer");
@@ -45,15 +43,14 @@ async function request<T>(
 	}
 
 	if (proxy) {
-		const { username = "", password = "" } = proxy;
-		await page.authenticate({ username, password });
+		const { password = "", username = "" } = proxy;
+		await page.authenticate({ password, username });
 	}
 
 	const { blockedResourceTypes } =
 		browserOptions as IFletcherBrowserUserOptions;
 	const shouldBlockResourceTypes =
-		typeof blockedResourceTypes === "undefined" ||
-		Array.isArray(blockedResourceTypes);
+		blockedResourceTypes === undefined || Array.isArray(blockedResourceTypes);
 	if (shouldBlockResourceTypes) {
 		const blockResourceTypes = blockedResourceTypes || [
 			"stylesheet",
@@ -86,7 +83,7 @@ async function html(url: string, options: Partial<IFletcherUserOptions> = {}) {
 		console.error(url);
 	}
 
-	const cacheParams = { format: "html", url, options };
+	const cacheParams = { format: "html", options, url };
 
 	const executor = async (page: Page) => {
 		await page.goto(url, {
@@ -116,19 +113,19 @@ async function html(url: string, options: Partial<IFletcherUserOptions> = {}) {
 
 async function json<T>(
 	pageUrl: string,
-	requestUrl: string | RegExp,
+	requestUrl: RegExp | string,
 	options: Partial<IFletcherUserOptions> = {}
 ) {
 	const cacheParams = {
 		format: "json",
-		url: pageUrl,
 		options: { requestUrl, ...options },
+		url: pageUrl,
 	};
 
 	const executor = (page: Page): Promise<T> =>
 		new Promise((resolve) => {
 			const store = new Proxy(
-				{ data: null },
+				{ data: undefined },
 				{
 					set: (obj, prop, value): boolean => {
 						cache.write({ ...cacheParams, payload: JSON.stringify(value) });
@@ -175,7 +172,7 @@ async function close() {
 	if (!browser) return;
 
 	await browser.close();
-	browser = null;
+	browser = undefined;
 }
 
-export default { json, html, script, jsonld, close };
+export default { close, html, json, jsonld, script };

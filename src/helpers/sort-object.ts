@@ -4,16 +4,13 @@ export function sortObject(obj: unknown): unknown {
 	}
 
 	if (typeof obj === "object" && obj !== null) {
-		return Object.keys(obj)
-			.sort((a, b) => a.localeCompare(b))
-			.reduce(
-				(acc, key) => {
-					// @ts-expect-error foobar
-					acc[key] = sortObject(obj[key] as unknown);
-					return acc;
-				},
-				{} as Record<string, unknown>
-			);
+		const keys = Object.keys(obj);
+		const o = {};
+		for (const key of keys.sort()) {
+			// @ts-expect-error foobar
+			o[key] = sortObject(obj[key]);
+		}
+		return o;
 	}
 
 	return obj;

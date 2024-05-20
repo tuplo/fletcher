@@ -1,11 +1,11 @@
 /* eslint-disable no-case-declarations */
 import { type Method } from "axios";
 
-import {
-	type IFletcherOptions,
-	type IFletcherUserOptions,
-	type IOnAfterRequestFn,
-	type IProxyConfig,
+import type {
+	IFletcherOptions,
+	IFletcherUserOptions,
+	IOnAfterRequestFn,
+	IProxyConfig,
 } from "../fletcher.d";
 import { type IOptions as RetryOptions } from "../helpers/async-retry";
 
@@ -21,11 +21,11 @@ export function getDefaultOptions(
 		},
 		method: "GET",
 		retry: {
-			retries: 10,
 			factor: 2,
-			minTimeout: 1_000,
 			maxTimeout: Infinity,
+			minTimeout: 1_000,
 			randomize: true,
+			retries: 10,
 		},
 		timeout: 30_000,
 		validateStatus: (status: number): boolean => status >= 200 && status < 400,
@@ -36,97 +36,114 @@ export function toFletcherOptions(
 	url: string,
 	options?: Partial<IFletcherUserOptions>
 ) {
-	return Object.entries(options || {}).reduce(
-		(acc, [key, value]) => {
-			switch (key) {
-				case "cache":
-					acc.cache = Boolean(value);
-					break;
-				case "delay":
-					acc.delay = Number(value);
-					break;
-				case "encoding":
-					acc.encoding = value as BufferEncoding;
-					break;
-				case "formData":
-				case "formUrlEncoded":
-					acc.method = "POST";
-					acc.headers = {
-						...acc.headers,
-						"content-type": "application/x-www-form-urlencoded",
-					};
-					const sp = new URLSearchParams(value as Record<string, string>);
-					acc.body = sp.toString();
-					break;
-				case "headers":
-					acc.headers = {
-						...(acc.headers || {}),
-						...((value || {}) as Record<string, string>),
-					};
-					break;
-				case "jsonData":
-					acc.headers = {
-						...acc.headers,
-						"content-type": "application/json",
-					};
-					acc.method = "POST";
-					acc.body = JSON.stringify(value);
-					break;
-				case "maxRedirections":
-					acc.maxRedirections = Number(value);
-					break;
-				case "method":
-					acc.method = value.toString() as Method;
-					break;
-				case "onAfterRequest":
-					acc.onAfterRequest = value as IOnAfterRequestFn;
-					break;
-				case "proxy":
-					acc.proxy = value as IProxyConfig;
-					break;
-				case "rejectUnauthorized":
-					acc.rejectUnauthorized = Boolean(value);
-					break;
-				case "retry":
-					if (value === false) {
-						acc.retry = {
-							retries: 0,
-						};
-					} else if (typeof value === "number") {
-						acc.retry = {
-							...acc.retry,
-							retries: value,
-						};
-					} else if (typeof value === "object") {
-						acc.retry = value as RetryOptions;
-					}
-					break;
-				case "timeout":
-					acc.timeout = Number(value);
-					break;
-				case "urlSearchParams":
-					const newUrl = new URL(url);
-					newUrl.search = new URLSearchParams(value as string).toString();
-					acc.url = newUrl.href;
-					break;
-				case "userAgent":
-					acc.headers = {
-						...(acc.headers || {}),
-						"user-agent": value.toString(),
-					};
-					break;
-				case "validateStatus":
-					const validateFn = value as (status: number) => boolean;
-					acc.validateStatus = validateFn ?? acc.validateStatus;
-					break;
-				default:
-			}
+	const opts = {
+		...getDefaultOptions(url),
+		url,
+	} as IFletcherOptions;
 
-			return acc;
-		},
-		{
-			...getDefaultOptions(url),
-			url,
-		} as IFletcherOptions
-	);
+	for (const entry of Object.entries(options || {})) {
+		const [key, value] = entry;
+
+		switch (key) {
+			case "cache": {
+				opts.cache = Boolean(value);
+				break;
+			}
+			case "delay": {
+				opts.delay = Number(value);
+				break;
+			}
+			case "encoding": {
+				opts.encoding = value as BufferEncoding;
+				break;
+			}
+			case "formData":
+			case "formUrlEncoded": {
+				opts.method = "POST";
+				opts.headers = {
+					...opts.headers,
+					"content-type": "application/x-www-form-urlencoded",
+				};
+				const sp = new URLSearchParams(value as Record<string, string>);
+				opts.body = sp.toString();
+				break;
+			}
+			case "headers": {
+				opts.headers = {
+					...opts.headers,
+					...((value || {}) as Record<string, string>),
+				};
+				break;
+			}
+			case "jsonData": {
+				opts.headers = {
+					...opts.headers,
+					"content-type": "application/json",
+				};
+				opts.method = "POST";
+				opts.body = JSON.stringify(value);
+				break;
+			}
+			case "maxRedirections": {
+				opts.maxRedirections = Number(value);
+				break;
+			}
+			case "method": {
+				opts.method = value.toString() as Method;
+				break;
+			}
+			case "onAfterRequest": {
+				opts.onAfterRequest = value as IOnAfterRequestFn;
+				break;
+			}
+			case "proxy": {
+				opts.proxy = value as IProxyConfig;
+				break;
+			}
+			case "rejectUnauthorized": {
+				opts.rejectUnauthorized = Boolean(value);
+				break;
+			}
+			case "retry": {
+				if (value === false) {
+					opts.retry = {
+						retries: 0,
+					};
+				} else if (typeof value === "number") {
+					opts.retry = {
+						...opts.retry,
+						retries: value,
+					};
+				} else if (typeof value === "object") {
+					opts.retry = value as RetryOptions;
+				}
+				break;
+			}
+			case "timeout": {
+				opts.timeout = Number(value);
+				break;
+			}
+			case "urlSearchParams": {
+				const newUrl = new URL(url);
+				newUrl.search = new URLSearchParams(value as string).toString();
+				opts.url = newUrl.href;
+				break;
+			}
+			case "userAgent": {
+				opts.headers = {
+					...opts.headers,
+					"user-agent": value.toString(),
+				};
+				break;
+			}
+			case "validateStatus": {
+				const validateFn = value as (status: number) => boolean;
+				opts.validateStatus = validateFn ?? opts.validateStatus;
+				break;
+			}
+			default:
+		}
+	}
+
+	return opts;
 }

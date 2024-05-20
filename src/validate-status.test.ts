@@ -1,4 +1,4 @@
-import { server, getRandomPort } from "src/mocks";
+import { getRandomPort, server } from "src/mocks";
 
 import fletcher from "./index";
 

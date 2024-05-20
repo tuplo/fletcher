@@ -20,9 +20,9 @@ export function getEmbeddedJson<T>(
 	let json: T;
 	try {
 		json = JSON.parse(src) as T;
-	} catch (e) {
+	} catch (error) {
 		// @ts-expect-error - e is not an Error
-		throw new Error(`fletch.embeddedJson: ${e.message}`);
+		throw new Error(`fletch.embeddedJson: ${error.message}`);
 	}
 
 	return json;

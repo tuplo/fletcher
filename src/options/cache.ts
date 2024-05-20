@@ -1,14 +1,16 @@
 /* eslint-disable class-methods-use-this */
-import { type ICacheParams } from "../fletcher.d";
+import type { ICacheParams } from "../fletcher.d";
 import { md5 } from "../helpers/md5";
 import { sortObject } from "../helpers/sort-object";
 
 export class Cache {
 	db = new Map();
 
-	hit = <T = string>(params: ICacheParams): null | T => {
+	hit = <T = string>(params: ICacheParams): T | undefined => {
 		const { options } = params;
-		if (!options?.cache) return null;
+		if (!options?.cache) {
+			return;
+		}
 
 		const key = this.key(params);
 
@@ -21,7 +23,22 @@ export class Cache {
 			return this.db.get(key) as T;
 		}
 
-		return null;
+		return;
+	};
+
+	key = (params: ICacheParams): string => {
+		const { format, options, url } = params;
+
+		const { cacheMethods } = options || {};
+		if (cacheMethods?.key) {
+			return cacheMethods.key(params);
+		}
+
+		const seed = [format, url, JSON.stringify(sortObject(params))]
+			.filter(Boolean)
+			.join("");
+
+		return md5(seed);
 	};
 
 	write = (params: ICacheParams): void => {
@@ -38,20 +55,5 @@ export class Cache {
 		}
 
 		this.db.set(key, payload);
-	};
-
-	key = (params: ICacheParams): string => {
-		const { format, url, options } = params;
-
-		const { cacheMethods } = options || {};
-		if (cacheMethods?.key) {
-			return cacheMethods.key(params);
-		}
-
-		const seed = [format, url, JSON.stringify(sortObject(params))]
-			.filter(Boolean)
-			.join("");
-
-		return md5(seed);
 	};
 }

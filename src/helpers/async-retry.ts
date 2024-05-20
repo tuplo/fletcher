@@ -1,12 +1,12 @@
 import retrier, { type WrapOptions } from "retry";
 
-export type IOptions = WrapOptions & {
+export type IOptions = {
 	onRetry?: ((e: Error, attempt: number) => unknown) | undefined;
-};
+} & WrapOptions;
 
-type IErrorWithBail = Error & {
+type IErrorWithBail = {
 	bail?: (error: Error) => void;
-};
+} & Error;
 
 type IAsyncFn<T> = {
 	(...args: unknown[]): Promise<T>;
@@ -48,15 +48,15 @@ export function retry<T>(fn: IAsyncFn<T>, opts: IOptions): Promise<T> {
 
 			try {
 				val = fn(bail, num);
-			} catch (err) {
-				onError(err as Error, num);
+			} catch (error) {
+				onError(error as Error, num);
 				return;
 			}
 
 			Promise.resolve(val)
 				.then(resolve)
-				.catch((err) => {
-					onError(err, num);
+				.catch((error) => {
+					onError(error, num);
 				});
 		}
 

@@ -30,11 +30,11 @@ describe("retry", () => {
 
 		await fletcher.html("http://localhost", {
 			retry: {
-				retries: 3,
 				factor: 1,
-				minTimeout: 1,
 				maxTimeout: 1,
+				minTimeout: 1,
 				randomize: false,
+				retries: 3,
 			},
 		});
 

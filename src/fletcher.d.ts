@@ -13,21 +13,21 @@ import { type Page, type ScreenshotOptions } from "puppeteer-core";
 import { type IOptions as IRetryOptions } from "./helpers/async-retry";
 import { type CookieJar } from "./helpers/cookie-jar";
 
-export type UrlSearchParams = Record<string, string | number | undefined>;
+export type UrlSearchParams = Record<string, number | string | undefined>;
 
 export type FetchOptions = AxiosRequestConfig;
 
-export { type ICookie, type CookieJar } from "./helpers/cookie-jar";
+export { type CookieJar, type ICookie } from "./helpers/cookie-jar";
 
 export type IProxyConfig = {
-	username?: string;
-	password?: string;
 	host: string;
+	password?: string;
 	port: number;
 	protocol?: string;
+	username?: string;
 };
 
-type RequestRedirect = "follow" | "error" | "manual";
+type RequestRedirect = "error" | "follow" | "manual";
 
 type RequestData = Record<string, unknown>;
 
@@ -49,15 +49,15 @@ export type IFletcherBrowserUserOptions = {
 
 export type ICacheParams = {
 	format: string;
-	url: string;
 	options?: Partial<IFletcherUserOptions>;
 	payload?: string;
+	url: string;
 };
 
 export type IFletcherCacheMethods = {
 	hit: (key: string) => null | unknown;
-	write: (key: string, payload?: string) => void;
 	key: (params: ICacheParams) => string;
+	write: (key: string, payload?: string) => void;
 };
 
 export type IFletcherUserOptions = {
@@ -68,16 +68,16 @@ export type IFletcherUserOptions = {
 	embeddedJsonSelector: string;
 	encoding: BufferEncoding;
 	formData: RequestData;
-	formUrlEncoded: Record<string, string | number | boolean>;
-	jsonData: RequestData;
+	formUrlEncoded: Record<string, boolean | number | string>;
 	headers: Record<string, string>;
+	jsonData: RequestData;
 	log: boolean;
 	maxRedirections: number;
 	method: Method;
 	onAfterRequest?: IOnAfterRequestFn;
 	proxy: IProxyConfig;
 	rejectUnauthorized?: boolean;
-	retry: boolean | number | IRetryOptions;
+	retry: boolean | IRetryOptions | number;
 	scriptFindFn: (script: Element) => boolean;
 	scriptPath: string;
 	scriptSandbox: VM.Context;
@@ -92,8 +92,8 @@ export type IFletcherOptions = {
 	cache: boolean;
 	delay: number;
 	encoding: BufferEncoding;
-	maxRedirections?: number | undefined; // =20 maximum redirect count. 0 to not follow redirect
 	headers: Record<string, string>;
+	maxRedirections?: number | undefined; // =20 maximum redirect count. 0 to not follow redirect
 	method: Method;
 	onAfterRequest?: IOnAfterRequestFn;
 	proxy?: IProxyConfig;
@@ -109,12 +109,26 @@ type IInstanceMethod<T> = {
 };
 
 export type IInstance = {
+	browser: {
+		close: () => Promise<void>;
+		html: IInstanceMethod<Cheerio<AnyNode>>;
+		json: <T = unknown>(
+			url: string,
+			requestUrl: RegExp | string,
+			options?: Partial<IFletcherUserOptions>
+		) => Promise<T>;
+		jsonld: IInstanceMethod<unknown[]>;
+		script: <T = unknown>(
+			url: string,
+			options?: Partial<IFletcherUserOptions>
+		) => Promise<T>;
+	};
+	cookies: IInstanceMethod<CookieJar>;
 	embeddedJson: <T = unknown>(
 		url: string,
 		options?: Partial<IFletcherUserOptions>
 	) => Promise<T>;
 	headers: IInstanceMethod<IncomingHttpHeaders>;
-	cookies: IInstanceMethod<CookieJar>;
 	html: IInstanceMethod<Cheerio<AnyNode>>;
 	json: <T = unknown>(
 		url: string,
@@ -127,21 +141,6 @@ export type IInstance = {
 		options?: Partial<IFletcherUserOptions>
 	) => Promise<T>;
 	text: IInstanceMethod<string>;
-	browser: {
-		close: () => Promise<void>;
-		json: <T = unknown>(
-			url: string,
-			requestUrl: string | RegExp,
-			options?: Partial<IFletcherUserOptions>
-		) => Promise<T>;
-		html: IInstanceMethod<Cheerio<AnyNode>>;
-
-		script: <T = unknown>(
-			url: string,
-			options?: Partial<IFletcherUserOptions>
-		) => Promise<T>;
-		jsonld: IInstanceMethod<unknown[]>;
-	};
 };
 
 export type IResponse = {

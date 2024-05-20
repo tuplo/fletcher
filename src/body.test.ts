@@ -1,4 +1,4 @@
-import { server, getRandomPort } from "src/mocks";
+import { getRandomPort, server } from "src/mocks";
 
 import fletcher from "./index";
 
@@ -23,15 +23,15 @@ describe("body formats", () => {
 	it("formData", async () => {
 		uri.pathname = "/anything";
 		const result = await fletcher.json(uri.href, {
-			formData: { foo: "bar", baz: "quz" },
+			formData: { baz: "quz", foo: "bar" },
 		});
 
 		const expected = {
-			method: "POST",
+			body: "baz=quz&foo=bar",
 			headers: expect.objectContaining({
 				"content-type": "application/x-www-form-urlencoded",
 			}),
-			body: "foo=bar&baz=quz",
+			method: "POST",
 		};
 		expect(result).toStrictEqual(expected);
 	});
@@ -39,15 +39,15 @@ describe("body formats", () => {
 	it("formUrlEncoded", async () => {
 		uri.pathname = "/anything";
 		const actual = await fletcher.json(uri.href, {
-			formUrlEncoded: { foo: "bar", baz: "quz" },
+			formUrlEncoded: { baz: "quz", foo: "bar" },
 		});
 
 		const expected = {
-			method: "POST",
+			body: "baz=quz&foo=bar",
 			headers: expect.objectContaining({
 				"content-type": "application/x-www-form-urlencoded",
 			}),
-			body: "foo=bar&baz=quz",
+			method: "POST",
 		};
 		expect(actual).toStrictEqual(expected);
 	});
@@ -55,15 +55,15 @@ describe("body formats", () => {
 	it("jsonData", async () => {
 		uri.pathname = "/anything";
 		const result = await fletcher.json(uri.href, {
-			jsonData: { foo: "bar", baz: "quz" },
+			jsonData: { baz: "quz", foo: "bar" },
 		});
 
 		const expected = {
-			method: "POST",
+			body: '{"baz":"quz","foo":"bar"}',
 			headers: expect.objectContaining({
 				"content-type": "application/json",
 			}),
-			body: '{"foo":"bar","baz":"quz"}',
+			method: "POST",
 		};
 		expect(result).toStrictEqual(expected);
 	});

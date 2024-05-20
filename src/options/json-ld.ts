@@ -10,7 +10,7 @@ export function getJsonLd<T>($page: Cheerio<AnyNode>) {
 			const src = ($el.html() || "").split("\n").join(" ");
 			try {
 				return JSON.parse(src) as T;
-			} catch (err) {
+			} catch {
 				return {};
 			}
 		});

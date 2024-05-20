@@ -8,12 +8,12 @@ export function getScript<T>(
 	$page: Cheerio<AnyNode>,
 	userOptions: Partial<IFletcherUserOptions> = {}
 ) {
-	const { scriptPath, scriptFindFn, scriptSandbox } = userOptions;
+	const { scriptFindFn, scriptPath, scriptSandbox } = userOptions;
 	if (!scriptPath && !scriptFindFn) {
 		throw new Error("fletch.script: scriptPath or scriptFindFn are required");
 	}
 
-	let $el: Cheerio<AnyNode> | null | undefined = null;
+	let $el: Cheerio<AnyNode> | null | undefined;
 	if (scriptPath) {
 		$el = $page.find(scriptPath);
 	} else if (scriptFindFn) {

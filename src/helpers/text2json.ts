@@ -3,7 +3,7 @@ export function text2json(input: string) {
 	try {
 		json = JSON.parse(input);
 		return json;
-	} catch (e) {
-		return JSON.parse(JSON.stringify(input));
+	} catch {
+		return structuredClone(input);
 	}
 }

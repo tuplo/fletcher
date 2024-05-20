@@ -37,7 +37,7 @@ describe("cache", () => {
 		])(
 			"builds a unique string out of different options on the URL",
 			(options, expected) => {
-				const cacheParams = { format: "json", url: "https://foo.com", options };
+				const cacheParams = { format: "json", options, url: "https://foo.com" };
 				const result = cache.key(cacheParams);
 				expect(result).toBe(expected);
 			}
@@ -46,8 +46,8 @@ describe("cache", () => {
 		it.each([
 			[
 				{
-					headers: { foo: "bar", baz: "buz" },
-					urlSearchParams: { quz: "qaz", qaz: "quz" },
+					headers: { baz: "buz", foo: "bar" },
+					urlSearchParams: { qaz: "quz", quz: "qaz" },
 				},
 			],
 			[
@@ -59,7 +59,7 @@ describe("cache", () => {
 		])(
 			"builds the same cache key for options ordered differently",
 			(options) => {
-				const cacheParams = { format: "json", url: "https://foo.com", options };
+				const cacheParams = { format: "json", options, url: "https://foo.com" };
 				const result = cache.key(cacheParams);
 				const expected = "19afdd3a772dbb3144e4aa62defff5b7";
 				expect(result).toBe(expected);
@@ -72,12 +72,12 @@ describe("cache", () => {
 		let cacheParams: ICacheParams;
 		const defaultCacheParams: ICacheParams = {
 			format: "json",
-			url,
 			options: { cache: true },
+			url,
 		};
 
 		beforeEach(() => {
-			cacheParams = JSON.parse(JSON.stringify(defaultCacheParams));
+			cacheParams = structuredClone(defaultCacheParams);
 		});
 
 		it("uses hit custom method", () => {

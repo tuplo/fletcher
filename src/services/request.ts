@@ -52,14 +52,14 @@ function toAxiosOptions(fletcherOptions?: Partial<IFletcherOptions>) {
 			validateStatus || ((statusCode) => statusCode >= 200 && statusCode < 400);
 	}
 
-	if (typeof rejectUnauthorized !== "undefined" && !proxy) {
+	if (rejectUnauthorized !== undefined && !proxy) {
 		options.httpsAgent = new https.Agent({
 			rejectUnauthorized: rejectUnauthorized ?? false,
 		});
 	}
 
 	if (proxy) {
-		const { username, password, host, port, protocol = "http" } = proxy;
+		const { host, password, port, protocol = "http", username } = proxy;
 		const auth = `${username}:${password}`;
 		options.httpsAgent = new HttpsProxyAgent({
 			proxy: `${protocol}://${auth}@${host}:${port}`,
@@ -97,10 +97,10 @@ export async function request(
 			statusMessage,
 			text: async () => data,
 		};
-	} catch (e) {
-		const error = e as AxiosError;
-		const { response = {} as AxiosResponse, cause } = error;
-		const { status: statusCode, headers } = response;
+	} catch (error_) {
+		const error = error_ as AxiosError;
+		const { cause, response = {} as AxiosResponse } = error;
+		const { headers, status: statusCode } = response;
 
 		const statusMessage =
 			response.statusText || error.message || STATUS_CODES[statusCode];
@@ -109,7 +109,7 @@ export async function request(
 			headers,
 			statusCode: statusCode || error.code,
 			statusMessage: `${statusMessage} - ${url}`,
-			text: async () => JSON.stringify({ statusCode, statusMessage, cause }),
+			text: async () => JSON.stringify({ cause, statusCode, statusMessage }),
 		} as IResponse;
 	}
 }

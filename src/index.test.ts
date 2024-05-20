@@ -1,4 +1,4 @@
-import { server, getRandomPort } from "src/mocks";
+import { getRandomPort, server } from "src/mocks";
 
 import fletcher from "./index";
 
@@ -74,6 +74,7 @@ describe("fletcher - HTTP client", () => {
 			image: "https://cdn.eventcinemas.com.au/cdn/content/img/ec-logo.svg",
 			logo: "https://cdn.eventcinemas.com.au/cdn/content/img/ec-logo.svg",
 			name: "Pacific Fair",
+			// eslint-disable-next-line unicorn/no-null
 			openingHours: null,
 			publicAccess: true,
 			telephone: "(07) 5504 1401",

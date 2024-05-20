@@ -28,7 +28,7 @@ describe("request", () => {
 		it("includes body on request", async () => {
 			uri.pathname = "/anything";
 			const body = JSON.stringify({ foo: "bar" });
-			const options = { method: "POST", body } as IFletcherOptions;
+			const options = { body, method: "POST" } as IFletcherOptions;
 			const actual = await request(uri.href, options);
 
 			const expected = {
@@ -44,7 +44,6 @@ describe("request", () => {
 			const req = await actual.text();
 
 			const expectedRequest = {
-				method: "POST",
 				body: '{"foo":"bar"}',
 				headers: {
 					accept: "application/json, text/plain, */*",
@@ -55,6 +54,7 @@ describe("request", () => {
 					host: `localhost:${port}`,
 					"user-agent": expect.anything(),
 				},
+				method: "POST",
 			};
 			expect(JSON.parse(req)).toStrictEqual(expectedRequest);
 		});
@@ -77,12 +77,12 @@ describe("request", () => {
 	describe("headers", () => {
 		it("includes custom headers", async () => {
 			uri.pathname = "/anything";
-			const options = { headers: { foo: "bar", baz: "buz" } };
+			const options = { headers: { baz: "buz", foo: "bar" } };
 			const response = await request(uri.href, options);
 			const body = await response.text();
 			const actual = JSON.parse(body);
 
-			const expected = { foo: "bar", baz: "buz" };
+			const expected = { baz: "buz", foo: "bar" };
 			expect(actual.headers).toMatchObject(expected);
 		});
 	});
@@ -204,10 +204,10 @@ describe("request", () => {
 		it.skip("uses a proxy", async () => {
 			uri.pathname = "/ip";
 			const proxy = {
-				username: "<username>",
-				password: "<password>",
 				host: "<ip>",
+				password: "<password>",
 				port: 666,
+				username: "<username>",
 			};
 
 			const uri2 = new URL("https://httpbin.org/ip");
@@ -235,8 +235,8 @@ describe("request", () => {
 
 		it("calls postRequest (async)", async () => {
 			const onAfterRequestSpy = vi.fn().mockReturnValue(
-				new Promise((resolve) => {
-					resolve(undefined);
+				new Promise<void>((resolve) => {
+					resolve();
 				})
 			);
 			uri.pathname = "/anything";

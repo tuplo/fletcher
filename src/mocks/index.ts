@@ -1,12 +1,13 @@
 import buffer, { type TranscodeEncoding } from "node:buffer";
 import fs from "node:fs";
 import http, {
-	STATUS_CODES,
 	type IncomingMessage,
 	type ServerResponse,
+	STATUS_CODES,
 } from "node:http";
 import net from "node:net";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import mime from "mime/lite";
 
@@ -44,6 +45,10 @@ async function requestListener(
 	if (/^\/file/.test(url)) {
 		const parts = url.split("/");
 		const basename = parts[2];
+
+		const __filename = fileURLToPath(import.meta.url);
+		const __dirname = path.dirname(__filename);
+
 		const file = path.join(__dirname, "__data__", basename);
 		const buf = fs.readFileSync(file);
 		const contentType = mime.getType(path.extname(basename)) || "text/plain";
@@ -56,7 +61,7 @@ async function requestListener(
 
 	// /anything
 	if (url === "/anything") {
-		const payload = { method, headers, body };
+		const payload = { body, headers, method };
 
 		response.setHeader("content-type", "application/json");
 		response.setHeader("date", new Date("2022-12-25").toISOString());

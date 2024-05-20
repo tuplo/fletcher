@@ -13,14 +13,8 @@ export class CookieJar {
 		return this.cookies.find((cookie) => cookie.key === key);
 	}
 
-	setCookie(cookie: string | ICookie) {
-		const c =
-			typeof cookie === "string" ? this.parseCookieFromString(cookie) : cookie;
-		this.cookies.push(c);
-	}
-
-	setCookies(cookies: string[] | ICookie[] = []) {
-		cookies.forEach((cookie) => this.setCookie(cookie));
+	getCookies() {
+		return this.cookies;
 	}
 
 	getCookieString() {
@@ -30,10 +24,6 @@ export class CookieJar {
 				return `${key}=${value}`;
 			})
 			.join("; ");
-	}
-
-	getCookies() {
-		return this.cookies;
 	}
 
 	parseCookieFromString(cookieStr: string) {
@@ -46,5 +36,17 @@ export class CookieJar {
 			key,
 			value,
 		} as ICookie;
+	}
+
+	setCookie(cookie: ICookie | string) {
+		const c =
+			typeof cookie === "string" ? this.parseCookieFromString(cookie) : cookie;
+		this.cookies.push(c);
+	}
+
+	setCookies(cookies: ICookie[] | string[] = []) {
+		for (const cookie of cookies) {
+			this.setCookie(cookie);
+		}
 	}
 }

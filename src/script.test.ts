@@ -1,6 +1,6 @@
 import $, { type Element } from "cheerio";
 
-import { server, getRandomPort } from "src/mocks";
+import { getRandomPort, server } from "src/mocks";
 
 import fletcher from "./index";
 

@@ -1,4 +1,4 @@
-import { toFletcherOptions, getDefaultOptions } from "./index";
+import { getDefaultOptions, toFletcherOptions } from "./index";
 
 describe("fletcher - general options", () => {
 	it("delay", () => {
@@ -51,10 +51,10 @@ describe("fletcher - general options", () => {
 		it("accepts proxy configuration", () => {
 			const result = toFletcherOptions("http://foo.com", {
 				proxy: {
-					username: "mock-user",
-					password: "mock-passwd",
 					host: "mock-host",
+					password: "mock-passwd",
 					port: 76,
+					username: "mock-user",
 				},
 			});
 			expect(result.proxy).toBeDefined();

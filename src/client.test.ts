@@ -71,7 +71,7 @@ describe("creates an instance with options", () => {
 		const client = fletcher.create({ headers: { foo: "bar" } });
 		const actual = await client.json(uri.href, { headers: { baz: "buz" } });
 
-		const expected = { headers: { foo: "bar", baz: "buz" } };
+		const expected = { headers: { baz: "buz", foo: "bar" } };
 		expect(actual).toMatchObject(expected);
 	});
 

@@ -19,12 +19,12 @@ import { getScript } from "./options/script";
 import type { IFletcherUserOptions, IInstance, IResponse } from "./fletcher.d";
 
 export type {
+	CookieJar,
 	ICacheParams,
+	ICookie,
+	IFletcherUserOptions as IUserOptions,
 	IInstance,
 	IProxyConfig,
-	IFletcherUserOptions as IUserOptions,
-	ICookie,
-	CookieJar,
 } from "./fletcher.d";
 
 const cache = new Cache();
@@ -35,10 +35,10 @@ function fletcher(
 ): Promise<IResponse> {
 	const options = toFletcherOptions(userUrl, userOptions);
 	const {
-		url,
 		delay: delayMs = 0,
-		validateStatus,
 		retry: retryOptions,
+		url,
+		validateStatus,
 	} = options;
 
 	if (userOptions?.log) {
@@ -51,19 +51,19 @@ function fletcher(
 			try {
 				res = await request(url, options);
 				if (!validateStatus(res.statusCode)) {
-					throw Error(`${res.statusCode}: ${res.statusMessage}`);
+					throw new Error(`${res.statusCode}: ${res.statusMessage}`);
 				}
 
 				return res;
-			} catch (err: unknown) {
+			} catch (error) {
 				if (userOptions?.log) {
-					console.error(err);
+					console.error(error);
 				}
 
-				if (!res) throw Error(err as string);
+				if (!res) throw new Error(error as string);
 
 				if (!validateStatus(res.statusCode)) {
-					throw Error(`${res.statusCode}: ${res.statusMessage}`);
+					throw new Error(`${res.statusCode}: ${res.statusMessage}`);
 				}
 
 				return res;
@@ -76,7 +76,7 @@ async function text(
 	userUrl: string,
 	userOptions?: Partial<IFletcherUserOptions>
 ) {
-	const cacheParams = { url: userUrl, options: userOptions, format: "text" };
+	const cacheParams = { format: "text", options: userOptions, url: userUrl };
 	const hit = cache.hit<string>(cacheParams);
 	if (hit) return hit;
 
@@ -90,7 +90,7 @@ async function html(
 	userUrl: string,
 	userOptions?: Partial<IFletcherUserOptions>
 ) {
-	const cacheParams = { format: "html", url: userUrl, options: userOptions };
+	const cacheParams = { format: "html", options: userOptions, url: userUrl };
 	const hit = cache.hit(cacheParams);
 	if (hit) return $.load(hit).root();
 
@@ -104,7 +104,7 @@ async function json<T = unknown>(
 	userUrl: string,
 	userOptions?: Partial<IFletcherUserOptions>
 ): Promise<T> {
-	const cacheParams = { format: "json", url: userUrl, options: userOptions };
+	const cacheParams = { format: "json", options: userOptions, url: userUrl };
 	const hit = cache.hit(cacheParams);
 	if (hit) return JSON.parse(hit);
 
@@ -162,12 +162,30 @@ async function embeddedJson(
 
 function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 	return {
+		browser: {
+			close: () => browser.close(),
+			html: (
+				url: string,
+				options: Partial<IFletcherUserOptions> = {}
+			): Promise<Cheerio<AnyNode>> =>
+				browser.html(url, deepMerge(defaultOptions, options)),
+			json: <T>(
+				pageUrl: string,
+				requestUrl: RegExp | string,
+				options: Partial<IFletcherUserOptions> = {}
+			): Promise<T> =>
+				browser.json(pageUrl, requestUrl, deepMerge(defaultOptions, options)),
+			jsonld: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
+				browser.jsonld(url, deepMerge(defaultOptions, options)),
+			script: <T>(url: string, options: Partial<IFletcherUserOptions> = {}) =>
+				browser.script<T>(url, deepMerge(defaultOptions, options)),
+		},
+		cookies: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
+			cookies(url, deepMerge(defaultOptions, options)),
 		embeddedJson: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			embeddedJson(url, deepMerge(defaultOptions, options)),
 		headers: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			headers(url, deepMerge(defaultOptions, options)),
-		cookies: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
-			cookies(url, deepMerge(defaultOptions, options)),
 		html: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			html(url, deepMerge(defaultOptions, options)),
 		json: <T = unknown>(
@@ -184,24 +202,6 @@ function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 		) => script<T>(url, deepMerge(defaultOptions, options)),
 		text: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
 			text(url, deepMerge(defaultOptions, options)),
-		browser: {
-			close: () => browser.close(),
-			html: (
-				url: string,
-				options: Partial<IFletcherUserOptions> = {}
-			): Promise<Cheerio<AnyNode>> =>
-				browser.html(url, deepMerge(defaultOptions, options)),
-			json: <T>(
-				pageUrl: string,
-				requestUrl: string | RegExp,
-				options: Partial<IFletcherUserOptions> = {}
-			): Promise<T> =>
-				browser.json(pageUrl, requestUrl, deepMerge(defaultOptions, options)),
-			script: <T>(url: string, options: Partial<IFletcherUserOptions> = {}) =>
-				browser.script<T>(url, deepMerge(defaultOptions, options)),
-			jsonld: (url: string, options: Partial<IFletcherUserOptions> = {}) =>
-				browser.jsonld(url, deepMerge(defaultOptions, options)),
-		},
 	} as IInstance;
 }
 

@@ -25,7 +25,7 @@ describe("cache", () => {
 		});
 
 		const result = [];
-		for await (const i of new Array(3).fill(null)) {
+		for await (const i of Array.from({ length: 3 })) {
 			const r = await fletcher.text("https://fletcher.dev", { cache: true });
 			result.push(r);
 		}
@@ -42,7 +42,7 @@ describe("cache", () => {
 		});
 
 		const result = [];
-		for await (const i of new Array(3).fill(null)) {
+		for await (const i of Array.from({ length: 3 })) {
 			const r = await fletcher.html("https://fletcher.dev", { cache: true });
 			result.push(r);
 		}
@@ -59,7 +59,7 @@ describe("cache", () => {
 		});
 
 		const result = [];
-		for await (const i of new Array(3).fill(null)) {
+		for await (const i of Array.from({ length: 3 })) {
 			const r = await fletcher.json("https://fletcher.dev", { cache: true });
 			result.push(r);
 		}
@@ -76,10 +76,10 @@ describe("cache", () => {
 		});
 
 		const result = [];
-		for await (const i of new Array(3).fill(null).map((_, j) => j)) {
+		for await (const i of Array.from({ length: 3 }).map((_, j) => j)) {
 			const r = await fletcher.json("https://fletcher.dev", {
-				formData: { i },
 				cache: true,
+				formData: { i },
 			});
 			result.push(r);
 		}

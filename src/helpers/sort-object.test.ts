@@ -3,9 +3,9 @@ import { sortObject } from "./sort-object";
 describe("serializeObject", () => {
 	it("deep sorts by key", () => {
 		const obj = {
-			z: "foo",
+			a: [{ b: "bar", z: "foo" }],
 			b: "bar",
-			a: [{ z: "foo", b: "bar" }],
+			z: "foo",
 		};
 		const actual = sortObject(obj);
 
