@@ -191,7 +191,7 @@ describe("request", () => {
 			uri.pathname = "/status-code/500";
 			const options = {
 				validateStatus: (statusCode: number) => statusCode === 500,
-			} as IFletcherOptions;
+			} as unknown as IFletcherOptions;
 			const actual = await request(uri.href, options);
 
 			const expected = "Internal Server Error";
