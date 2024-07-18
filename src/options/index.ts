@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { type Method } from "axios";
+import { type Method } from "got-scraping";
 
 import type {
 	IFletcherOptions,

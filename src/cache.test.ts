@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-restricted-syntax */
-import { vi } from "vitest";
-
 import fletcher from "./index";
 
 const requestSpy = vi.fn();

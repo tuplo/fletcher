@@ -1,13 +1,13 @@
 import { type IncomingHttpHeaders } from "node:http";
 import type * as VM from "node:vm";
 
-import {
-	type AxiosRequestConfig,
-	type AxiosResponse,
-	type AxiosResponseHeaders,
-	type Method,
-} from "axios";
 import { type AnyNode, type Cheerio, type Element } from "cheerio";
+import {
+	type Headers,
+	type Method,
+	type OptionsInit,
+	type Response,
+} from "got-scraping";
 import { type Page, type ScreenshotOptions } from "puppeteer-core";
 
 import { type IOptions as IRetryOptions } from "./helpers/async-retry";
@@ -15,7 +15,7 @@ import { type CookieJar } from "./helpers/cookie-jar";
 
 export type UrlSearchParams = Record<string, number | string | undefined>;
 
-export type FetchOptions = AxiosRequestConfig;
+export type FetchOptions = OptionsInit;
 
 export { type CookieJar, type ICookie } from "./helpers/cookie-jar";
 
@@ -27,12 +27,10 @@ export type IProxyConfig = {
 	username?: string;
 };
 
-type RequestRedirect = "error" | "follow" | "manual";
-
 type RequestData = Record<string, unknown>;
 
 type IOnAfterRequestArgs = {
-	response: AxiosResponse;
+	response: Response;
 };
 
 export type IOnAfterRequestFn = {
@@ -145,7 +143,7 @@ export type IInstance = {
 
 export type IResponse = {
 	// body: Readable & Dispatcher.BodyMixin;
-	headers: AxiosResponseHeaders;
+	headers: Headers;
 	statusCode: number;
 	statusMessage?: string;
 	text: () => Promise<string>;

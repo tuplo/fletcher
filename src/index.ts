@@ -60,7 +60,9 @@ function fletcher(
 					console.error(error);
 				}
 
-				if (!res) throw new Error(error as string);
+				if (!res) {
+					throw new Error(error as string);
+				}
 
 				if (!validateStatus(res.statusCode)) {
 					throw new Error(`${res.statusCode}: ${res.statusMessage}`);

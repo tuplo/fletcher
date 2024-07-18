@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 import { toFletcherOptions } from "./options";
 import fletcher from "./index";
 

@@ -1,70 +1,47 @@
 import { STATUS_CODES } from "node:http";
-import https from "node:https";
 
-import axios, {
-	type AxiosError,
-	type AxiosRequestConfig,
-	type AxiosResponse,
-	type AxiosResponseHeaders,
-} from "axios";
-import { HttpsProxyAgent } from "hpagent";
+import {
+	gotScraping as got,
+	type Method,
+	type OptionsInit,
+	type RequestError,
+	type Response,
+} from "got-scraping";
 
-import { type IFletcherOptions, type IResponse } from "../fletcher.d";
+import { type IFletcherOptions, type IResponse } from "../fletcher";
 
-function toAxiosOptions(fletcherOptions?: Partial<IFletcherOptions>) {
+function toGotOptions(
+	url: string,
+	fletcherOptions?: Partial<IFletcherOptions>
+) {
 	const {
 		body,
 		encoding,
 		headers,
-		maxRedirections = 999, // follow all redirects by default
+		maxRedirections = 999,
 		method = "GET",
 		proxy,
-		rejectUnauthorized,
+		rejectUnauthorized = false,
 		timeout = 30_000,
-		validateStatus,
 	} = fletcherOptions || {};
 
-	const options: AxiosRequestConfig = {
+	const options: OptionsInit = {
+		body,
+		encoding,
+		followRedirect: maxRedirections > 0,
+		headers,
+		https: { rejectUnauthorized },
 		maxRedirects: maxRedirections,
-		method,
-		responseType: "text",
-		timeout,
+		method: method as Method,
+		retry: { limit: 0 },
+		timeout: { request: timeout },
+		url,
 	};
-
-	if (body) {
-		options.data = body;
-	}
-
-	if (encoding) {
-		options.responseEncoding = encoding;
-	}
-
-	if (headers) {
-		options.headers = headers;
-	}
-
-	if (validateStatus) {
-		options.validateStatus = validateStatus;
-	}
-
-	if (options.maxRedirects === 0) {
-		options.validateStatus =
-			validateStatus || ((statusCode) => statusCode >= 200 && statusCode < 400);
-	}
-
-	if (rejectUnauthorized !== undefined && !proxy) {
-		options.httpsAgent = new https.Agent({
-			rejectUnauthorized: rejectUnauthorized ?? false,
-		});
-	}
 
 	if (proxy) {
 		const { host, password, port, protocol = "http", username } = proxy;
 		const auth = `${username}:${password}`;
-		options.httpsAgent = new HttpsProxyAgent({
-			proxy: `${protocol}://${auth}@${host}:${port}`,
-			rejectUnauthorized: rejectUnauthorized ?? false,
-		});
+		options.proxyUrl = `${protocol}://${auth}@${host}:${port}`;
 	}
 
 	return options;
@@ -75,39 +52,35 @@ export async function request(
 	userOptions?: Partial<IFletcherOptions>
 ) {
 	try {
-		// encode special characters on the URL
-		const uri = new URL(url);
-		const options = toAxiosOptions(userOptions);
-		const response = await axios(uri.href, options);
-		const {
-			data,
-			headers,
-			status: statusCode,
-			statusText: statusMessage,
-		} = response;
+		const options = toGotOptions(url, userOptions);
+		const response_ = await got(options);
+		const response = response_ as Response;
 
-		if (userOptions?.onAfterRequest) {
-			const r = userOptions.onAfterRequest({ response });
-			await Promise.resolve(r);
+		const { headers, statusCode } = response;
+
+		const statusMessage = response.statusMessage || STATUS_CODES[statusCode];
+
+		if (userOptions?.validateStatus) {
+			response.ok = userOptions.validateStatus(statusCode);
 		}
 
 		return {
-			headers: headers as AxiosResponseHeaders,
+			headers,
 			statusCode,
-			statusMessage,
-			text: async () => data,
-		};
+			statusMessage: response.ok ? statusMessage : `${statusMessage} - ${url}`,
+			text: async () => response.body as string,
+		} as IResponse;
 	} catch (error_) {
-		const error = error_ as AxiosError;
-		const { cause, response = {} as AxiosResponse } = error;
-		const { headers, status: statusCode } = response;
+		// @ts-expect-error caus is not a standard property
+		const { cause, code, options } = error_ as RequestError;
+		const { headers } = options;
+		const { message: statusMessage } = cause;
 
-		const statusMessage =
-			response.statusText || error.message || STATUS_CODES[statusCode];
+		const statusCode = code || 500;
 
 		return {
 			headers,
-			statusCode: statusCode || error.code,
+			statusCode,
 			statusMessage: `${statusMessage} - ${url}`,
 			text: async () => JSON.stringify({ cause, statusCode, statusMessage }),
 		} as IResponse;

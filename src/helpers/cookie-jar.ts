@@ -44,7 +44,12 @@ export class CookieJar {
 		this.cookies.push(c);
 	}
 
-	setCookies(cookies: ICookie[] | string[] = []) {
+	setCookies(cookies_: ICookie[] | string | string[] | undefined) {
+		const cookies = Array.isArray(cookies_)
+			? cookies_
+			: typeof cookies_ === "string"
+				? cookies_.split("; ")
+				: [];
 		for (const cookie of cookies) {
 			this.setCookie(cookie);
 		}
