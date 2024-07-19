@@ -76,12 +76,14 @@ export async function request(
 			text: async () => response.body as string,
 		} as IResponse;
 	} catch (error_) {
+		const error = error_ as Error;
 		// @ts-expect-error caus is not a standard property
 		const { cause, code, options } = error_ as RequestError;
-		const { headers } = options;
-		const { message: statusMessage } = cause;
+		const { headers } = options || {};
 
 		const statusCode = code || 500;
+		const statusMessage =
+			cause?.message || error?.message || STATUS_CODES[statusCode];
 
 		return {
 			headers,
