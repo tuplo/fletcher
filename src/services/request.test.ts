@@ -1,6 +1,6 @@
 import { STATUS_CODES } from "node:http";
 
-import { type IFletcherOptions } from "src/fletcher.d";
+import { type IFletcherOptions } from "src/fletcher";
 import { getRandomPort, server } from "src/mocks";
 import { server as httpsServer } from "src/mocks/https";
 
@@ -45,9 +45,18 @@ describe("request", () => {
 
 			const expectedRequest = {
 				body: '{"foo":"bar"}',
+				headers: {
+					accept: "application/json, text/plain, */*",
+					"accept-encoding": "gzip, compress, deflate, br",
+					connection: expect.anything(),
+					"content-length": "13",
+					"content-type": "application/x-www-form-urlencoded",
+					host: `localhost:${port}`,
+					"user-agent": expect.anything(),
+				},
 				method: "POST",
 			};
-			expect(JSON.parse(req)).toMatchObject(expectedRequest);
+			expect(JSON.parse(req)).toStrictEqual(expectedRequest);
 		});
 	});
 
@@ -188,6 +197,25 @@ describe("request", () => {
 			const expected = "Internal Server Error";
 			expect(actual.statusCode).toBe(500);
 			expect(actual.statusMessage).toBe(expected);
+		});
+	});
+
+	describe("proxy", () => {
+		it.skip("uses a proxy", async () => {
+			uri.pathname = "/ip";
+			const proxy = {
+				host: "<ip>",
+				password: "<password>",
+				port: 666,
+				username: "<username>",
+			};
+
+			const uri2 = new URL("https://httpbin.org/ip");
+			const response = await request(uri2.href, { proxy });
+			const body = await response.text();
+			const actual = JSON.parse(body);
+
+			expect(actual.origin).toBe(proxy.host);
 		});
 	});
 

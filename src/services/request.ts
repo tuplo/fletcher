@@ -1,47 +1,70 @@
 import { STATUS_CODES } from "node:http";
+import https from "node:https";
 
-import {
-	gotScraping as got,
-	type Method,
-	type OptionsInit,
-	type RequestError,
-	type Response,
-} from "got-scraping";
+import axios, {
+	type AxiosError,
+	type AxiosRequestConfig,
+	type AxiosResponse,
+	type AxiosResponseHeaders,
+} from "axios";
+import { HttpsProxyAgent } from "hpagent";
 
 import { type IFletcherOptions, type IResponse } from "../fletcher";
 
-function toGotOptions(
-	url: string,
-	fletcherOptions?: Partial<IFletcherOptions>
-) {
+function toAxiosOptions(fletcherOptions?: Partial<IFletcherOptions>) {
 	const {
 		body,
 		encoding,
 		headers,
-		maxRedirections = 999,
+		maxRedirections = 999, // follow all redirects by default
 		method = "GET",
 		proxy,
-		rejectUnauthorized = false,
+		rejectUnauthorized,
 		timeout = 30_000,
+		validateStatus,
 	} = fletcherOptions || {};
 
-	const options: OptionsInit = {
-		body,
-		encoding,
-		followRedirect: maxRedirections > 0,
-		headers,
-		https: { rejectUnauthorized },
+	const options: AxiosRequestConfig = {
 		maxRedirects: maxRedirections,
-		method: method as Method,
-		retry: { limit: 0 },
-		timeout: { request: timeout },
-		url,
+		method,
+		responseType: "text",
+		timeout,
 	};
+
+	if (body) {
+		options.data = body;
+	}
+
+	if (encoding) {
+		options.responseEncoding = encoding;
+	}
+
+	if (headers) {
+		options.headers = headers;
+	}
+
+	if (validateStatus) {
+		options.validateStatus = validateStatus;
+	}
+
+	if (options.maxRedirects === 0) {
+		options.validateStatus =
+			validateStatus || ((statusCode) => statusCode >= 200 && statusCode < 400);
+	}
+
+	if (rejectUnauthorized !== undefined && !proxy) {
+		options.httpsAgent = new https.Agent({
+			rejectUnauthorized: rejectUnauthorized ?? false,
+		});
+	}
 
 	if (proxy) {
 		const { host, password, port, protocol = "http", username } = proxy;
 		const auth = `${username}:${password}`;
-		options.proxyUrl = `${protocol}://${auth}@${host}:${port}`;
+		options.httpsAgent = new HttpsProxyAgent({
+			proxy: `${protocol}://${auth}@${host}:${port}`,
+			rejectUnauthorized: rejectUnauthorized ?? false,
+		});
 	}
 
 	return options;
@@ -52,42 +75,39 @@ export async function request(
 	userOptions?: Partial<IFletcherOptions>
 ) {
 	try {
-		const options = toGotOptions(url, userOptions);
-		const response_ = await got(options);
-		const response = response_ as Response;
+		// encode special characters on the URL
+		const uri = new URL(url);
+		const options = toAxiosOptions(userOptions);
+		const response = await axios(uri.href, options);
+		const {
+			data,
+			headers,
+			status: statusCode,
+			statusText: statusMessage,
+		} = response;
 
 		if (userOptions?.onAfterRequest) {
 			const r = userOptions.onAfterRequest({ response });
 			await Promise.resolve(r);
 		}
 
-		const { headers, statusCode } = response;
-
-		const statusMessage = response.statusMessage || STATUS_CODES[statusCode];
-
-		if (userOptions?.validateStatus) {
-			response.ok = userOptions.validateStatus(statusCode);
-		}
-
 		return {
-			headers,
+			headers: headers as AxiosResponseHeaders,
 			statusCode,
-			statusMessage: response.ok ? statusMessage : `${statusMessage} - ${url}`,
-			text: async () => response.body as string,
-		} as IResponse;
+			statusMessage,
+			text: async () => data,
+		};
 	} catch (error_) {
-		const error = error_ as Error;
-		// @ts-expect-error caus is not a standard property
-		const { cause, code, options } = error_ as RequestError;
-		const { headers } = options || {};
+		const error = error_ as AxiosError;
+		const { cause, response = {} as AxiosResponse } = error;
+		const { headers, status: statusCode } = response;
 
-		const statusCode = code || 500;
 		const statusMessage =
-			cause?.message || error?.message || STATUS_CODES[statusCode];
+			response.statusText || error.message || STATUS_CODES[statusCode];
 
 		return {
 			headers,
-			statusCode,
+			statusCode: statusCode || error.code,
 			statusMessage: `${statusMessage} - ${url}`,
 			text: async () => JSON.stringify({ cause, statusCode, statusMessage }),
 		} as IResponse;

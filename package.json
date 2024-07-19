@@ -16,8 +16,7 @@
 		"dist/helpers/cookie-jar.d.ts",
 		"dist/index.cjs",
 		"dist/index.d.ts",
-		"dist/index.mjs",
-		"dist/data_files/*"
+		"dist/index.mjs"
 	],
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
@@ -59,10 +58,11 @@
 		"@types/cheerio": "0.22.35",
 		"@types/cookie": "0.6.0",
 		"@types/retry": "0.12.5",
+		"axios": "1.7.2",
 		"cheerio": "1.0.0-rc.12",
 		"cookie": "0.6.0",
 		"deepmerge": "4.3.1",
-		"got-scraping": "4.0.6",
+		"hpagent": "1.2.0",
 		"puppeteer-core": "22.13.1",
 		"retry": "0.13.1"
 	},
