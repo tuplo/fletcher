@@ -16,7 +16,8 @@
 		"dist/helpers/cookie-jar.d.ts",
 		"dist/index.cjs",
 		"dist/index.d.ts",
-		"dist/index.mjs"
+		"dist/index.mjs",
+		"dist/data_files/*"
 	],
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
