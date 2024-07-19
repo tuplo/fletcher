@@ -190,4 +190,36 @@ describe("request", () => {
 			expect(actual.statusMessage).toBe(expected);
 		});
 	});
+
+	describe("onAfterRequest", () => {
+		it("calls postRequest (sync)", async () => {
+			const onAfterRequestSpy = vi.fn();
+			uri.pathname = "/anything";
+			const options = { onAfterRequest: onAfterRequestSpy };
+			await request(uri.href, options);
+
+			const expected = {
+				response: expect.anything(),
+			};
+			expect(onAfterRequestSpy).toHaveBeenCalledTimes(1);
+			expect(onAfterRequestSpy).toHaveBeenCalledWith(expected);
+		});
+
+		it("calls postRequest (async)", async () => {
+			const onAfterRequestSpy = vi.fn().mockReturnValue(
+				new Promise<void>((resolve) => {
+					resolve();
+				})
+			);
+			uri.pathname = "/anything";
+			const options = { onAfterRequest: onAfterRequestSpy };
+			await request(uri.href, options);
+
+			const expected = {
+				response: expect.anything(),
+			};
+			expect(onAfterRequestSpy).toHaveBeenCalledTimes(1);
+			expect(onAfterRequestSpy).toHaveBeenCalledWith(expected);
+		});
+	});
 });

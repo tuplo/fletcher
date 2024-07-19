@@ -56,6 +56,11 @@ export async function request(
 		const response_ = await got(options);
 		const response = response_ as Response;
 
+		if (userOptions?.onAfterRequest) {
+			const r = userOptions.onAfterRequest({ response });
+			await Promise.resolve(r);
+		}
+
 		const { headers, statusCode } = response;
 
 		const statusMessage = response.statusMessage || STATUS_CODES[statusCode];
