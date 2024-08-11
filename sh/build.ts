@@ -15,7 +15,9 @@ async function main() {
 	];
 
 	await $`esbuild src/cjs/index.cjs --outfile=dist/index.cjs ${flags}`;
-	await $`esbuild src/index.ts --format=esm --outfile=dist/index.mjs ${flags}`;
+
+	const esmFlags = [...flags, "--inject:sh/cjs-shim.ts"];
+	await $`esbuild src/index.ts --format=esm --outfile=dist/index.mjs ${esmFlags}`;
 
 	await $`cp src/fletcher.d.ts dist/fletcher.d.ts`;
 	await $`rm -rf dist/mocks`;
