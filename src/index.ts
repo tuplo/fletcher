@@ -1,14 +1,15 @@
 /* eslint-disable no-console */
-import $, { type AnyNode, type Cheerio } from "cheerio";
+import * as $ from "cheerio";
 import deepMerge from "deepmerge";
+import type { AnyNode } from "domhandler";
 
 import browser from "./services/browser";
 import { request } from "./services/request";
 
 import { retry } from "./helpers/async-retry";
+import { CookieJar } from "./helpers/cookie-jar";
 import { delay } from "./helpers/delay";
 import { text2json } from "./helpers/text2json";
-import { CookieJar } from "./helpers/cookie-jar";
 
 import { toFletcherOptions } from "./options";
 import { Cache } from "./options/cache";
@@ -80,7 +81,9 @@ async function text(
 ) {
 	const cacheParams = { format: "text", options: userOptions, url: userUrl };
 	const hit = cache.hit<string>(cacheParams);
-	if (hit) return hit;
+	if (hit) {
+		return hit;
+	}
 
 	const data = await fletcher(userUrl, userOptions).then((res) => res.text());
 	cache.write({ ...cacheParams, payload: data });
@@ -94,7 +97,9 @@ async function html(
 ) {
 	const cacheParams = { format: "html", options: userOptions, url: userUrl };
 	const hit = cache.hit(cacheParams);
-	if (hit) return $.load(hit).root();
+	if (hit) {
+		return $.load(hit).root();
+	}
 
 	const src = await fletcher(userUrl, userOptions).then((res) => res.text());
 	cache.write({ ...cacheParams, payload: src });
@@ -108,7 +113,9 @@ async function json<T = unknown>(
 ): Promise<T> {
 	const cacheParams = { format: "json", options: userOptions, url: userUrl };
 	const hit = cache.hit(cacheParams);
-	if (hit) return JSON.parse(hit);
+	if (hit) {
+		return JSON.parse(hit);
+	}
 
 	const raw = await fletcher(userUrl, userOptions).then((res) => res.text());
 	const src = text2json(raw);
@@ -169,7 +176,7 @@ function create(defaultOptions: Partial<IFletcherUserOptions> = {}) {
 			html: (
 				url: string,
 				options: Partial<IFletcherUserOptions> = {}
-			): Promise<Cheerio<AnyNode>> =>
+			): Promise<$.Cheerio<AnyNode>> =>
 				browser.html(url, deepMerge(defaultOptions, options)),
 			json: <T>(
 				pageUrl: string,

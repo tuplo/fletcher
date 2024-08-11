@@ -1,4 +1,5 @@
-import $, { type Element } from "cheerio";
+import * as $ from "cheerio";
+import type { Element } from "domhandler";
 
 import { getRandomPort, server } from "src/mocks";
 
@@ -38,8 +39,10 @@ describe("inline scripts", () => {
 	it("uses a function to find a script element", async () => {
 		uri.pathname = "/file/inline-script.html";
 		const actual = await fletcher.script(uri.href, {
-			scriptFindFn: (script: Element) =>
-				/findThisVar/.test($(script).html() || ""),
+			scriptFindFn: (script: Element) => {
+				const src = $.load(script).text() || "";
+				return /findThisVar/.test(src);
+			},
 		});
 
 		const expected = { findThisVar: true };

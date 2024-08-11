@@ -1,4 +1,4 @@
-import $ from "cheerio";
+import * as $ from "cheerio";
 import puppeteer, { type Browser, type Page } from "puppeteer-core";
 
 import {

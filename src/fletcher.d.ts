@@ -7,7 +7,10 @@ import {
 	type AxiosResponseHeaders,
 	type Method,
 } from "axios";
-import { type AnyNode, type Cheerio, type Element } from "cheerio";
+import * as $ from "cheerio";
+import { type Cheerio } from "cheerio";
+import type { AnyNode, Element } from "domhandler";
+
 import { type Page, type ScreenshotOptions } from "puppeteer-core";
 
 import { type IOptions as IRetryOptions } from "./helpers/async-retry";
@@ -117,7 +120,7 @@ export type IInstance = {
 			requestUrl: RegExp | string,
 			options?: Partial<IFletcherUserOptions>
 		) => Promise<T>;
-		jsonld: IInstanceMethod<unknown[]>;
+		jsonld: IInstanceMethod<$.Cheerio<unknown>>;
 		script: <T = unknown>(
 			url: string,
 			options?: Partial<IFletcherUserOptions>
@@ -134,7 +137,7 @@ export type IInstance = {
 		url: string,
 		options?: Partial<IFletcherUserOptions>
 	) => Promise<T>;
-	jsonld: IInstanceMethod<unknown[]>;
+	jsonld: IInstanceMethod<$.Cheerio<unknown>>;
 	response: IInstanceMethod<IResponse>;
 	script: <T = unknown>(
 		url: string,

@@ -1,9 +1,10 @@
-import { type AnyNode, type Cheerio } from "cheerio";
+import * as $ from "cheerio";
+import type { AnyNode } from "domhandler";
 
 import { type IFletcherUserOptions } from "../fletcher.d";
 
 export function getEmbeddedJson<T>(
-	$page: Cheerio<AnyNode>,
+	$page: $.Cheerio<AnyNode>,
 	userOptions: Partial<IFletcherUserOptions> = {}
 ) {
 	const { embeddedJsonSelector } = userOptions;

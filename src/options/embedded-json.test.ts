@@ -1,4 +1,4 @@
-import $ from "cheerio";
+import * as $ from "cheerio";
 
 import { getEmbeddedJson } from "./embedded-json";
 
