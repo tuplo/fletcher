@@ -47,14 +47,14 @@
 		"lint": "eslint sh/ src/",
 		"test:ci": "vitest run",
 		"test": "vitest --watch",
-		"upgrade": "npm-check-updates -u -x eslint && npm install"
+		"upgrade": "npm-check-updates -u -x eslint -x cheerio && npm install"
 	},
 	"dependencies": {
 		"@types/cheerio": "0.22.35",
 		"@types/cookie": "0.6.0",
 		"@types/retry": "0.12.5",
-		"axios": "1.7.3",
-		"cheerio": "1.0.0",
+		"axios": "1.7.4",
+		"cheerio": "1.0.0-rc.12",
 		"cookie": "0.6.0",
 		"deepmerge": "4.3.1",
 		"hpagent": "1.2.0",
@@ -78,7 +78,7 @@
 		"tsup": "8.2.4",
 		"tsx": "4.17.0",
 		"typescript": "5.5.4",
-		"typescript-eslint": "8.0.1",
+		"typescript-eslint": "8.1.0",
 		"vitest": "2.0.5"
 	}
 }
